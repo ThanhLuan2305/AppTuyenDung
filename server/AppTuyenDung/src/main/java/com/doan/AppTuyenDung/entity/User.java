@@ -1,6 +1,12 @@
 package com.doan.AppTuyenDung.entity;
 
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,7 +18,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "User")
-public class User {
+public class User implements UserDetails {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer user_id;
@@ -105,6 +111,10 @@ public class User {
 	}
 	public void setLocation(String location) {
 		this.location = location;
+	}
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		 return List.of(new SimpleGrantedAuthority(user_type));
 	}
 	
 }
