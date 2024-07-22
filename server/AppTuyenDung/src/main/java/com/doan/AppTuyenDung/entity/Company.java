@@ -2,6 +2,10 @@ package com.doan.AppTuyenDung.entity;
 
 
 import java.util.Date;
+import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -19,7 +23,6 @@ public class Company {
     @JoinColumn(name = "user_id")
     public User user;
 
-
     @ManyToOne
     @JoinColumn(name = "sizeCompany_id")
     public SizeCompany size_Company;
@@ -34,15 +37,12 @@ public class Company {
 
     public Date date_founding;
 
-    
     public String city;
     public String district;
     public String location;
     public String logo;
     public String cover_image;
     public String website;
-
-    
 
     // Getters and setters
 }

@@ -13,14 +13,14 @@ import lombok.Data;
 public class Position_In_Job {
     @Id
     @Column(name = "position_id")
-    public Integer position_id;
+    public String position_id;
     public String name_position;
 
-    public Integer getPosition_id() {
+    public String getPosition_id() {
         return this.position_id;
     }
 
-    public void setPosition_id(Integer position_id) {
+    public void setPosition_id(String position_id) {
         this.position_id = position_id;
     }
 

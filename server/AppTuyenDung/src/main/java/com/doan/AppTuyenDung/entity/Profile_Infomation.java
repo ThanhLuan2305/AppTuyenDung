@@ -15,8 +15,6 @@ public class Profile_Infomation {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    private String username;
-    private String education;
     private String level_wish;
     private String literacy;
     private String work_experience;
