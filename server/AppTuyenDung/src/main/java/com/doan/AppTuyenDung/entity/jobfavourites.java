@@ -16,7 +16,7 @@ import lombok.Data;
 public class jobfavourites {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Integer jobFavorite_id;
+    public Long jobFavorite_id;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

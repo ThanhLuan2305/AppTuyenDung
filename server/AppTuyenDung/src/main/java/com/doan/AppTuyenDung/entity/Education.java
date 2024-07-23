@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 public class Education {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer education_id;
+    private Long education_id;
     @OneToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;

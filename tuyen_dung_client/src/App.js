@@ -1,6 +1,7 @@
-import logo from './logo.svg';
-import './App.css';
-
+import logo from "./logo.svg";
+import "./App.css";
+import { Button } from "./ui/button";
+import { Link } from "react-router-dom";
 function App() {
   return (
     <div className="App">
@@ -17,6 +18,9 @@ function App() {
         >
           Learn React
         </a>
+        <Link to="/login">
+          <Button variant={"outline"}>Login</Button>
+        </Link>
       </header>
     </div>
   );

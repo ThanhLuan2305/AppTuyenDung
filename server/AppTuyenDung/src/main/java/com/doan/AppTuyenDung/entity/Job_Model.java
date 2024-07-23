@@ -3,6 +3,9 @@ package com.doan.AppTuyenDung.entity;
 import java.sql.Date;
 
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -54,11 +57,27 @@ public class Job_Model {
 
     public Job_Model() {
     }
-
-    public Job_Model(Long job_id, String job_title, String career, String job_description, String location,
-            int quanlity, Long salary_min, Long salary_max, String city, String district, Date posted_date,
-            Date expiry_date, Boolean urgent, Company company, User user, Position_In_Job position,
-            Working_Form workingForm, Employment_Type employmentType) {
+    @JsonCreator
+    public Job_Model(
+        @JsonProperty("job_id") Long job_id,
+        @JsonProperty("job_title") String job_title,
+        @JsonProperty("career") String career,
+        @JsonProperty("job_description") String job_description,
+        @JsonProperty("location") String location,
+        @JsonProperty("quanlity") int quanlity,
+        @JsonProperty("salary_min") Long salary_min,
+        @JsonProperty("salary_max") Long salary_max,
+        @JsonProperty("city") String city,
+        @JsonProperty("district") String district,
+        @JsonProperty("posted_date") Date posted_date,
+        @JsonProperty("expiry_date") Date expiry_date,
+        @JsonProperty("urgent") Boolean urgent,
+        @JsonProperty("company") Company company,
+        @JsonProperty("user") User user,
+        @JsonProperty("position") Position_In_Job position,
+        @JsonProperty("workingForm") Working_Form workingForm,
+        @JsonProperty("employmentType") Employment_Type employmentType
+    ) {
         this.job_id = job_id;
         this.job_title = job_title;
         this.career = career;
@@ -78,6 +97,48 @@ public class Job_Model {
         this.workingForm = workingForm;
         this.employmentType = employmentType;
     }
+    // public Job_Model(String job_title, String career, String job_description, String location, int quanlity,
+    //         Long salary_min, Long salary_max, String city, String district, Date posted_date, Date expiry_date,
+    //         Boolean urgent, Company company, User user, Position_In_Job position, Working_Form workingForm,
+    //         Employment_Type employmentType) {
+    //     this.job_title = job_title;
+    //     this.career = career;
+    //     this.job_description = job_description;
+    //     this.location = location;
+    //     this.quanlity = quanlity;
+    //     this.salary_min = salary_min;
+    //     this.salary_max = salary_max;
+    //     this.city = city;
+    //     this.district = district;
+    //     this.posted_date = posted_date;
+    //     this.expiry_date = expiry_date;
+    //     this.urgent = urgent;
+    //     this.company = company;
+    //     this.user = user;
+    //     this.position = position;
+    //     this.workingForm = workingForm;
+    //     this.employmentType = employmentType;
+    // }
+
+    // public Job_Model(String job_title, String career, String job_description, String location, int quanlity,
+    //         Long salary_min, Long salary_max, String city, String district, Date posted_date, Date expiry_date,
+    //         Boolean urgent, Position_In_Job position, Working_Form workingForm, Employment_Type employmentType) {
+    //     this.job_title = job_title;
+    //     this.career = career;
+    //     this.job_description = job_description;
+    //     this.location = location;
+    //     this.quanlity = quanlity;
+    //     this.salary_min = salary_min;
+    //     this.salary_max = salary_max;
+    //     this.city = city;
+    //     this.district = district;
+    //     this.posted_date = posted_date;
+    //     this.expiry_date = expiry_date;
+    //     this.urgent = urgent;
+    //     this.position = position;
+    //     this.workingForm = workingForm;
+    //     this.employmentType = employmentType;
+    // }
 
     public Long getJob_id() {
         return this.job_id;
@@ -226,6 +287,28 @@ public class Job_Model {
     public void setEmploymentType(Employment_Type employmentType) {
         this.employmentType = employmentType;
     }
-
+    @Override
+    public String toString() {
+        return "Job_Model{" +
+                "job_id=" + job_id +
+                ", job_title='" + job_title + '\'' +
+                ", career='" + career + '\'' +
+                ", job_description='" + job_description + '\'' +
+                ", location='" + location + '\'' +
+                ", quanlity=" + quanlity +
+                ", salary_min=" + salary_min +
+                ", salary_max=" + salary_max +
+                ", city='" + city + '\'' +
+                ", district='" + district + '\'' +
+                ", posted_date=" + posted_date +
+                ", expiry_date=" + expiry_date +
+                ", urgent=" + urgent +
+                ", company=" + company +
+                ", user=" + user +
+                ", position=" + position +
+                ", workingForm=" + workingForm +
+                ", employmentType=" + employmentType +
+                '}';
+    }
 }
 

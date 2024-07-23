@@ -2,7 +2,6 @@ package com.doan.AppTuyenDung.entity;
 
 import java.util.Date;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -21,7 +20,7 @@ import lombok.Data;
 public class ImagesCompany {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Integer imagesCompany_id;
+    public Long imagesCompany_id;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
     public Company company;

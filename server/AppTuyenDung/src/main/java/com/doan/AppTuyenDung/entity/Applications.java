@@ -12,7 +12,7 @@ import lombok.Data;
 public class Applications {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Integer applications_id;
+    public Long applications_id;
     @ManyToOne
     @JoinColumn(name = "job_id")
     public Job_Model job;
