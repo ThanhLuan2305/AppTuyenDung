@@ -19,7 +19,7 @@ public class AppTuyenDungApplication {
 	// 		public void addCorsMappings(CorsRegistry reg){
 	// 			reg.addMapping("/**").allowedOrigins("*");
 	// 		}
-	// 	};
+	// 	}; 
 	// }
 
 }
