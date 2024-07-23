@@ -1,4 +1,4 @@
-package com.doan.AppTuyenDung.controller;
+package com.doan.AppTuyenDung.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

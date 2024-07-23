@@ -11,7 +11,7 @@ import com.doan.AppTuyenDung.Repositories.UserRepository;
 public class UserDetailsService implements org.springframework.security.core.userdetails.UserDetailsService {
 
 	@Autowired
-	private UserRepo userRepo;
+	private UserRepository userRepo;
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		// TODO Auto-generated method stub

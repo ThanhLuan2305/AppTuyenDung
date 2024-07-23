@@ -12,7 +12,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.doan.AppTuyenDung.services.JWTUtils;
+import com.doan.AppTuyenDung.Services.JWTUtils;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

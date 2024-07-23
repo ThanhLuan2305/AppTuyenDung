@@ -1,4 +1,4 @@
-package com.doan.AppTuyenDung.services;
+package com.doan.AppTuyenDung.Services;
 
 import java.util.HashMap;
 import java.util.List;
@@ -10,7 +10,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.doan.AppTuyenDung.dto.ReqRes;
+import com.doan.AppTuyenDung.DTO.ReqRes;
 import com.doan.AppTuyenDung.entity.User;
 import com.doan.AppTuyenDung.repository.UserRepo;
 
