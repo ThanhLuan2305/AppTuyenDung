@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.doan.AppTuyenDung.dto.ReqRes;
 import com.doan.AppTuyenDung.entity.User;
-import com.doan.AppTuyenDung.services.UserManagermentService;
+import com.doan.AppTuyenDung.DTO.ReqRes;
+import com.doan.AppTuyenDung.Services.UserManagermentService;
 
 
 

@@ -1,5 +1,4 @@
-package com.doan.AppTuyenDung.Services;
-
+package com.doan.AppTuyenDung.services;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;

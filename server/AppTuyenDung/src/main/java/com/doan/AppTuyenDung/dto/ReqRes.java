@@ -1,4 +1,5 @@
-package com.doan.AppTuyenDung.dto;
+package com.doan.AppTuyenDung.DTO;
+
 
 import java.util.Date;
 import java.util.List;

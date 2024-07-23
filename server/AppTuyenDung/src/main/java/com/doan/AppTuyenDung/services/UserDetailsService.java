@@ -1,13 +1,11 @@
-package com.doan.AppTuyenDung.services;
+package com.doan.AppTuyenDung.Services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.doan.AppTuyenDung.repository.UserRepo;
-
-
+import com.doan.AppTuyenDung.Repositories.UserRepository;
 
 @Service
 public class UserDetailsService implements org.springframework.security.core.userdetails.UserDetailsService {
