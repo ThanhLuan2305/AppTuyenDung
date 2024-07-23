@@ -3,9 +3,6 @@ package com.doan.AppTuyenDung.entity;
 
 import java.util.Date;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import jakarta.persistence.*;
 import lombok.Data;
 
