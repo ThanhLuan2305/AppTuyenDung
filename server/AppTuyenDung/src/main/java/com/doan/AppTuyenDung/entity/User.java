@@ -8,6 +8,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,19 +25,70 @@ import lombok.Data;
 public class User implements UserDetails {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer user_id;
-	private String username;
-	private String password;
-	private String email;
-	private String phone_number;	
-	private String full_name;
-	private String user_type;
-	private Date created_ad;
-	private String avatar;
-	private String martial_status;
-	private String city;
-	private String district;
-	private String location;
+	public Integer user_id;
+	public String username;
+	public String password;
+	public String email;
+	public String phone_number;	
+	public String full_name;
+	public String user_type;
+	public Date created_ad;
+	public String avatar;
+	public String martial_status;
+	public String city;
+	public String district;
+	public String location;
+	
+
+	@JsonCreator
+    public User(
+        @JsonProperty("user_id") Integer user_id,
+        @JsonProperty("username") String username,
+        @JsonProperty("password") String password,
+        @JsonProperty("email") String email,
+        @JsonProperty("phone_number") String phone_number,
+        @JsonProperty("full_name") String full_name,
+        @JsonProperty("user_type") String user_type,
+        @JsonProperty("created_ad") Date created_ad,
+        @JsonProperty("avatar") String avatar,
+        @JsonProperty("martial_status") String martial_status,
+        @JsonProperty("city") String city,
+        @JsonProperty("district") String district,
+        @JsonProperty("location") String location
+    ) {
+        this.user_id = user_id;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.phone_number = phone_number;
+        this.full_name = full_name;
+        this.user_type = user_type;
+        this.created_ad = created_ad;
+        this.avatar = avatar;
+        this.martial_status = martial_status;
+        this.city = city;
+        this.district = district;
+        this.location = location;
+    }
+	public User() {
+	}
+	// public User(Integer user_id, String username, String password, String email, String phone_number, String full_name,
+	// 		String user_type, Date created_ad, String avatar, String martial_status, String city, String district,
+	// 		String location) {
+	// 	this.user_id = user_id;
+	// 	this.username = username;
+	// 	this.password = password;
+	// 	this.email = email;
+	// 	this.phone_number = phone_number;
+	// 	this.full_name = full_name;
+	// 	this.user_type = user_type;
+	// 	this.created_ad = created_ad;
+	// 	this.avatar = avatar;
+	// 	this.martial_status = martial_status;
+	// 	this.city = city;
+	// 	this.district = district;
+	// 	this.location = location;
+	// }
 	public Integer getUser_id() {
 		return user_id;
 	}
@@ -111,7 +166,9 @@ public class User implements UserDetails {
 	}
 	public void setLocation(String location) {
 		this.location = location;
+
 	}
+	@JsonIgnore
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		 return List.of(new SimpleGrantedAuthority(user_type));
