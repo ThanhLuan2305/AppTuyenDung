@@ -29,6 +29,7 @@ public class ReqRes {
 	private String city;
 	private User User;
 	private List<User> UsersList;
+
 	public int getStatusCode() {
 		return statusCode;
 	}

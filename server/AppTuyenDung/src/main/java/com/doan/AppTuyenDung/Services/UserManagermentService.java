@@ -1,7 +1,5 @@
 package com.doan.AppTuyenDung.Services;
 
-
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -13,16 +11,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.doan.AppTuyenDung.DTO.ReqRes;
-import com.doan.AppTuyenDung.Repositories.UserRepository;
 import com.doan.AppTuyenDung.entity.User;
-
+import com.doan.AppTuyenDung.repository.UserRepo;
 
 
 
 @Service
 public class UserManagermentService {
 	@Autowired
-	private UserRepository usersRepo;
+	private UserRepo usersRepo;
 	@Autowired
 	private JWTUtils jwtUtils;
 	@Autowired
@@ -209,4 +206,3 @@ public class UserManagermentService {
 
     }
 }
-
