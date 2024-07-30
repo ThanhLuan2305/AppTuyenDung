@@ -12,14 +12,14 @@ import org.springframework.stereotype.Service;
 
 import com.doan.AppTuyenDung.DTO.ReqRes;
 import com.doan.AppTuyenDung.entity.User;
-import com.doan.AppTuyenDung.repository.UserRepo;
+import com.doan.AppTuyenDung.Repositories.UserRepository;
 
 
 
 @Service
 public class UserManagermentService {
 	@Autowired
-	private UserRepo usersRepo;
+	private UserRepository usersRepo;
 	@Autowired
 	private JWTUtils jwtUtils;
 	@Autowired
