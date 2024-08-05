@@ -4,7 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.doan.AppTuyenDung.entity.Company;
 
-public interface CompanyRepository extends JpaRepository<Company,Integer>{
+public interface CompanyRepository extends JpaRepository<Company,Long>{
     
 
     

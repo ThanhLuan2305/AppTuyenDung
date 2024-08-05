@@ -2,7 +2,7 @@ package com.doan.AppTuyenDung.Services;
 
 import java.sql.Date;
 import java.util.List;
-import java.util.Optional;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,13 +10,8 @@ import org.springframework.stereotype.Service;
 import com.doan.AppTuyenDung.Repositories.CompanyRepository;
 import com.doan.AppTuyenDung.Repositories.Job__ModelRepository;
 import com.doan.AppTuyenDung.Repositories.UserRepository;
-import com.doan.AppTuyenDung.entity.Company;
-import com.doan.AppTuyenDung.entity.Employment_Type;
-import com.doan.AppTuyenDung.entity.Job_Model;
-import com.doan.AppTuyenDung.entity.Position_In_Job;
-import com.doan.AppTuyenDung.entity.User;
-import com.doan.AppTuyenDung.entity.Working_Form;
 
+import com.doan.AppTuyenDung.entity.Job_Model;
 import lombok.AllArgsConstructor;
 import com.doan.AppTuyenDung.Exception.ResourceNotFoundException;
 import com.doan.AppTuyenDung.InterfaceServices.IjobModelServices;
