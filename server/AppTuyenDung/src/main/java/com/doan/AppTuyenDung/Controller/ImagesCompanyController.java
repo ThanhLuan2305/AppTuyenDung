@@ -14,27 +14,31 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.doan.AppTuyenDung.AWS.S3Util;
+import com.doan.AppTuyenDung.Entity.Company;
+// import com.doan.AppTuyenDung.Repositories.CompanyRepository;
+// import com.doan.AppTuyenDung.Repositories.ImagesCompanyRepository;
+// // import com.doan.AppTuyenDung.entity.Company;
+// // import com.doan.AppTuyenDung.entity.ImagesCompany;
 import com.doan.AppTuyenDung.Repositories.CompanyRepository;
-import com.doan.AppTuyenDung.Repositories.ImagesCompanyRepository;
-import com.doan.AppTuyenDung.entity.Company;
-import com.doan.AppTuyenDung.entity.ImagesCompany;
 
 import lombok.RequiredArgsConstructor;
+
+// import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/images")
 @RequiredArgsConstructor
 public class ImagesCompanyController {
     
-    @Autowired
-    ImagesCompanyRepository imagesCompanyRepository;
+    // @Autowired
+    // ImagesCompanyRepository imagesCompanyRepository;
 
     @Autowired
     CompanyRepository companyRepository;
 
     @PostMapping("/file-upload")
     public ResponseEntity<String> handleFileUpload(@RequestParam("file") MultipartFile multipart,
-                                                   @RequestParam("company_id") Long companyId) {
+                                                   @RequestParam("company_id") Integer companyId) {
         String fileName = multipart.getOriginalFilename();
         String message;
 
@@ -52,13 +56,13 @@ public class ImagesCompanyController {
             }
             Company company = optionalCompany.get();
             
-            // save db 
-            ImagesCompany imagesCompany = new ImagesCompany();
-            imagesCompany.setCompany(company);
-            imagesCompany.setAddress_image(fileUrl);
-            imagesCompany.setDate_created(new Date());
+            
+            // ImagesCompany imagesCompany = new ImagesCompany();
+            // imagesCompany.setCompany(company);
+            // imagesCompany.setAddress_image(fileUrl);
+            // imagesCompany.setDate_created(new Date());
 
-            imagesCompanyRepository.save(imagesCompany);
+            // imagesCompanyRepository.save(imagesCompany);
 
             message = "Your file has been uploaded successfully. File URL: " + fileUrl;
             return new ResponseEntity<>(message, HttpStatus.OK);

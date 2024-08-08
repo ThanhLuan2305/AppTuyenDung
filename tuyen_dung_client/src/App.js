@@ -1,47 +1,98 @@
-
-// App.js
-import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import Navbar from './components/common/Navbar';
-import LoginPage from './components/auth/LoginPage';
-import RegistrationPage from './components/auth/RegistrationPage';
-import FooterComponent from './components/common/Footer';
-import UserService from './components/service/UserService';
-import UpdateUser from './components/userspage/UpdateUser';
-import UserManagementPage from './components/userspage/UserManagementPage';
-import ProfilePage from './components/userspage/ProfilePage';
-
-import logo from "./logo.svg";
-import "./App.css";
-import { Button } from "./ui/button";
-import { Link } from "react-router-dom";
+import React, { useEffect } from "react";
+import Header from "./container/header/header";
+import Footer from "./container/footer/Footer";
+import Home from "./container/home/home";
+import About from "./container/About/About";
+import Contact from "./container/Contact/Contact";
+import "react-toastify/dist/ReactToastify.css";
+import JobPage from "./container/JobPage/JobPage";
+import { ToastContainer } from "react-toastify";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  Redirect,
+} from "react-router-dom";
+import Otp from "./container/login/Otp";
+import Login from "./container/login/Login";
+import Register from "./container/login/Register";
+import ForgetPassword from "./container/login/ForgetPassword";
 
 function App() {
-
   return (
-    <BrowserRouter>
-      <div className="App">
-        <Navbar />
-        <div className="content">
-          <Routes>
-            <Route exact path="/" element={<LoginPage />} />
-            <Route exact path="/login" element={<LoginPage />} />
-            <Route path="/profile" element={<ProfilePage />} />
+    <Router>
+      <Switch>
+        <div className="App">
+          <Route exact path="/">
+            <Header />
+            <Home />
+            <Footer />
+          </Route>
+          <Route path="/about">
+            <Header />
+            <About />
+            <Footer />
+          </Route>
+          <Route path="/contact">
+            <Header />
+            <Contact />
+            <Footer />
+          </Route>
+          <Route path="/job">
+            <Header />
+            <JobPage />
+            <Footer />
+          </Route>
 
-            {/* Check if user is authenticated and admin before rendering admin-only routes */}
-            {UserService.adminOnly() && (
-              <>
-                <Route path="/register" element={<RegistrationPage />} />
-                <Route path="/admin/user-management" element={<UserManagementPage />} />
-                <Route path="/update-user/:userId" element={<UpdateUser />} />
-              </>
-            )}
-            <Route path="*" element={<Navigate to="/login" />} />‰
-          </Routes>
+          <Route path="/company">
+            <Header />
+            {/* <ListCompany /> */}
+            <Footer />
+          </Route>
+          <Route path="/detail-company/:id">
+            <Header />
+            {/* <DetailCompany /> */}
+            <Footer />
+          </Route>
+
+          <Route path="/login">
+            <Header />
+            <Login />
+            <Footer />
+          </Route>
+          <Route path="/register">
+            <Header />
+            <Register />
+            <Footer />
+          </Route>
+          <Route path="/forget-password">
+            <Header />
+            <ForgetPassword />
+            <Footer />
+          </Route>
+
+          {/* <DetailPage /> */}
+          {/* <Route path="/detail-job/:id">
+            <Header />
+            <DetailPage />
+            <Footer />
+          </Route> */}
+
+          <ToastContainer
+            position="top-right"
+            autoClose={4000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+          />
         </div>
-        <FooterComponent />
-      </div>
-    </BrowserRouter>
+      </Switch>
+    </Router>
   );
 }
 

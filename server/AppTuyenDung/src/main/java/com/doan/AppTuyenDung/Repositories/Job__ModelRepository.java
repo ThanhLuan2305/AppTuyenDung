@@ -6,10 +6,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import org.springframework.stereotype.Repository;
 
-import com.doan.AppTuyenDung.entity.Job_Model;
+// import com.doan.AppTuyenDung.entity.Job_Model;
 
-@Repository
-public interface Job__ModelRepository extends JpaRepository<Job_Model, Long> {
+// @Repository
+// public interface Job__ModelRepository extends JpaRepository<Job_Model, Long> {
 
     
-}
+// }

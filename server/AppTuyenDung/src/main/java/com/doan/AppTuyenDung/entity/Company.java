@@ -1,213 +1,234 @@
-package com.doan.AppTuyenDung.entity;
+package com.doan.AppTuyenDung.Entity;
 
+import java.util.Set;
 
-import java.util.Date;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 
-import jakarta.persistence.*;
-import lombok.Data;
-
-
-
-@Data
 @Entity
-@Table(name = "Company")
+@Table(name = "companies")
 public class Company {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Long company_id;
+    private Integer id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    public User user;
-
-    @ManyToOne
-    @JoinColumn(name = "sizeCompany_id")
-    public SizeCompany size_Company;
-
-    public String company_name;
-
-    public String email_company;
-
-    public String industry;
-
-    public String description;
-
-    public Date date_founding;
-
-    public String city;
-    public String district;
-    public String location;
-    public String logo;
-    public String cover_image;
-    public String website;
-
-    // @JsonCreator
-    // public Company(
-    //     @JsonProperty("company_id") Integer company_id,
-    //     @JsonProperty("user") User user,
-    //     @JsonProperty("size_Company") SizeCompany size_Company,
-    //     @JsonProperty("company_name") String company_name,
-    //     @JsonProperty("email_company") String email_company,
-    //     @JsonProperty("industry") String industry,
-    //     @JsonProperty("description") String description,
-    //     @JsonProperty("date_founding") Date date_founding,
-    //     @JsonProperty("city") String city,
-    //     @JsonProperty("district") String district,
-    //     @JsonProperty("location") String location,
-    //     @JsonProperty("logo") String logo,
-    //     @JsonProperty("cover_image") String cover_image,
-    //     @JsonProperty("website") String website
-    // ) {
-    //     this.company_id = company_id;
-    //     this.user = user;
-    //     this.size_Company = size_Company;
-    //     this.company_name = company_name;
-    //     this.email_company = email_company;
-    //     this.industry = industry;
-    //     this.description = description;
-    //     this.date_founding = date_founding;
-    //     this.city = city;
-    //     this.district = district;
-    //     this.location = location;
-    //     this.logo = logo;
-    //     this.cover_image = cover_image;
-    //     this.website = website;
-    // }
-    
+    private String name;
+    private String thumbnail;
+    private String coverImage;
+    private String descriptionHTML;
+    private String descriptionMarkdown;
+    private String website;
+    private String address;
+    private String phonenumber;
+    private Integer amountEmployer;
+    private String taxnumber;
+    private String statusCode;
+    private String censorCode;
+    private String file; // BYTES
+    private Integer allowPost;
+    private Integer allowHotPost;
+    private Integer allowCvFree;
+    private Integer allowCV;
 
     public Company() {
     }
 
-    public Company(Long company_id, User user, SizeCompany size_Company, String company_name, String email_company,
-            String industry, String description, Date date_founding, String city, String district, String location,
-            String logo, String cover_image, String website) {
-        this.company_id = company_id;
-        this.user = user;
-        this.size_Company = size_Company;
-        this.company_name = company_name;
-        this.email_company = email_company;
-        this.industry = industry;
-        this.description = description;
-        this.date_founding = date_founding;
-        this.city = city;
-        this.district = district;
-        this.location = location;
-        this.logo = logo;
-        this.cover_image = cover_image;
+    public Company(Integer id, String name, String thumbnail, String coverImage, String descriptionHTML,
+            String descriptionMarkdown, String website, String address, String phonenumber, Integer amountEmployer,
+            String taxnumber, String statusCode, String censorCode, String file, Integer allowPost,
+            Integer allowHotPost, Integer allowCvFree, Integer allowCV) {
+        this.id = id;
+        this.name = name;
+        this.thumbnail = thumbnail;
+        this.coverImage = coverImage;
+        this.descriptionHTML = descriptionHTML;
+        this.descriptionMarkdown = descriptionMarkdown;
         this.website = website;
+        this.address = address;
+        this.phonenumber = phonenumber;
+        this.amountEmployer = amountEmployer;
+        this.taxnumber = taxnumber;
+        this.statusCode = statusCode;
+        this.censorCode = censorCode;
+        this.file = file;
+        this.allowPost = allowPost;
+        this.allowHotPost = allowHotPost;
+        this.allowCvFree = allowCvFree;
+        this.allowCV = allowCV;
     }
 
-    public Long getCompany_id() {
-        return this.company_id;
+    @ManyToOne
+    @JoinColumn(name = "userId")
+    private User user;
+
+    @OneToMany(mappedBy = "company")
+    private Set<User> users;
+
+    public Integer getId() {
+        return id;
     }
 
-    public void setCompany_id(Long company_id) {
-        this.company_id = company_id;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
-    public User getUser() {
-        return this.user;
+    public String getName() {
+        return name;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public SizeCompany getSize_Company() {
-        return this.size_Company;
+    public String getThumbnail() {
+        return thumbnail;
     }
 
-    public void setSize_Company(SizeCompany size_Company) {
-        this.size_Company = size_Company;
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
     }
 
-    public String getCompany_name() {
-        return this.company_name;
+    public String getCoverImage() {
+        return coverImage;
     }
 
-    public void setCompany_name(String company_name) {
-        this.company_name = company_name;
+    public void setCoverImage(String coverImage) {
+        this.coverImage = coverImage;
     }
 
-    public String getEmail_company() {
-        return this.email_company;
+    public String getDescriptionHTML() {
+        return descriptionHTML;
     }
 
-    public void setEmail_company(String email_company) {
-        this.email_company = email_company;
+    public void setDescriptionHTML(String descriptionHTML) {
+        this.descriptionHTML = descriptionHTML;
     }
 
-    public String getIndustry() {
-        return this.industry;
+    public String getDescriptionMarkdown() {
+        return descriptionMarkdown;
     }
 
-    public void setIndustry(String industry) {
-        this.industry = industry;
-    }
-
-    public String getDescription() {
-        return this.description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Date getDate_founding() {
-        return this.date_founding;
-    }
-
-    public void setDate_founding(Date date_founding) {
-        this.date_founding = date_founding;
-    }
-
-    public String getCity() {
-        return this.city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getDistrict() {
-        return this.district;
-    }
-
-    public void setDistrict(String district) {
-        this.district = district;
-    }
-
-    public String getLocation() {
-        return this.location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    public String getLogo() {
-        return this.logo;
-    }
-
-    public void setLogo(String logo) {
-        this.logo = logo;
-    }
-
-    public String getCover_image() {
-        return this.cover_image;
-    }
-
-    public void setCover_image(String cover_image) {
-        this.cover_image = cover_image;
+    public void setDescriptionMarkdown(String descriptionMarkdown) {
+        this.descriptionMarkdown = descriptionMarkdown;
     }
 
     public String getWebsite() {
-        return this.website;
+        return website;
     }
 
     public void setWebsite(String website) {
         this.website = website;
     }
 
-    // Getters and setters
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getPhonenumber() {
+        return phonenumber;
+    }
+
+    public void setPhonenumber(String phonenumber) {
+        this.phonenumber = phonenumber;
+    }
+
+    public Integer getAmountEmployer() {
+        return amountEmployer;
+    }
+
+    public void setAmountEmployer(Integer amountEmployer) {
+        this.amountEmployer = amountEmployer;
+    }
+
+    public String getTaxnumber() {
+        return taxnumber;
+    }
+
+    public void setTaxnumber(String taxnumber) {
+        this.taxnumber = taxnumber;
+    }
+
+    public String getStatusCode() {
+        return statusCode;
+    }
+
+    public void setStatusCode(String statusCode) {
+        this.statusCode = statusCode;
+    }
+
+    public String getCensorCode() {
+        return censorCode;
+    }
+
+    public void setCensorCode(String censorCode) {
+        this.censorCode = censorCode;
+    }
+
+    public String getFile() {
+        return file;
+    }
+
+    public void setFile(String file) {
+        this.file = file;
+    }
+
+    public Integer getAllowPost() {
+        return allowPost;
+    }
+
+    public void setAllowPost(Integer allowPost) {
+        this.allowPost = allowPost;
+    }
+
+    public Integer getAllowHotPost() {
+        return allowHotPost;
+    }
+
+    public void setAllowHotPost(Integer allowHotPost) {
+        this.allowHotPost = allowHotPost;
+    }
+
+    public Integer getAllowCvFree() {
+        return allowCvFree;
+    }
+
+    public void setAllowCvFree(Integer allowCvFree) {
+        this.allowCvFree = allowCvFree;
+    }
+
+    public Integer getAllowCV() {
+        return allowCV;
+    }
+
+    public void setAllowCV(Integer allowCV) {
+        this.allowCV = allowCV;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Set<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<User> users) {
+        this.users = users;
+    }
+
+    // Getters and Setters
 }

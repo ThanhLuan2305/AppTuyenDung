@@ -2,15 +2,15 @@ package com.doan.AppTuyenDung.DTO;
 
 
 import java.util.Date;
-import java.util.List;
+// import java.util.List;
 
-import com.doan.AppTuyenDung.entity.User;
+// import com.doan.AppTuyenDung.entity.User;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import lombok.Data;
+// import lombok.Data;
 
-@Data
+// @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ReqRes {
@@ -27,8 +27,8 @@ public class ReqRes {
 	private String user_type;
 	private Date created_ad;
 	private String city;
-	private User User;
-	private List<User> UsersList;
+	// private User User;
+	// private List<User> UsersList;
 	public int getStatusCode() {
 		return statusCode;
 	}
@@ -108,19 +108,19 @@ public class ReqRes {
 		this.city = city;
 	}
 	
-	public User getUser() {
-		return User;
-	}
-	public void setUser(User user) {
-		User = user;
-	}
-	public List<User> getUsersList() {
-		return UsersList;
-	}
-	public void setUsersList(List<User> usersList) {
-		UsersList = usersList;
+	// public User getUser() {
+	// 	return User;
+	// }
+	// public void setUser(User user) {
+	// 	User = user;
+	// }
+	// public List<User> getUsersList() {
+	// 	return UsersList;
+	// }
+	// public void setUsersList(List<User> usersList) {
+	// 	UsersList = usersList;
 	}
 	
 	
-}
+// }
 
