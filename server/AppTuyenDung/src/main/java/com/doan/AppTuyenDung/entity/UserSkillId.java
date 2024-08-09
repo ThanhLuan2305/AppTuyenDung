@@ -1,4 +1,4 @@
-package com.doan.AppTuyenDung.Entity;
+package com.doan.AppTuyenDung.entity;
 import java.io.Serializable;
 import java.util.Objects;
 
