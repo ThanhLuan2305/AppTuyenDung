@@ -1,10 +1,10 @@
-package com.doan.AppTuyenDung.Entity;
+package com.doan.AppTuyenDung.entity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 @Entity
@@ -14,10 +14,21 @@ public class UserSetting {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private String categoryJobCode;
-    private String salaryJobCode;
-    private String addressCode;
-    private String experienceJobCode;
+    @ManyToOne
+    @JoinColumn(name = "CodeJobType", referencedColumnName = "code")
+    private CodeJobType categoryJobCode;
+    @ManyToOne
+    @JoinColumn(name = "CodeSalaryType", referencedColumnName = "code")
+    private CodeSalaryType salaryJobCode;
+
+    @ManyToOne
+    @JoinColumn(name = "CodeAdressCode", referencedColumnName = "code")
+    private CodeProvince addressCode;
+    
+    @ManyToOne
+    @JoinColumn(name = "CodeExpType", referencedColumnName = "code")
+    private CodeExpType experienceJobCode;
+
     private Boolean isFindJob;
     private Boolean isTakeMail;
     private byte[] file;

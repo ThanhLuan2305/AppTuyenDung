@@ -1,4 +1,4 @@
-package com.doan.AppTuyenDung.Entity;
+package com.doan.AppTuyenDung.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -20,7 +20,7 @@ public class Note {
     @ManyToOne
     @JoinColumn(name = "postId")
     private Post post;
-
+    
     @ManyToOne
     @JoinColumn(name = "userId")
     private User user;

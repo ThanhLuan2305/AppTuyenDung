@@ -1,5 +1,4 @@
-package com.doan.AppTuyenDung.Entity;
-
+package com.doan.AppTuyenDung.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

@@ -1,4 +1,5 @@
-package com.doan.AppTuyenDung.Entity;
+package com.doan.AppTuyenDung.entity;
+import java.util.Date;
 import java.util.Set;
 
 import jakarta.persistence.Entity;
@@ -17,10 +18,15 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private String statusCode;
+    @ManyToOne
+    @JoinColumn(name = "statusCode", referencedColumnName = "code")
+    private CodePostStatus statusCode;
+
     private String timeEnd;
     private String timePost;
-    private Boolean isHot;
+    private Integer isHot;
+    private java.util.Date createdAt;
+    private java.util.Date updatedAt;
 
     @ManyToOne
     @JoinColumn(name = "userId")
@@ -36,8 +42,11 @@ public class Post {
     @OneToMany(mappedBy = "post")
     private Set<Note> notes;
 
-    private java.util.Date createdAt;
-    private java.util.Date updatedAt;
+   
+    public Post() {
+    }
+
+
 
     // Getters and Setters
 }

@@ -1,5 +1,120 @@
 import React, { useState, useEffect } from 'react'
+import ReactPaginate from 'react-paginate';
+import LeftBar from './LeftPage/LeftBar'
+import { PAGINATION } from '../utils/constant';
+import RightContent from './RightPage/RightContent'
+import { getListPostService } from '../../service/userService'
+import CommonUtils from '../utils/CommonUtils';
 const JobPage = () => {
+
+    const [countPage, setCountPage] = useState(1)
+    const [post, setPost] = useState([])
+    const [count, setCount] = useState(0)
+    const [numberPage, setNumberPage] = useState('')
+    const [offset, setOffset] = useState(0)
+    const [limit, setLimit] = useState(PAGINATION.pagerow)
+
+    const [workType, setWorkType] = useState([])
+    const [jobType, setJobType] = useState('')
+    const [salary, setSalary] = useState([])
+    const [exp, setExp] = useState([])
+    const [jobLevel, setJobLevel] = useState([])
+    const [jobLocation, setJobLocation] = useState('')
+    const [search,setSearch] = useState('')
+    let loadPost = async (limit, offset, sortName) => {
+        let params = {
+            limit: limit,
+            offset: offset,
+            categoryJobCode: jobType,
+            addressCode: jobLocation,
+            salaryJobCode: salary,
+            categoryJoblevelCode: jobLevel,
+            categoryWorktypeCode: workType,
+            experienceJobCode: exp,
+            sortName: sortName,
+            search : CommonUtils.removeSpace(search)
+        }
+        let arrData = await getListPostService(params)
+        if (arrData && arrData.errCode === 0) {
+            setPost(arrData.data)
+            setCountPage(Math.ceil(arrData.count / limit))
+            setCount(arrData.count)
+        }
+    }
+    const handleSearch = (value) => {
+        setSearch(value)
+    }
+    const recieveWorkType = (data) => {
+        setWorkType(prev => {
+            let isCheck = workType.includes(data)
+            if (isCheck)
+                return workType.filter(item => item !== data)
+            else
+                return [...prev, data]
+        })
+    }
+    const recieveSalary = (data) => {
+        setSalary(prev => {
+            let isCheck = salary.includes(data)
+            if (isCheck)
+                return salary.filter(item => item !== data)
+            else
+                return [...prev, data]
+        })
+    }
+    const recieveExp = (data) => {
+        setExp(prev => {
+            let isCheck = exp.includes(data)
+            if (isCheck)
+                return exp.filter(item => item !== data)
+            else
+                return [...prev, data]
+        })
+    }
+    const recieveJobType = (data) => {
+        jobType === data ? setJobType('') : setJobType(data)
+    }
+    const recieveJobLevel = (data) => {
+        setJobLevel(prev => {
+            let isCheck = jobLevel.includes(data)
+            if (isCheck)
+                return jobLevel.filter(item => item !== data)
+            else
+                return [...prev, data]
+        })
+    }
+    const recieveLocation = (data) => {
+        jobLocation === data ? setJobLocation('') : setJobLocation(data)
+    }
+    useEffect(() => {
+        let filterdata = async () => {
+            let params = {
+                limit: limit,
+                offset: 0,
+                categoryJobCode: jobType,
+                addressCode: jobLocation,
+                salaryJobCode: salary,
+                categoryJoblevelCode: jobLevel,
+                categoryWorktypeCode: workType,
+                experienceJobCode: exp,
+                search: CommonUtils.removeSpace(search)
+            }
+            let arrData = await getListPostService(params)
+            if (arrData && arrData.errCode === 0) {
+                setNumberPage(0)
+                setOffset(0)
+                setPost(arrData.data)
+                setCountPage(Math.ceil(arrData.count / limit))
+                setCount(arrData.count)
+            }
+        }
+        filterdata()
+    }, [workType, jobLevel, exp, jobType, jobLocation, salary, search])
+    const handleChangePage = (number) => {
+        setNumberPage(number.selected)
+        loadPost(limit, number.selected * limit)
+        setOffset(number.selected * limit)
+    }
     return (
         <>
 
@@ -44,16 +159,33 @@ const JobPage = () => {
                                     </div>
                                 </div>
                                 {/* <!-- Job Category Listing start --> */}
-                                {/* <LeftBar worktype={recieveWorkType} recieveSalary={recieveSalary} recieveExp={recieveExp}
+                                <LeftBar worktype={recieveWorkType} recieveSalary={recieveSalary} recieveExp={recieveExp}
                                     recieveJobType={recieveJobType} recieveJobLevel={recieveJobLevel} recieveLocation={recieveLocation}
-                                /> */}
+                                />
                                 {/* <!-- Job Category Listing End --> */}
                             </div>
                             {/* <!-- Right content --> */}
                             <div class="col-xl-9 col-lg-9 col-md-8">
-                            
-                            
-                                
+                            <RightContent handleSearch={handleSearch} count={count} post={post} />
+                            <ReactPaginate
+                            forcePage={numberPage}
+                            previousLabel={'Quay lại'}
+                            nextLabel={'Tiếp'}
+                            breakLabel={'...'}
+                            pageCount={countPage}
+                            marginPagesDisplayed={3}
+                            containerClassName={"pagination justify-content-center pb-3"}
+                            pageClassName={"page-item"}
+                            pageLinkClassName={"page-link"}
+                            previousLinkClassName={"page-link"}
+                            previousClassName={"page-item"}
+                            nextClassName={"page-item"}
+                            nextLinkClassName={"page-link"}
+                            breakLinkClassName={"page-link"}
+                            breakClassName={"page-item"}
+                            activeClassName={"active"}
+                            onPageChange={handleChangePage}
+                        />
                             </div>
                         </div>
                     </div>
@@ -66,5 +198,4 @@ const JobPage = () => {
         </>
     )
 }
-
 export default JobPage

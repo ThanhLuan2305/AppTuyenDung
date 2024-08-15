@@ -22,7 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.doan.AppTuyenDung.DTO.CreateCompanyRequest;
 import com.doan.AppTuyenDung.DTO.CreateCompanyResponse;
-import com.doan.AppTuyenDung.Services.JobService;
+
 
 // import com.doan.AppTuyenDung.Repositories.Job__ModelRepository;
 // import com.doan.AppTuyenDung.Services.JobService;
@@ -44,46 +44,46 @@ public class JobController {
 
     public class CompanyController {
 
-    @Autowired
-    private JobService jobService;
+    // @Autowired
+    // private JobService jobService;
 
-    @PostMapping("/create")
-    public ResponseEntity<CreateCompanyResponse> createCompany(
-            @RequestParam("name") String name,
-            @RequestParam("thumbnail") MultipartFile thumbnail,
-            @RequestParam("coverimage") MultipartFile coverimage,
-            @RequestParam("descriptionHTML") String descriptionHTML,
-            @RequestParam("descriptionMarkdown") String descriptionMarkdown,
-            @RequestParam("website") String website,
-            @RequestParam("address") String address,
-            @RequestParam("phonenumber") String phonenumber,
-            @RequestParam("amountEmployer") Integer amountEmployer,
-            @RequestParam("taxnumber") String taxnumber,
-            @RequestParam("file") String file,
-            @RequestParam("userId") Integer userId) {
+    // @PostMapping("/create")
+    // public ResponseEntity<CreateCompanyResponse> createCompany(
+    //         @RequestParam("name") String name,
+    //         @RequestParam("thumbnail") MultipartFile thumbnail,
+    //         @RequestParam("coverimage") MultipartFile coverimage,
+    //         @RequestParam("descriptionHTML") String descriptionHTML,
+    //         @RequestParam("descriptionMarkdown") String descriptionMarkdown,
+    //         @RequestParam("website") String website,
+    //         @RequestParam("address") String address,
+    //         @RequestParam("phonenumber") String phonenumber,
+    //         @RequestParam("amountEmployer") Integer amountEmployer,
+    //         @RequestParam("taxnumber") String taxnumber,
+    //         @RequestParam("file") String file,
+    //         @RequestParam("userId") Integer userId) {
 
-        CreateCompanyRequest request = new CreateCompanyRequest();
-        request.setName(name);
-        request.setThumbnail(thumbnail);
-        request.setCoverimage(coverimage);
-        request.setDescriptionHTML(descriptionHTML);
-        request.setDescriptionMarkdown(descriptionMarkdown);
-        request.setWebsite(website);
-        request.setAddress(address);
-        request.setPhonenumber(phonenumber);
-        request.setAmountEmployer(amountEmployer);
-        request.setTaxnumber(taxnumber);
-        request.setFile(file);
-        request.setUserId(userId);
+    //     CreateCompanyRequest request = new CreateCompanyRequest();
+    //     request.setName(name);
+    //     request.setThumbnail(thumbnail);
+    //     request.setCoverimage(coverimage);
+    //     request.setDescriptionHTML(descriptionHTML);
+    //     request.setDescriptionMarkdown(descriptionMarkdown);
+    //     request.setWebsite(website);
+    //     request.setAddress(address);
+    //     request.setPhonenumber(phonenumber);
+    //     request.setAmountEmployer(amountEmployer);
+    //     request.setTaxnumber(taxnumber);
+    //     request.setFile(file);
+    //     request.setUserId(userId);
 
-        CreateCompanyResponse response = jobService.createCompany(request);
+    //     CreateCompanyResponse response = jobService.createCompany(request);
 
-        if (response.getErrCode() == 0) {
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-        }
-    }
+    //     if (response.getErrCode() == 0) {
+    //         return new ResponseEntity<>(response, HttpStatus.OK);
+    //     } else {
+    //         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    //     }
+    // }
 }
     // @GetMapping("")
 	// public ResponseEntity<List<Job_Model>> getAllJobModel(){
@@ -110,22 +110,6 @@ public class JobController {
 	// 		return new ResponseEntity<>("ERROR", HttpStatus.BAD_REQUEST);
 	// 	}
     // }
-    // @PostMapping("/print-job")
-    // public String postMethodName(@RequestBody Job_Model jobs) {
-    //     System.out.println("print :"+jobs);
-    //     return "Success";
-    // }
-    
 
-    // @PostMapping("/spring/hello/{id}")
-    // public String showHello(@PathVariable(value="id") String id,
-    //                     @RequestParam(value="param1", required=true) String parameter1,
-    //                     @RequestParam(value="param2", required=false) String parameter2) {
-    //  // gia tri cua id duoc su dung o day
-    //     System.out.println("ID : " + id);
-    //     System.out.println("Param 1 : " + parameter1);
-    //     System.out.println("Param 2 : " + parameter2);
-    //     return "hello";
-    // }
     
 }

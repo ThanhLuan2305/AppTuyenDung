@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.doan.AppTuyenDung.AWS.S3Util;
-import com.doan.AppTuyenDung.Entity.Company;
+import com.doan.AppTuyenDung.entity.Company;
 // import com.doan.AppTuyenDung.Repositories.CompanyRepository;
 // import com.doan.AppTuyenDung.Repositories.ImagesCompanyRepository;
 // // import com.doan.AppTuyenDung.entity.Company;
@@ -27,7 +27,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/images")
-@RequiredArgsConstructor
+// @RequiredArgsConstructor
 public class ImagesCompanyController {
     
     // @Autowired
@@ -50,11 +50,11 @@ public class ImagesCompanyController {
             String fileUrl = "https://s3-" + S3Util.region + ".amazonaws.com/" + S3Util.bucketName + "/" + newFileName;
             
             // find id company
-            Optional<Company> optionalCompany = companyRepository.findById(companyId);
-            if (!optionalCompany.isPresent()) {
-                return new ResponseEntity<>("Company not found", HttpStatus.NOT_FOUND);
-            }
-            Company company = optionalCompany.get();
+            // Optional<Company> optionalCompany = companyRepository.findById(companyId);
+            // if (!optionalCompany.isPresent()) {
+            //     return new ResponseEntity<>("Company not found", HttpStatus.NOT_FOUND);
+            // }
+            // Company company = optionalCompany.get();
             
             
             // ImagesCompany imagesCompany = new ImagesCompany();

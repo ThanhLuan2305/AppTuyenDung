@@ -1,13 +1,75 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import Categories from "../../components/home/Categories";
+import FeaturesJob from "../../components/home/FeaturesJobs";
+// import { getListPostService } from "../../service/userService";
+import axios from "axios";
 const Home = () => {
   const [dataFeature, setDataFeature] = useState([]);
-  const [dataHot, setDateHot] = useState([]);
+  const [dataHot, setDataHot] = useState([]);
+  const buildParams = (params) => {
+    // Loại bỏ các tham số có giá trị rỗng hoặc undefined
+    return Object.fromEntries(
+      Object.entries(params).filter(([_, v]) => v !== "" && v !== undefined)
+    );
+  };
+  let loadPost = async (limit, offset) => {
+    const paramsFeature = buildParams({
+      limit: 5,
+      offset: 0,
+      categoryJobCode: "",
+      addressCode: "",
+      salaryJobCode: "",
+      categoryJoblevelCode: "",
+      categoryWorktypeCode: "",
+      experienceJobCode: "",
+      isHot: 0,
+      search: "",
+    });
+    axios
+      .get("http://localhost:8080/api/get-filter-post", {
+        params: paramsFeature,
+      })
+      .then((responseFeature) => {
+        setDataFeature(responseFeature.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching feature data", error);
+      });
+      
+    const paramsHot = buildParams({
+      limit: 5,
+      offset: 0,
+      categoryJobCode: "",
+      addressCode: "",
+      salaryJobCode: "",
+      categoryJoblevelCode: "",
+      categoryWorktypeCode: "",
+      experienceJobCode: "",
+      isHot: 1,
+      search: "",
+    });
+    
+    axios
+      .get("http://localhost:8080/api/get-filter-post", { params: paramsHot })
+      .then((responseHot) => {
+        setDataHot(responseHot.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching hot data", error);
+      });
+  };
+  useEffect(() => {
+    let fetchPost = async () => {
+      await loadPost(5, 0);
+    };
+    fetchPost();
+  }, []);
 
   const H1 = styled.h1`
     color: darkblue;
-    width:600px;
+    width: 600px;
     font-size: 2rem; /* Kích thước chữ cơ bản */
     margin: 0;
 
@@ -66,12 +128,13 @@ const Home = () => {
             <div class="row">
               <div class="col-lg-12">
                 <div class="section-tittle text-center">
-                  <p  style={{color:"red"}}>Lĩnh vực công việc nổi bật</p>
+                  <p style={{ color: "red" }}>Lĩnh vực công việc nổi bật</p>
                   <h1>Danh mục nghề nghiệp </h1>
                 </div>
               </div>
             </div>
-            {/* <Categories /> */}
+            <Categories />
+
             {/* <!-- More Btn -->
                 <!-- Section Button --> */}
           </div>
@@ -110,7 +173,7 @@ const Home = () => {
                 </div>
               </div>
             </div>
-            {/* <FeatureJobs dataFeature={dataHot} /> */}
+            <FeaturesJob dataFeature={dataHot} />
           </div>
         </section>
         <section class="featured-job-area feature-padding">
@@ -123,7 +186,7 @@ const Home = () => {
                 </div>
               </div>
             </div>
-            {/* <FeatureJobs dataFeature={dataFeature} /> */}
+            <FeaturesJob dataFeature={dataFeature} />
           </div>
         </section>
 
