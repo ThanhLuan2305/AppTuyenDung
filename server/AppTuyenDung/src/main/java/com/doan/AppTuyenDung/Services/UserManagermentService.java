@@ -18,17 +18,16 @@ import com.doan.AppTuyenDung.entity.User;
 
 
 
-
-@Service
-public class UserManagermentService {
-	@Autowired
-	private UserRepository usersRepo;
-	@Autowired
-	private JWTUtils jwtUtils;
-	@Autowired
-	private AuthenticationManager authenticationManager;
-	@Autowired
-	private PasswordEncoder passwordEncoder;
+// @Service
+// public class UserManagermentService {
+// 	@Autowired
+// 	private UserRepo usersRepo;
+// 	@Autowired
+// 	private JWTUtils jwtUtils;
+// 	@Autowired
+// 	private AuthenticationManager authenticationManager;
+// 	@Autowired
+// 	private PasswordEncoder passwordEncoder;
 	
 	public ReqRes register(ReqRes registrationRequest) {
 		ReqRes resp = new ReqRes();
