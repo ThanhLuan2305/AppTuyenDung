@@ -33,7 +33,7 @@ import com.doan.AppTuyenDung.entity.Post;
 
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping()
 public class postController {
     @Autowired
     private postService postService;
@@ -47,7 +47,7 @@ public class postController {
     
 
 
-    @GetMapping("/get-filter-post")
+    @GetMapping("/public/get-filter-post")
     public ResponseEntity<Page<DetailPostDTO>> getFilteredDetailPosts(@RequestParam(required = false) String categoryJobCode,
                                                               @RequestParam(required = false) String addressCode,
                                                               @RequestParam(required = false) String search,
@@ -65,13 +65,13 @@ public class postController {
                                                                             isHot, pageable);
         return ResponseEntity.ok(detailPosts);
     }
-    @GetMapping("/get-list-job-count-post")
+    @GetMapping("/public/get-list-job-count-post")
     public Page<PostJobTypeCountDTO> getListJobTypeAndCountPost(@RequestParam(defaultValue = "0") int offset,
                                                                 @RequestParam(defaultValue = "10") int limit) {
         Pageable pageable = PageRequest.of(offset, limit);
         return  postService.getPostJobTypeAndCountPost(pageable);
     }
-    @GetMapping("/get-detail-post-by-id")
+    @GetMapping("/public/get-detail-post-by-id")
     public ResponseEntity<?> getPostDetailById(@RequestParam Integer id) {
         return postService.getPostDetailById(id);
     }
