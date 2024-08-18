@@ -27,9 +27,9 @@ import jakarta.servlet.http.HttpServletResponse;
 // 	// @Autowired
 // 	// private org.springframework.security.core.userdetails.UserDetailsService UserDetailsService;
 
-// 	@Override
-// 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-// 			throws ServletException, IOException {
+	@Override
+	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+			throws ServletException, IOException {
 		
 // 		final String autheHeader = request.getHeader("Authorization"); 
 // 		final String jwtToken;
