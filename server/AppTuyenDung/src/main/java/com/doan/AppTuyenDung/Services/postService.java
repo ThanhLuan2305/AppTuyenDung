@@ -1,9 +1,6 @@
 package com.doan.AppTuyenDung.Services;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
+import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.stereotype.Service;
@@ -13,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.ResponseEntity;
 
 import com.doan.AppTuyenDung.Repositories.DetailPostRepository;
 import com.doan.AppTuyenDung.Repositories.PostRepositoriesQuery;
@@ -37,7 +35,7 @@ import com.doan.AppTuyenDung.DTO.FilterCriteria;
 import com.doan.AppTuyenDung.DTO.Response.PageResponse;
 import com.doan.AppTuyenDung.DTO.Response.PostJobTypeCountDTO;
 import com.doan.AppTuyenDung.DTO.Response.postDetailResponse;
-
+import com.doan.AppTuyenDung.DTO.InfoPostDetailDto;
 import java.util.*;
 import java.util.regex.Matcher;
 import static com.doan.AppTuyenDung.utils.AppConst.SEARCH_SPEC_OPERATOR;
@@ -63,6 +61,7 @@ public class postService {
     //     return searchRepository.advanceSearchDetailPost(pageNo, pageSize, sortBy,isHot, search);
     // }
 
+    //amount post and get 
     public Page<PostJobTypeCountDTO> getPostJobTypeAndCountPost(Pageable pageable) {
         Page<Object[]> rawResults = postRepositoriesQuery.findPostJobTypeAndCountPost(pageable);
 
@@ -82,37 +81,21 @@ public class postService {
             return new PageImpl<>(dtos, PageRequest.of(pageNumber, pageSize), totalElements);
     }
 
+    // get Detail Post 
+    public ResponseEntity<?> getPostDetailById(Integer id) {
+        List<InfoPostDetailDto> postDetails = postRepositoriesQuery.findPostDetailById(id);
 
-    // public Page<DetailPostDTO> getFilteredPosts1(String categoryJobCode, String addressCode, String search,
-    //                                             List<String> experienceJobCodes, List<String> categoryWorktypeCodes,
-    //                                             List<String> salaryJobCodes, List<String> categoryJoblevelCodes,
-    //                                             Integer isHot, Pageable pageable) {
+        InfoPostDetailDto postDetail = postDetails.stream().findFirst().orElse(null);
 
-    //     Page<Object[]> result = postRepositoriesQuery.findFilteredPosts1(categoryJobCode, addressCode, search,
-    //                                                              experienceJobCodes, categoryWorktypeCodes,
-    //                                                              salaryJobCodes, categoryJoblevelCodes, isHot, pageable);
+        if (postDetail != null) {
+            return ResponseEntity.ok(postDetail); // Trả về DTO nếu tìm thấy
+        } else {
+            return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST)
+                                 .body("Không tìm thấy bài viết"); // Trả về thông báo lỗi nếu không tìm thấy
+        }
+    }
 
-    //     return result.map(objects -> new DetailPostDTO(
-    //             (Integer) objects[0], // id
-    //             (String) objects[1], // categoryJobValue
-    //             (String) objects[2], // categoryJoblevelValue
-    //             (String) objects[3], // categoryWorktypeValue
-    //             (String) objects[4], // experienceJobValue
-    //             (String) objects[5], // genderPostValue
-    //             (String) objects[6], // thumbnail
-    //             (String) objects[7]  // addressCode
-    //     ));
-    // }
-
-    // public Page<Post> getFilteredPosts(String categoryJobCode, String addressCode, String search,
-    //                                    List<String> experienceJobCodes, List<String> categoryWorktypeCodes,
-    //                                    List<String> salaryJobCodes, List<String> categoryJoblevelCodes,
-    //                                    Integer isHot, int offset, int limit) {
-    //     Pageable pageable = PageRequest.of(offset, limit);
-    //     return postRepositoriesQuery.findFilteredPosts(categoryJobCode, addressCode, search, experienceJobCodes,
-    //                                             categoryWorktypeCodes, salaryJobCodes, categoryJoblevelCodes, isHot, pageable);
-    // }
-
+    // Filter post and detail post
     public Page<DetailPostDTO> getFilteredDetailPosts(String categoryJobCode, String addressCode, String search,
                                                       List<String> experienceJobCodes, List<String> categoryWorktypeCodes,
                                                       List<String> salaryJobCodes, List<String> categoryJoblevelCodes,
@@ -130,22 +113,6 @@ public class postService {
                                                      pageable);
     }
 
-    // public Page<DetailPostDTO> findFilteredPosts(String categoryJobCode, String addressCode, String search,
-    //                                             List<String> experienceJobCodes, List<String> categoryWorktypeCodes,
-    //                                             List<String> salaryJobCodes, List<String> categoryJoblevelCodes,
-    //                                             Integer isHot, Pageable pageable) {
-    //     return searchRepository.findFilteredPosts(
-    //             categoryJobCode, addressCode, search, experienceJobCodes, categoryWorktypeCodes, salaryJobCodes, 
-    //             categoryJoblevelCodes, isHot, pageable);
-    // }
-
-    // public Page<PostJobTypeCountDTO> getPostJob(Pageable pageable) {
-    //     return searchRepository.getPostJobTypeAndCountPost(pageable);
-    // }
-
-    // public PageResponse<?> searchPostJobTypePost(int pageNo, int pageSize){
-    //     return searchRepository.searchPostJobTypePost(pageNo, pageSize);
-    // }
 }
 
 

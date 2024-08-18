@@ -1,6 +1,7 @@
 import moment from "moment";
 
 const FeatureJob = (props) => {
+  
   const handleSplitTime = (time) => {
     return moment(new Date(+time)).fromNow();
   };
@@ -27,7 +28,7 @@ const FeatureJob = (props) => {
                 <i class="fas fa-map-marker-alt"></i>
                 {props.data.addressCodeValue}
               </li>
-              {/* <li>{props.data.postDetailData.salaryTypePostData.value}</li> */}
+              <li><i class="fas fa-money-bill-wave"></i>{props.data.salaryCodeValue}</li>
             </ul>
           </div>
         </div>
@@ -36,7 +37,7 @@ const FeatureJob = (props) => {
             {props.data.categoryWorktypeCodeValue}
           </a>
           <span style={{ position: "absolute", right: "70px" }}>
-            {/* {handleSplitTime(props.data.timePost)} */}
+            {handleSplitTime(props.data.timePostValue)}
           </span>
         </div>
       </div>

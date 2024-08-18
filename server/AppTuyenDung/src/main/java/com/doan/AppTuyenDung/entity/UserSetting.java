@@ -1,4 +1,5 @@
 package com.doan.AppTuyenDung.entity;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -31,6 +32,7 @@ public class UserSetting {
 
     private Boolean isFindJob;
     private Boolean isTakeMail;
+    @Column(columnDefinition = "LONGBLOB")
     private byte[] file;
 
     @OneToOne

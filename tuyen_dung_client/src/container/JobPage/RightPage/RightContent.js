@@ -1,8 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
-
+import Job from "../../../components/Job/Job";
 import { Input } from "antd";
+
 const RightContent = (props) => {
+  useEffect(() => {
+    console.log(props);
+  }, []);
+
   return (
     <>
       {/* <!-- Featured_job_start --> */}
@@ -35,12 +40,11 @@ const RightContent = (props) => {
               </div>
             </div>
           </div>
-          {props.post.map((data, index) => {
+          {props.post?.map((data, index) => {
             return (
               <Link to={`/detail-job/${data.id}`}>
                 <div class="single-job-items mb-30">
-                  {/* <Job key={data.id} data={data} /> */}
-                  <div>rightcontent</div>
+                  <Job key={data.id} data={data} />
                 </div>
               </Link>
             );

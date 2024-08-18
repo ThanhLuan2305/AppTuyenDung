@@ -144,7 +144,7 @@ const Home = () => {
         <div
           class="online-cv cv-bg section-overly pt-90 pb-120"
           style={{
-            backgroundImage: `url("assets/img/gallery/cv_bg.jpg")`,
+            backgroundImage: `url("./assets/img/gallery/cv_bg.jpg")`,
           }}
         >
           <div class="container">
