@@ -78,6 +78,7 @@ public class UserManagermentService {
                 resp.setMessage("User Saved Successfully");
                 resp.setStatusCode(200);
             }
+            }
 		}catch(Exception e) {
 			resp.setStatusCode(500);
 			resp.setError(e.getMessage());
@@ -91,9 +92,10 @@ public class UserManagermentService {
 			authenticationManager
 							.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getPhonenumber()
 									, loginRequest.getPassword()));
-			var user = usersRepo.findByUsername(loginRequest.getUsername()).orElseThrow();
-			var jwt = jwtUtils.generateToken(user);
-            var refreshToken = jwtUtils.generateRefreshToken(new HashMap<>(), user);
+			var account = accountRepo.findByPhonenumber(loginRequest.getPhonenumber());
+			var jwt = jwtUtils.generateToken(account);
+            var refreshToken = jwtUtils.generateRefreshToken(new HashMap<>(), account);
+			CodeRule rule = ruleRepo.findByCode(account.getRoleCode().getCode());
 			resp.setStatusCode(200);
 			resp.setRoleCode(rule.getCode());
 			resp.setToken(jwt);
@@ -172,6 +174,12 @@ public class UserManagermentService {
             Optional<User> userOptional = usersRepo.findById(userId);
             if (userOptional.isPresent()) {
                 User existingUser = userOptional.get();
+                existingUser.setFirstName(updatedUser.getFirstName());
+                existingUser.setLastName(updatedUser.getLastName());
+                existingUser.setEmail(updatedUser.getEmail());
+                existingUser.setAddress(updatedUser.getAddress());
+                existingUser.setEmail(updatedUser.getEmail());
+                existingUser.setLastName(updatedUser.getLastName());
                 existingUser.setEmail(updatedUser.getEmail());
                 CodeGender gender = codeGenderRepo.findByCode(updatedUser.getGenderCode());
                 existingUser.setGenderCode(gender);

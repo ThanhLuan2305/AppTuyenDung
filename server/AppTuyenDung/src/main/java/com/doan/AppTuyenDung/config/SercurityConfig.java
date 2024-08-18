@@ -29,13 +29,13 @@ public class SercurityConfig {
 	    @Bean
 	    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
 	        httpSecurity.csrf(AbstractHttpConfigurer::disable)
-	            .cors(Customizer.withDefaults())
+	                .cors(Customizer.withDefaults())
 	            .authorizeHttpRequests(request -> request
 	                .requestMatchers("/auth/**", "/public/**").permitAll()
-	                .requestMatchers("/admin/**").hasAnyAuthority("ADMIN")
+	                        .requestMatchers("/admin/**").hasAnyAuthority("ADMIN")
 	                .requestMatchers("/candidate/**").hasAnyAuthority("CANDIDATE")
-	                .requestMatchers("/employer/**").hasAnyAuthority("EMPLOYER")
-	                .anyRequest().authenticated())
+	                        .requestMatchers("/employer/**").hasAnyAuthority("EMPLOYER")
+	                        .anyRequest().authenticated())
 	            .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 	            .authenticationProvider(authenticationProvider())
 	            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
