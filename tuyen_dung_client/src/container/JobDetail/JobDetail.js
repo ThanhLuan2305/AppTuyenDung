@@ -4,31 +4,64 @@ import { useHistory, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import moment from "moment";
 
+import { getDetailPostByIdService } from "../../service/userService";
+import axios from "axios";
+import CommonUtils from "../utils/CommonUtils";
+import { CgEnter } from "react-icons/cg";
 const JobDetail = () => {
   const history = useHistory();
   const { id } = useParams();
   const [isActiveModal, setAcitveModal] = useState(false);
   const [dataPost, setDataPost] = useState({});
+  useEffect(() => {
+    if (id) {
+      axios
+        .get("http://localhost:8080/api/get-detail-post-by-id", {
+          params: {
+            id,
+          },
+        })
+        .then((res) => {
+          setDataPost(res);
+        })
+        .catch((error) => {
+          console.error("Error fetching feature data", error);
+        });
+    }
+  }, [id]);
+console.log(dataPost.data)
+  const handleOpenModal = () => {
+    if (dataPost.timeEnd && CommonUtils.formatDate(dataPost.timeEnd) > 0) {
+      const userData = JSON.parse(localStorage.getItem("userData"));
+      if (userData) setAcitveModal(true);
+      else {
+        toast.error("Xin hãy đăng nhập để có thể thực hiện nộp CV");
+        setTimeout(() => {
+          localStorage.setItem("lastUrl", window.location.href);
+          history.push("/login");
+        }, 1000);
+      }
+    } else toast.error("Hạn ứng tuyển đã hết");
+  };
   return (
     <>
       {/* <div id="preloader-active">
-        <div className="preloader d-flex align-items-center justify-content-center">
-            <div className="preloader-inner position-relative">
-                <div className="preloader-circle"></div>
-                <div className="preloader-img pere-text">
-                    <img src="assets/img/logo/logo.png" alt="">
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Preloader Start --> */}
-      {dataPost.companyData && (
+      <div className="preloader d-flex align-items-center justify-content-center">
+          <div className="preloader-inner position-relative">
+              <div className="preloader-circle"></div>
+              <div className="preloader-img pere-text">
+                  <img src="assets/img/logo/logo.png" alt="">
+              </div>
+          </div>
+      </div>
+  </div>
+  <!-- Preloader Start --> */}
         <main>
           <div className="slider-area ">
             <div
               className="single-slider slider-height2 d-flex align-items-center"
               style={{
-                backgroundImage: `url(${dataPost.companyData.coverimage})`,
+                backgroundImage: `url(${dataPost.data?.coverImageCompanyValue})`,
               }}
             >
               <div className="container">
@@ -49,25 +82,25 @@ const JobDetail = () => {
                     <div className="job-items">
                       <div className="company-img company-img-details">
                         <img
-                          src={dataPost.companyData.thumbnail}
+                          src={dataPost.data?.thumbnailCompanyValue}
                           alt="Ảnh bị lỗi"
                           width={100}
                           height={100}
                         />
                       </div>
                       <div className="job-tittle">
-                        <h4>{dataPost.postDetailData.name}</h4>
+                        <h4>{dataPost.data?.name}</h4>
 
                         <ul>
                           <li>
-                            {dataPost.postDetailData.workTypePostData.value}
+                            {dataPost.data?.categoryWorktypeCodeValue}
                           </li>
                           <li>
                             <i className="fas fa-map-marker-alt"></i>
-                            {dataPost.postDetailData.provincePostData.value}
+                            {dataPost.data?.adressCodeValue}
                           </li>
-                          <li>
-                            {dataPost.postDetailData.salaryTypePostData.value}
+                          <li><i class="fas fa-money-bill-wave"></i>
+                            {dataPost.data?.salaryCodeValue}
                           </li>
                         </ul>
                       </div>
@@ -82,7 +115,8 @@ const JobDetail = () => {
                     </div>
                     <div
                       dangerouslySetInnerHTML={{
-                        __html: dataPost.postDetailData.descriptionHTML,
+                        __html: dataPost.data?.descriptionHTMLValue
+                        ,
                       }}
                     />
                   </div>
@@ -97,69 +131,69 @@ const JobDetail = () => {
                       <li>
                         Lĩnh vực :{" "}
                         <span>
-                          {dataPost.postDetailData.jobTypePostData.value}
+                          {dataPost.data?.categoryWorktypeCodeValue}
                         </span>
                       </li>
                       <li>
                         Nơi làm việc :{" "}
                         <span>
-                          {dataPost.postDetailData.provincePostData.value}
+                          {dataPost.data?.addressCompanyValue}
                         </span>
                       </li>
                       <li>
                         Hình thức làm việc :{" "}
                         <span>
-                          {dataPost.postDetailData.workTypePostData.value}
+                          {dataPost.data?.categoryWorktypeCodeValue}
                         </span>
                       </li>
                       <li>
                         Kinh nghiệm:{" "}
                         <span>
-                          {dataPost.postDetailData.expTypePostData.value}
+                          {dataPost.data?.experienceJobCodeValue}
                         </span>
                       </li>
                       <li>
                         Lương :{" "}
                         <span>
-                          {dataPost.postDetailData.salaryTypePostData.value}
+                          {dataPost.data?.salaryCodeValue}
                         </span>
                       </li>
                       <li>
                         Hạn nộp :{" "}
                         <span>
                           {moment
-                            .unix(dataPost.timeEnd / 1000)
+                            .unix(dataPost.data?.TimeEndValue / 1000)
                             .format("DD/MM/YYYY")}
                         </span>
                       </li>
                     </ul>
-                    <div className="btn" onClick={{/*() => handleOpenModal() */}}>
+                    <div className="btn" onClick={() => handleOpenModal()}>
                       Ứng tuyển ngay
                     </div>
                   </div>
-                  <div className="post-details4  mb-50">
+                  <div className="post-details4 mb-50 " style={{border:"0.1rem solid",padding:"20px"}}>
                     <div className="small-section-tittle">
-                      <h4>Thông tin công ty</h4>
+                      <h4 style={{textAlign:"center"}}>Thông tin công ty</h4>
                     </div>
-                    <span>Tên công ty : {dataPost.companyData.name}</span>
+                    <span>Tên công ty : {dataPost.data?.nameCompanyValue}</span>
                     <ul>
                       <li>
-                        Website : <span>{dataPost.companyData.website}</span>
+                        Website : <span>{dataPost.data?.websiteCompanyValue}</span>
                       </li>
                       <li>
-                        Địa chỉ : <span>{dataPost.companyData.address}</span>
+                        Địa chỉ : <span>{dataPost.data?.addressCompanyValue}</span>
                       </li>
                       <li>
                         Điện thoại :{" "}
-                        <span>{dataPost.companyData.phonenumber}</span>
+                        <span>{dataPost.data?.phoneCompanyValue}</span>
                       </li>
                       <li>
                         Mã số thuế :{" "}
-                        <span>{dataPost.companyData.taxnumber}</span>
+                        <span>{dataPost.data?.taxNumberValue}</span>
                       </li>
                       <li>
                         Số nhân viên:{" "}
-                        <span>{dataPost.companyData.amountEmployer}</span>
+                        <span>{dataPost.data?.employerCompanyValue}</span>
                       </li>
                     </ul>
                   </div>
@@ -169,13 +203,9 @@ const JobDetail = () => {
           </div>
 
           {/* <!-- job post company End --> */}
-          {/* <SendCvModal
-            isOpen={isActiveModal}
-            onHide={() => setAcitveModal(false)}
-            postId={id}
-          /> */}
+          {/* <SendCvModal isOpen={isActiveModal} onHide={() => setAcitveModal(false)} postId={id} /> */}
         </main>
-      )}
+      
     </>
   );
 };

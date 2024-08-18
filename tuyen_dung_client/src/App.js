@@ -18,6 +18,7 @@ import Otp from "./container/login/Otp";
 import Login from "./container/login/Login";
 import Register from "./container/login/Register";
 import ForgetPassword from "./container/login/ForgetPassword";
+import JobDetail from "./container/JobDetail/JobDetail";
 
 function App() {
   return (
@@ -73,11 +74,11 @@ function App() {
           </Route>
 
           {/* <DetailPage /> */}
-          {/* <Route path="/detail-job/:id">
+          <Route path="/detail-job/:id">
             <Header />
-            <DetailPage />
+            <JobDetail />
             <Footer />
-          </Route> */}
+          </Route>
 
           <ToastContainer
             position="top-right"

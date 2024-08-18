@@ -3,6 +3,7 @@ package com.doan.AppTuyenDung.entity;
 import java.util.Date;
 import java.util.Set;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,7 +23,9 @@ public class Company {
     private String name;
     private String thumbnail;
     private String coverImage;
+    @Column(columnDefinition = "LONGTEXT")
     private String descriptionHTML;
+    @Column(columnDefinition = "LONGTEXT")
     private String descriptionMarkdown;
     private String website;
     private String address;
@@ -35,7 +38,8 @@ public class Company {
     @ManyToOne
     @JoinColumn(name = "CodeCensorStatus", referencedColumnName = "code")
     private CodeCensorstatus censorCode;
-    private String file; // BYTES
+    @Column(columnDefinition = "LONGBLOB")
+    private byte[] file; // BYTES
     private Integer allowPost;
     private Integer allowHotPost;
     private Integer allowCvFree;

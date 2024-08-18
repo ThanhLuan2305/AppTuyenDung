@@ -2,6 +2,7 @@ package com.doan.AppTuyenDung.entity;
 
 import java.util.Set;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,7 +21,9 @@ public class DetailPost {
     private Integer id;
 
     private String name;
+    @Column(columnDefinition = "LONGTEXT")
     private String descriptionHTML;
+    @Column(columnDefinition = "LONGTEXT")
     private String descriptionMarkdown;
     @ManyToOne
     @JoinColumn(name = "CodeJobType", referencedColumnName = "code")

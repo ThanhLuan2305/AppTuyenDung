@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -64,14 +65,15 @@ public class postController {
                                                                             isHot, pageable);
         return ResponseEntity.ok(detailPosts);
     }
-
-
     @GetMapping("/get-list-job-count-post")
     public Page<PostJobTypeCountDTO> getListJobTypeAndCountPost(@RequestParam(defaultValue = "0") int offset,
                                                                 @RequestParam(defaultValue = "10") int limit) {
         Pageable pageable = PageRequest.of(offset, limit);
         return  postService.getPostJobTypeAndCountPost(pageable);
     }
-    
+    @GetMapping("/get-detail-post-by-id")
+    public ResponseEntity<?> getPostDetailById(@RequestParam Integer id) {
+        return postService.getPostDetailById(id);
+    }
 
 }

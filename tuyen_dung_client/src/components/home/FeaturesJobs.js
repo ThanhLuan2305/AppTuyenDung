@@ -11,7 +11,7 @@ const FeaturesJob = (props) => {
           {/* <!-- single-job-content --> */}
           {props.dataFeature.content?.map((data) => {
             return (
-              <Link key={data.id} to={`/detail-job/${data.id}`}>
+              <Link to={`/detail-job/${data.id}`}>
                 <FeatureJob key={data.id} data={data} /> 
               </Link>
             );

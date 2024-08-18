@@ -4,6 +4,7 @@ import { Link, NavLink } from "react-router-dom";
 // import { toast } from 'react-toastify';
 import "./header.scss";
 import "./header.css";
+
 const Header = () => {
   const [user, setUser] = useState({});
   useEffect(() => {

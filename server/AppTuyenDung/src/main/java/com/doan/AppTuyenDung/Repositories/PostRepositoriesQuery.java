@@ -1,6 +1,7 @@
 package com.doan.AppTuyenDung.Repositories;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -8,10 +9,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
 import com.doan.AppTuyenDung.DTO.DetailPostDTO;
-import com.doan.AppTuyenDung.DTO.PostDTO;
-import com.doan.AppTuyenDung.DTO.Response.PostJobTypeCountDTO;
+import com.doan.AppTuyenDung.DTO.InfoPostDetailDto;
 import com.doan.AppTuyenDung.entity.Post;
 
 @Repository
@@ -34,7 +33,8 @@ public interface PostRepositoriesQuery extends JpaRepository<Post,Integer>{
                 "ac5.value as GenderPostCodeValue , \n" + //
                 "ac6.value as AddressCodeValue,\n" + //
                 "ac7.value as SalaryCodeValue,\n" + //
-                "c.thumbnail as CompanyThumbnailValue\n" + //
+                "c.thumbnail as CompanyThumbnailValue,\n" + //
+                "p.time_Post as TimePostValue\n"+
                 "FROM Posts p \n" + //
                 "JOIN detailposts dp ON dp.id = p.detail_post_id \n" + //
                 "JOIN companies c ON c.user_id = p.user_id \n" + //
@@ -66,4 +66,25 @@ public interface PostRepositoriesQuery extends JpaRepository<Post,Integer>{
                                            @Param("isHot") Integer isHot,
                                           Pageable pageable);
 
+
+    @Query(value = "SELECT p.id as Id, p.time_Post as TimePostValue, p.time_End as TimeEndValue, dp.name, dp.descriptionhtml as DescriptionHTMLValue, " +
+    "dp.description_markdown as DescriptionMarkdownValue, ac1.value as CategoryJobCodeValue, ac2.value as CategoryJobLevelCodeValue, " +
+    "ac3.value as CategoryWorktypeCodeValue , ac4.value as ExperienceJobCodeValue, ac5.value as GenderPostCodeValue, " +
+    "ac6.value as AdressCodeValue, ac7.value as SalaryCodeValue, c.name as NameCompanyValue, c.address as AddressCompanyValue, " +
+    "c.cover_image as CoverImageCompanyValue, c.phonenumber as PhoneCompanyValue, c.taxnumber as TaxNumberValue, c.thumbnail as ThumbnailCompanyValue, " +
+    "c.website as WebsiteCompanyValue, c.amount_employer as EmployerCompanyValue " +
+    "FROM Posts p " +
+    "JOIN detailposts dp ON dp.id = p.detail_post_id " +
+    "JOIN companies c ON c.user_id = p.user_id " +
+    "LEFT JOIN code_job_type ac1 ON dp.code_job_type = ac1.code " +
+    "LEFT JOIN code_job_level ac2 ON dp.code_job_level = ac2.code " +
+    "LEFT JOIN code_work_type ac3 ON dp.code_work_type = ac3.code " +
+    "LEFT JOIN code_exp_type ac4 ON dp.code_exp_type = ac4.code " +
+    "LEFT JOIN code_gender_post ac5 ON dp.code_gender_post = ac5.code " +
+    "LEFT JOIN code_province ac6 ON dp.code_adress_code = ac6.code " +
+    "LEFT JOIN code_salary_type ac7 ON dp.code_salary_type = ac7.code " +
+    "WHERE p.id = :id", nativeQuery = true)
+    List<InfoPostDetailDto> findPostDetailById(@Param("id") Integer id);
+    
+    
 } 
