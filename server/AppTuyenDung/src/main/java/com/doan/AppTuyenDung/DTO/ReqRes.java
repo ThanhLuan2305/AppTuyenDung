@@ -4,6 +4,8 @@ package com.doan.AppTuyenDung.DTO;
 import java.util.Date;
 import java.util.List;
 
+import com.doan.AppTuyenDung.entity.CodeGender;
+import com.doan.AppTuyenDung.entity.CodeRule;
 import com.doan.AppTuyenDung.entity.User;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -20,13 +22,13 @@ public class ReqRes {
 	private String token;
 	private String refreshToken;
 	private String expirationTime;
-	private String username;
+	private String phonenumber;
+	private String roleCode;
 	private String password;
-	private String email; 	
-	private String full_name;
-	private String user_type;
-	private Date created_ad;
-	private String city;
+	private String firstName;
+	private String lastName;
+	private String email;
+	private String genderCode;
 	private User User;
 	private List<User> UsersList;
 
@@ -66,12 +68,6 @@ public class ReqRes {
 	public void setExpirationTime(String expirationTime) {
 		this.expirationTime = expirationTime;
 	}
-	public String getUsername() {
-		return username;
-	}
-	public void setUsername(String username) {
-		this.username = username;
-	}
 	public String getPassword() {
 		return password;
 	}
@@ -84,31 +80,47 @@ public class ReqRes {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public String getFull_name() {
-		return full_name;
+
+	public String getPhonenumber() {
+		return phonenumber;
 	}
-	public void setFull_name(String full_name) {
-		this.full_name = full_name;
+
+	public void setPhonenumber(String phonenumber) {
+		this.phonenumber = phonenumber;
 	}
-	public String getUser_type() {
-		return user_type;
+
+	public String getRoleCode() {
+		return roleCode;
 	}
-	public void setUser_type(String user_type) {
-		this.user_type = user_type;
+
+	public void setRoleCode(String roleCode) {
+		this.roleCode = roleCode;
 	}
-	public Date getCreated_ad() {
-		return created_ad;
+
+	public String getFirstName() {
+		return firstName;
 	}
-	public void setCreated_ad(Date created_ad) {
-		this.created_ad = created_ad;
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
 	}
-	public String getCity() {
-		return city;
+
+	public String getLastName() {
+		return lastName;
 	}
-	public void setCity(String city) {
-		this.city = city;
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
 	}
-	
+
+	public String getGenderCode() {
+		return genderCode;
+	}
+
+	public void setGenderCode(String genderCode) {
+		this.genderCode = genderCode;
+	}
+
 	public User getUser() {
 		return User;
 	}
@@ -121,7 +133,5 @@ public class ReqRes {
 	public void setUsersList(List<User> usersList) {
 		UsersList = usersList;
 	}
-	
-	
 }
 

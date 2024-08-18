@@ -27,19 +27,18 @@ public class SercurityConfig {
 	    @Autowired
 	    private JWTAuthFilter jwtAuthFilter;
 	    @Bean
-	    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
+	    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
 	        httpSecurity.csrf(AbstractHttpConfigurer::disable)
 	                .cors(Customizer.withDefaults())
-	                .authorizeHttpRequests(request-> request.requestMatchers("/auth/**", "/public/**").permitAll()
+	            .authorizeHttpRequests(request -> request
+	                .requestMatchers("/auth/**", "/public/**").permitAll()
 	                        .requestMatchers("/admin/**").hasAnyAuthority("ADMIN")
-	                        .requestMatchers("/user/**").hasAnyAuthority("USER")
+	                .requestMatchers("/candidate/**").hasAnyAuthority("CANDIDATE")
 	                        .requestMatchers("/employer/**").hasAnyAuthority("EMPLOYER")
-	                        .requestMatchers("/adminuseremployer/**").hasAnyAuthority("ADMIN", "USER", "EMPLOYER")
 	                        .anyRequest().authenticated())
-	                .sessionManagement(manager->manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-	                .authenticationProvider(authenticationProvider()).addFilterBefore(
-	                        jwtAuthFilter, UsernamePasswordAuthenticationFilter.class
-	                );
+	            .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+	            .authenticationProvider(authenticationProvider())
+	            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 	        return httpSecurity.build();
 	    }
 	    @Bean

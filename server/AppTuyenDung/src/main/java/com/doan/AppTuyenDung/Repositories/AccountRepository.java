@@ -8,4 +8,6 @@ import com.doan.AppTuyenDung.entity.Account;
 @Repository
 public interface AccountRepository extends JpaRepository<Account, Integer>{
     Account findByUserId(Integer userId);
+    boolean existsByPhonenumber(String phone);
+    Account findByPhonenumber(String phone);
 }

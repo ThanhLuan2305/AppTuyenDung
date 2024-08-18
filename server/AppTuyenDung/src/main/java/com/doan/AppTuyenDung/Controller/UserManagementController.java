@@ -1,24 +1,21 @@
 package com.doan.AppTuyenDung.Controller;
 
+import com.doan.AppTuyenDung.entity.Account;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.doan.AppTuyenDung.entity.User;
 import com.doan.AppTuyenDung.DTO.ReqRes;
+import com.doan.AppTuyenDung.DTO.UserUpdateRequest;
 import com.doan.AppTuyenDung.Services.UserManagermentService;
 
 
 
 @RestController
+@RequestMapping
 public class UserManagementController {
 	@Autowired
     private UserManagermentService usersManagementService;
@@ -51,20 +48,8 @@ public class UserManagementController {
     }
 
     @PutMapping("/admin/update/{userId}")
-    public ResponseEntity<ReqRes> updateUser(@PathVariable Integer userId, @RequestBody User reqres){
+    public ResponseEntity<ReqRes> updateUser(@PathVariable Integer userId, @RequestBody UserUpdateRequest reqres){
         return ResponseEntity.ok(usersManagementService.updateUser(userId, reqres));
     }
 
-//     @GetMapping("/adminuseremployer/get-profile")
-//     public ResponseEntity<ReqRes> getMyProfile(){
-//         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//         String username = authentication.getName();
-//         ReqRes response = usersManagementService.getMyInfo(username);
-//         return  ResponseEntity.status(response.getStatusCode()).body(response);
-//     }
-
-    @DeleteMapping("/admin/delete/{userId}")
-    public ResponseEntity<ReqRes> deleteUSer(@PathVariable Integer userId){
-        return ResponseEntity.ok(usersManagementService.deleteUser(userId));
-    }
 }
