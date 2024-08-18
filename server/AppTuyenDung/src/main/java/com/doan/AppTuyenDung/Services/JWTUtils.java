@@ -1,5 +1,6 @@
 package com.doan.AppTuyenDung.Services;
 
+
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Date;
@@ -26,7 +27,7 @@ public class JWTUtils {
         this.Key = new SecretKeySpec(keyBytes, "HmacSHA256");
     }
 	
-	public String generateToken(UserDetails userDetails) {
+    public String generateToken(Account userDetails) {
 		return Jwts.builder()
 				.subject(userDetails.getUsername())
 				.issuedAt(new Date(System.currentTimeMillis()))
