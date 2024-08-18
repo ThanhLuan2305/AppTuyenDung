@@ -30,7 +30,7 @@ import jakarta.persistence.ManyToOne;
 public class UserManagermentService {
 	@Autowired
 	private UserRepository usersRepo;
-	@Autowired
+    @Autowired
     private AccountRepository accountRepo;
     @Autowired
     private CodeGenderRepository codeGenderRepo;
@@ -42,10 +42,10 @@ public class UserManagermentService {
 	private AuthenticationManager authenticationManager;
 	@Autowired
 	private PasswordEncoder passwordEncoder;
-	
+
 	public ReqRes register(ReqRes registrationRequest) {
 		ReqRes resp = new ReqRes();
-		
+
 		try {
             boolean accountExists = checkAccountExist(registrationRequest.getPhonenumber());
             if(accountExists) {
@@ -74,10 +74,10 @@ public class UserManagermentService {
                 account.setUser(user);
                 Account accountResult = accountRepo.save(account);
                 if (account.getId()>0) {
-                resp.setUser(UserResult);
-                resp.setMessage("User Saved Successfully");
-                resp.setStatusCode(200);
-            }
+                    resp.setUser(UserResult);
+                    resp.setMessage("User Saved Successfully");
+                    resp.setStatusCode(200);
+                }
             }
 		}catch(Exception e) {
 			resp.setStatusCode(500);
@@ -87,7 +87,7 @@ public class UserManagermentService {
 	}
 	public ReqRes login(ReqRes loginRequest) {
 		ReqRes resp = new ReqRes();
-		
+
 		try {
 			authenticationManager
 							.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getPhonenumber()

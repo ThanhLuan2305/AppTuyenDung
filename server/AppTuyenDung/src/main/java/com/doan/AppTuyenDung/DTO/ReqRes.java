@@ -27,7 +27,7 @@ public class ReqRes {
 	private String password;
 	private String firstName;
 	private String lastName;
-	private String email; 	
+	private String email;
 	private String genderCode;
 	private User User;
 	private List<User> UsersList;
@@ -120,7 +120,7 @@ public class ReqRes {
 	public void setGenderCode(String genderCode) {
 		this.genderCode = genderCode;
 	}
-	
+
 	public User getUser() {
 		return User;
 	}
