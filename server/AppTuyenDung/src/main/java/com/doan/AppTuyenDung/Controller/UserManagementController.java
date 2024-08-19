@@ -8,6 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import com.doan.AppTuyenDung.entity.User;
+import com.doan.AppTuyenDung.DTO.ProfileUserRequest;
 import com.doan.AppTuyenDung.DTO.ReqRes;
 import com.doan.AppTuyenDung.DTO.UserUpdateRequest;
 import com.doan.AppTuyenDung.Services.UserManagermentService;
@@ -50,6 +51,11 @@ public class UserManagementController {
     @PutMapping("/admin/update/{userId}")
     public ResponseEntity<ReqRes> updateUser(@PathVariable Integer userId, @RequestBody UserUpdateRequest reqres){
         return ResponseEntity.ok(usersManagementService.updateUser(userId, reqres));
+    }
+    @GetMapping("/public/get-profile/{token}")
+    public ResponseEntity<ProfileUserRequest> getProfile(@PathVariable String token){
+        return ResponseEntity.ok(usersManagementService.getProfile(token));
+
     }
 
 }

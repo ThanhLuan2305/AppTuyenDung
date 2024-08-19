@@ -21,7 +21,7 @@ import com.doan.AppTuyenDung.entity.CodeSalaryType;
 import com.doan.AppTuyenDung.entity.CodeWorkType;
 
 @RestController
-@RequestMapping("/api/get-all-code")
+@RequestMapping("/public/get-all-code")
 public class AllcodeController {
     @Autowired
     private AllCodeService codeService;    

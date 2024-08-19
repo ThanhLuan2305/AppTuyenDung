@@ -18,6 +18,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.doan.AppTuyenDung.DTO.ProfileUserRequest;
 import com.doan.AppTuyenDung.DTO.ReqRes;
 import com.doan.AppTuyenDung.DTO.UserUpdateRequest;
 import com.doan.AppTuyenDung.Repositories.UserRepository;
@@ -202,6 +203,23 @@ public class UserManagermentService {
             reqRes.setMessage("Error occurred while updating user: " + e.getMessage());
         }
         return reqRes;
+    }
+    public ProfileUserRequest getProfile(String token) {
+    	String phoneNumber = jwtUtils.extractUserName(token);
+    	Account account = accountRepo.findByPhonenumber(phoneNumber);
+    	User user = account.getUser();
+    	ProfileUserRequest profile = new ProfileUserRequest();
+    	profile.setFirstName(user.getFirstName());
+    	profile.setLastName(user.getLastName());
+    	profile.setAddress(user.getAddress());
+    	profile.setDob(user.getDob());
+    	profile.setEmail(user.getEmail());
+    	profile.setGender(user.getGenderCode().getValue());
+    	profile.setImage(user.getImage());
+    	profile.setPhonenumber(account.getPhonenumber());
+    	//profile.setStatus(account.getStatusCode().getValue()); chưa có status tam thoi de active
+    	profile.setStatus("active");
+    	return profile;
     }
 
     private boolean checkAccountExist(String phoneNumber) {
