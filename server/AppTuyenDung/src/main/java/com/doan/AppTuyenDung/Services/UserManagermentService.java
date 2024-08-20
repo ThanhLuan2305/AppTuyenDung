@@ -177,11 +177,8 @@ public class UserManagermentService {
                 User existingUser = userOptional.get();
                 existingUser.setFirstName(updatedUser.getFirstName());
                 existingUser.setLastName(updatedUser.getLastName());
-                existingUser.setEmail(updatedUser.getEmail());
                 existingUser.setAddress(updatedUser.getAddress());
-                existingUser.setEmail(updatedUser.getEmail());
                 existingUser.setLastName(updatedUser.getLastName());
-                existingUser.setEmail(updatedUser.getEmail());
                 CodeGender gender = codeGenderRepo.findByCode(updatedUser.getGenderCode());
                 existingUser.setGenderCode(gender);
                 existingUser.setImage(null); // Cần chỉnh lại sau
