@@ -2,11 +2,13 @@ package com.doan.AppTuyenDung.entity;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.Data;
+
 
 @Entity
 @Table(name = "CodeRule")
@@ -16,10 +18,19 @@ public class CodeRule {
     private String type;
     private String value;
     private String image;
-
+    @JsonIgnore
     @OneToMany(mappedBy = "roleCode")
     private List<Account> accounts;
-
+    
+    public CodeRule(String code, String type, String value, String image, List<Account> accounts) {
+        this.code = code;
+        this.type = type;
+        this.value = value;
+        this.image = image;
+        this.accounts = accounts;
+    }
+    public CodeRule() {
+        }
     public String getCode() {
         return code;
     }

@@ -75,5 +75,6 @@ public class postController {
     public ResponseEntity<?> getPostDetailById(@RequestParam Integer id) {
         return postService.getPostDetailById(id);
     }
+    
 
 }

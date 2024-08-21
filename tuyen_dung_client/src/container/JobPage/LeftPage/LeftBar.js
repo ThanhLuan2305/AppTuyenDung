@@ -12,7 +12,7 @@ const LeftBar = (props) => {
   const [dataJobType, setdataJobType] = useState([]);
   useEffect(() => {
     axios
-      .get("http://localhost:8080/api/get-all-code/job-types")
+      .get("http://localhost:8080/public/get-all-code/job-types")
       .then((response) => {
         setdataJobType(response.data);
       })
@@ -23,7 +23,7 @@ const LeftBar = (props) => {
   const [dataJobLevel,setDataJobLevel] = useState([])
   useEffect(() => {
     axios
-      .get("http://localhost:8080/api/get-all-code/job-levels")
+      .get("http://localhost:8080/public/get-all-code/job-levels")
       .then((response) => {
         setDataJobLevel(response.data);
       })
@@ -34,7 +34,7 @@ const LeftBar = (props) => {
   const [dataSalaryType, setDataSalaryType] = useState([])
   useEffect(() => {
     axios
-      .get("http://localhost:8080/api/get-all-code/salary-types")
+      .get("http://localhost:8080/public/get-all-code/salary-types")
       .then((response) => {
         setDataSalaryType(response.data);
       })
@@ -45,7 +45,7 @@ const LeftBar = (props) => {
   const [dataExpType,setDataExpType] = useState([])
   useEffect(() => {
     axios
-      .get("http://localhost:8080/api/get-all-code/exp-types")
+      .get("http://localhost:8080/public/get-all-code/exp-types")
       .then((response) => {
         setDataExpType(response.data);
       })
@@ -56,7 +56,7 @@ const LeftBar = (props) => {
   const [dataWorkType, setdataWorkType] = useState([]);
   useEffect(() => {
     axios
-      .get("http://localhost:8080/api/get-all-code/work-types")
+      .get("http://localhost:8080/public/get-all-code/work-types")
       .then((response) => {
         setdataWorkType(response.data);
       })
@@ -67,7 +67,7 @@ const LeftBar = (props) => {
   const [dataJobLocation, setdataJobLocation] = useState([]);
   useEffect(() => {
     axios
-      .get("http://localhost:8080/api/get-all-code/provinces")
+      .get("http://localhost:8080/public/get-all-code/provinces")
       .then((response) => {
         setdataJobLocation(response.data);
       })

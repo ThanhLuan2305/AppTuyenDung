@@ -28,7 +28,7 @@ const Home = () => {
       search: "",
     });
     axios
-      .get("http://localhost:8080/api/get-filter-post", {
+      .get("http://localhost:8080/public/get-filter-post", {
         params: paramsFeature,
       })
       .then((responseFeature) => {
@@ -52,7 +52,7 @@ const Home = () => {
     });
     
     axios
-      .get("http://localhost:8080/api/get-filter-post", { params: paramsHot })
+      .get("http://localhost:8080/public/get-filter-post", { params: paramsHot })
       .then((responseHot) => {
         setDataHot(responseHot.data);
       })

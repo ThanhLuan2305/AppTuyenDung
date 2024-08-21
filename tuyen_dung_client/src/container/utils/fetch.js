@@ -102,6 +102,40 @@ const useFetchDataJobLocation = () => {
   return { dataJobLocation };
 };
 
+const useFetchDataCodeRole = () => {
+  const [dataCodeRole, setdataCodeRole] = useState([]);
+  useEffect(() => {
+    try {
+      let fetchData = async () => {
+        axios.get("http://localhost:8080/public/get-all-code/rules-user").then((res) => {
+          setdataCodeRole(res.data);
+        })
+        };
+      fetchData();
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+  return { dataCodeRole };
+};
 
+const useFetchDataCodeGender = () => {
+  const [dataCodeGender, setdataCodeGender] = useState([]);
+  useEffect(() => {
+    try {
+      let fetchData = async () => {
+        axios.get("http://localhost:8080/public/get-all-code/genders-user").then((res) => {
+          setdataCodeGender(res.data);
+        })
+        };
+      fetchData();
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+  return { dataCodeGender };
+};
 
-export { useFetchDataJobType,useFetchDataJobLevel,useFetchDataSalaryType,useFetchDataExpType,useFetchDataWorkType,useFetchDataJobLocation };
+export { useFetchDataJobType,useFetchDataJobLevel,useFetchDataSalaryType,useFetchDataExpType,
+  useFetchDataWorkType,useFetchDataCodeRole,useFetchDataCodeGender
+ };

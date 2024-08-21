@@ -11,7 +11,7 @@ const Categories = () => {
       try {
         axios
           .get(
-            `http://localhost:8080/api/get-list-job-count-post?limit=4&offset=0`
+            `http://localhost:8080/public/get-list-job-count-post?limit=4&offset=0`
           )
           .then((res) => {
             setAllCategory(res.data.content);

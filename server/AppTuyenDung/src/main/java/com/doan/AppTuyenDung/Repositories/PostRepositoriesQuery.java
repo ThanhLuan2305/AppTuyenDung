@@ -34,7 +34,7 @@ public interface PostRepositoriesQuery extends JpaRepository<Post,Integer>{
                 "ac6.value as AddressCodeValue,\n" + //
                 "ac7.value as SalaryCodeValue,\n" + //
                 "c.thumbnail as CompanyThumbnailValue,\n" + //
-                "p.time_Post as TimePostValue\n"+
+                "p.time_Post as TimePostValue \n"+
                 "FROM Posts p \n" + //
                 "JOIN detailposts dp ON dp.id = p.detail_post_id \n" + //
                 "JOIN companies c ON c.user_id = p.user_id \n" + //

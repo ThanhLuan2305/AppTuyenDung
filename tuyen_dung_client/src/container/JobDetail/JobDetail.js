@@ -16,7 +16,7 @@ const JobDetail = () => {
   useEffect(() => {
     if (id) {
       axios
-        .get("http://localhost:8080/api/get-detail-post-by-id", {
+        .get("http://localhost:8080/public/get-detail-post-by-id", {
           params: {
             id,
           },

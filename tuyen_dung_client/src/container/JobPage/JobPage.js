@@ -42,7 +42,7 @@ const JobPage = () => {
       }, {});
 
     axios
-      .get("http://localhost:8080/api/get-filter-post", {
+      .get("http://localhost:8080/public/get-filter-post", {
         params: filteredParams,
       })
       .then((responseFeature) => {
@@ -129,7 +129,7 @@ const JobPage = () => {
           return obj;
         }, {});
       axios
-        .get("http://localhost:8080/api/get-filter-post", {
+        .get("http://localhost:8080/public/get-filter-post", {
           params: filteredParams,
         })
         .then((responseFeature) => {
