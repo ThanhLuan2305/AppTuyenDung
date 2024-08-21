@@ -3,6 +3,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
+import com.doan.AppTuyenDung.DTO.Request.ProfileUserRequest;
+import com.doan.AppTuyenDung.DTO.Request.ReqRes;
+import com.doan.AppTuyenDung.DTO.Request.UserUpdateRequest;
 import com.doan.AppTuyenDung.Repositories.AccountRepository;
 import com.doan.AppTuyenDung.Repositories.CodeGenderRepository;
 import com.doan.AppTuyenDung.Repositories.CodeRuleRepository;
@@ -18,14 +21,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.doan.AppTuyenDung.DTO.ProfileUserRequest;
-import com.doan.AppTuyenDung.DTO.ReqRes;
-import com.doan.AppTuyenDung.DTO.UserUpdateRequest;
 import com.doan.AppTuyenDung.Repositories.UserRepository;
 import com.doan.AppTuyenDung.entity.User;
 
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+
 
 @Service
 public class UserManagermentService {

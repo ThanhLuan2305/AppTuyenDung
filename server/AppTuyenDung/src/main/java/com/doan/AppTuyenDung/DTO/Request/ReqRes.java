@@ -1,4 +1,4 @@
-package com.doan.AppTuyenDung.DTO;
+package com.doan.AppTuyenDung.DTO.Request;
 
 
 import java.util.Date;

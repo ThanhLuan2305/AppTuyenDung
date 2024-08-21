@@ -1,18 +1,18 @@
-package com.doan.AppTuyenDung.DTO;
+package com.doan.AppTuyenDung.DTO.Request;
 
 import com.doan.AppTuyenDung.entity.CodeGender;
-import com.doan.AppTuyenDung.entity.CodeStatus;
 
-public class ProfileUserRequest {
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+
+public class UserUpdateRequest {
 	private String firstName;
     private String lastName;
     private String email;
     private String address;
-    private String gender;
+    private String genderCode;
     private String image;
     private String dob;
-    private String phonenumber;
-    private String status;
 	public String getFirstName() {
 		return firstName;
 	}
@@ -37,11 +37,11 @@ public class ProfileUserRequest {
 	public void setAddress(String address) {
 		this.address = address;
 	}
-	public String getGender() {
-		return gender;
+	public String getGenderCode() {
+		return genderCode;
 	}
-	public void setGender(String genderCode) {
-		this.gender = genderCode;
+	public void setGenderCode(String genderCode) {
+		this.genderCode = genderCode;
 	}
 	public String getImage() {
 		return image;
@@ -55,16 +55,5 @@ public class ProfileUserRequest {
 	public void setDob(String dob) {
 		this.dob = dob;
 	}
-	public String getPhonenumber() {
-		return phonenumber;
-	}
-	public void setPhonenumber(String phonenumber) {
-		this.phonenumber = phonenumber;
-	}
-	public String getStatus() {
-		return status;
-	}
-	public void setStatus(String status) {
-		this.status = status;
-	}
+    
 }

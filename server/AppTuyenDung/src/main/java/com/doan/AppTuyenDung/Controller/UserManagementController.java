@@ -8,9 +8,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import com.doan.AppTuyenDung.entity.User;
-import com.doan.AppTuyenDung.DTO.ProfileUserRequest;
-import com.doan.AppTuyenDung.DTO.ReqRes;
-import com.doan.AppTuyenDung.DTO.UserUpdateRequest;
+import com.doan.AppTuyenDung.DTO.Request.ProfileUserRequest;
+import com.doan.AppTuyenDung.DTO.Request.ReqRes;
+import com.doan.AppTuyenDung.DTO.Request.UserUpdateRequest;
 import com.doan.AppTuyenDung.Services.UserManagermentService;
 
 
