@@ -3,7 +3,7 @@ package com.doan.AppTuyenDung.Controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,8 +16,6 @@ import com.doan.AppTuyenDung.DTO.Request.CompanyDTO;
 import com.doan.AppTuyenDung.DTO.Response.ApiResponse;
 import com.doan.AppTuyenDung.DTO.Response.CompanyResponse;
 import com.doan.AppTuyenDung.Services.CompanyService;
-import com.doan.AppTuyenDung.entity.Company;
-
 
 
 @RestController
