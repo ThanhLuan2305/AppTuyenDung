@@ -52,7 +52,104 @@ public class DetailPost {
     @ManyToOne
     @JoinColumn(name = "CodeGenderPost", referencedColumnName = "code")
     private CodeGenderPost genderPostCode;
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getDescriptionHTML() {
+		return descriptionHTML;
+	}
+
+	public void setDescriptionHTML(String descriptionHTML) {
+		this.descriptionHTML = descriptionHTML;
+	}
+
+	public String getDescriptionMarkdown() {
+		return descriptionMarkdown;
+	}
+
+	public void setDescriptionMarkdown(String descriptionMarkdown) {
+		this.descriptionMarkdown = descriptionMarkdown;
+	}
+
+	public CodeJobType getCategoryJobCode() {
+		return categoryJobCode;
+	}
+
+	public void setCategoryJobCode(CodeJobType categoryJobCode) {
+		this.categoryJobCode = categoryJobCode;
+	}
+
+	public CodeProvince getAddressCode() {
+		return addressCode;
+	}
+
+	public void setAddressCode(CodeProvince addressCode) {
+		this.addressCode = addressCode;
+	}
+
+	public CodeSalaryType getSalaryJobCode() {
+		return salaryJobCode;
+	}
+
+	public void setSalaryJobCode(CodeSalaryType salaryJobCode) {
+		this.salaryJobCode = salaryJobCode;
+	}
+
+	public Integer getAmount() {
+		return amount;
+	}
+
+	public void setAmount(Integer amount) {
+		this.amount = amount;
+	}
+
+	public CodeJobLevel getCategoryJoblevelCode() {
+		return categoryJoblevelCode;
+	}
+
+	public void setCategoryJoblevelCode(CodeJobLevel categoryJoblevelCode) {
+		this.categoryJoblevelCode = categoryJoblevelCode;
+	}
+
+	public CodeWorkType getCategoryWorktypeCode() {
+		return categoryWorktypeCode;
+	}
+
+	public void setCategoryWorktypeCode(CodeWorkType categoryWorktypeCode) {
+		this.categoryWorktypeCode = categoryWorktypeCode;
+	}
+
+	public CodeExpType getExperienceJobCode() {
+		return experienceJobCode;
+	}
+
+	public void setExperienceJobCode(CodeExpType experienceJobCode) {
+		this.experienceJobCode = experienceJobCode;
+	}
+
+	public CodeGenderPost getGenderPostCode() {
+		return genderPostCode;
+	}
+
+	public void setGenderPostCode(CodeGenderPost genderPostCode) {
+		this.genderPostCode = genderPostCode;
+	}
    
 
     // Getters and Setters
+    
 }

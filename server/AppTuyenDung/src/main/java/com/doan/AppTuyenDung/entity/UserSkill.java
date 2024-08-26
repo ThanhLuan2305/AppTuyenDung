@@ -26,5 +26,38 @@ public class UserSkill {
     @JoinColumn(name = "skillId", insertable = false, updatable = false)
     private Skill skill;
 
+	public Integer getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Integer userId) {
+		this.userId = userId;
+	}
+
+	public Integer getSkillId() {
+		return skillId;
+	}
+
+	public void setSkillId(Integer skillId) {
+		this.skillId = skillId;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public Skill getSkill() {
+		return skill;
+	}
+
+	public void setSkill(Skill skill) {
+		this.skill = skill;
+	}
+
     // Getters and Setters
+    
 }
