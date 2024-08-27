@@ -6,5 +6,5 @@ import com.doan.AppTuyenDung.entity.CodeExpType;
 import org.springframework.stereotype.Repository;
 @Repository
 public interface CodeExpTypeRepository extends JpaRepository<CodeExpType,String>{
-    
+    public CodeExpType findByCode(String code);
 }

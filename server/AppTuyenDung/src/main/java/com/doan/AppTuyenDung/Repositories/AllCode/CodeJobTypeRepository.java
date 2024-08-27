@@ -6,5 +6,5 @@ import com.doan.AppTuyenDung.entity.CodeJobType;
 import org.springframework.stereotype.Repository;
 @Repository
 public interface CodeJobTypeRepository extends JpaRepository<CodeJobType,String>{
-    
+    public CodeJobType findByCode(String code);
 }

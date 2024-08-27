@@ -39,5 +39,78 @@ public class UserSetting {
     @JoinColumn(name = "userId")
     private User user;
 
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public CodeJobType getCategoryJobCode() {
+		return categoryJobCode;
+	}
+
+	public void setCategoryJobCode(CodeJobType categoryJobCode) {
+		this.categoryJobCode = categoryJobCode;
+	}
+
+	public CodeSalaryType getSalaryJobCode() {
+		return salaryJobCode;
+	}
+
+	public void setSalaryJobCode(CodeSalaryType salaryJobCode) {
+		this.salaryJobCode = salaryJobCode;
+	}
+
+	public CodeProvince getAddressCode() {
+		return addressCode;
+	}
+
+	public void setAddressCode(CodeProvince addressCode) {
+		this.addressCode = addressCode;
+	}
+
+	public CodeExpType getExperienceJobCode() {
+		return experienceJobCode;
+	}
+
+	public void setExperienceJobCode(CodeExpType experienceJobCode) {
+		this.experienceJobCode = experienceJobCode;
+	}
+
+	public Boolean getIsFindJob() {
+		return isFindJob;
+	}
+
+	public void setIsFindJob(Boolean isFindJob) {
+		this.isFindJob = isFindJob;
+	}
+
+	public Boolean getIsTakeMail() {
+		return isTakeMail;
+	}
+
+	public void setIsTakeMail(Boolean isTakeMail) {
+		this.isTakeMail = isTakeMail;
+	}
+
+	public byte[] getFile() {
+		return file;
+	}
+
+	public void setFile(byte[] file) {
+		this.file = file;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
     // Getters and Setters
+    
 }

@@ -67,8 +67,7 @@ public class CompanyService {
 	        company.setCreatedAt(new Date()); 
 	        company.setUpdatedAt(new Date());
 		} catch (Exception e) {
-			ErrorCode err = new ErrorCode(404, e.getMessage(), HttpStatus.BAD_REQUEST);
-            throw new AppException(err);
+            throw new AppException(ErrorCode.UNCATEGORIZED_EXCEPTION);
 		}
 
         Company savedCompany = companyRepository.save(company);
@@ -96,8 +95,7 @@ public class CompanyService {
             Company updatedCompany = companyRepository.save(company);
             return convertEntityToDTO(updatedCompany);
         } else {
-        	ErrorCode err = new ErrorCode(404, "Không tìm thấy công ty với id trên", HttpStatus.BAD_REQUEST);
-            throw new AppException(err);
+            throw new AppException(ErrorCode.NOTEXISTCOMPANY);
         }
     }
 

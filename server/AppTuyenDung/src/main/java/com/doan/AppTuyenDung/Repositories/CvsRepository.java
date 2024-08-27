@@ -9,6 +9,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.doan.AppTuyenDung.entity.Cv;
 
-public interface CvRepository extends JpaRepository<Cv, Integer> {
+public interface CvsRepository extends JpaRepository<Cv, Integer> {
 	public Page<Cv> findByUserId(Integer id, Pageable pageable);
 }

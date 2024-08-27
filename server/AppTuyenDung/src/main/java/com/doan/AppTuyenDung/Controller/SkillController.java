@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.doan.AppTuyenDung.DTO.Response.ApiResponse;
+import com.doan.AppTuyenDung.DTO.Response.SkillResponse;
 import com.doan.AppTuyenDung.Services.SkillService;
 import com.doan.AppTuyenDung.entity.Skill;
 @RestController
@@ -17,8 +18,8 @@ public class SkillController {
 	@Autowired
 	private SkillService service;
 	@GetMapping("/public/skill/get-all-skill-by-job-code")
-	public ApiResponse<List<Skill>> getAllSkillJobCode (@RequestParam (required = false) String categoryJobCode) {
-		ApiResponse<List<Skill>> lstSkill = new ApiResponse<>();
+	public ApiResponse<List<SkillResponse>> getAllSkillJobCode (@RequestParam (required = false) String categoryJobCode) {
+		ApiResponse<List<SkillResponse>> lstSkill = new ApiResponse<>();
 		lstSkill.setResult(service.GetSkillByCodeJob(categoryJobCode));
 		return lstSkill;
 	}

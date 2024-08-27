@@ -6,5 +6,5 @@ import com.doan.AppTuyenDung.entity.CodeSalaryType;
 import org.springframework.stereotype.Repository;
 @Repository
 public interface CodeSalaryTypeRepository extends JpaRepository<CodeSalaryType,String>{
-    
+	public CodeSalaryType findByCode(String code);
 }

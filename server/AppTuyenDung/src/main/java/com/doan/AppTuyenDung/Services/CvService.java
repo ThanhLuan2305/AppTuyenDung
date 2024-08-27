@@ -1,8 +1,5 @@
 package com.doan.AppTuyenDung.Services;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -10,9 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.doan.AppTuyenDung.DTO.Response.CvsResponse;
-import com.doan.AppTuyenDung.Repositories.CvRepository;
-import com.doan.AppTuyenDung.Repositories.DetailPostRepository;
-import com.doan.AppTuyenDung.Repositories.PostRepository;
+import com.doan.AppTuyenDung.Repositories.CvsRepository;
 import com.doan.AppTuyenDung.entity.Cv;
 import com.doan.AppTuyenDung.entity.DetailPost;
 import com.doan.AppTuyenDung.entity.Post;
@@ -20,11 +15,7 @@ import com.doan.AppTuyenDung.entity.Post;
 @Service
 public class CvService {
 	@Autowired
-	private CvRepository cvRepository;
-	@Autowired
-	private PostRepository postRepository;	
-	@Autowired
-	private DetailPostRepository DPRepository;
+	private CvsRepository cvRepository;
 
 	public Page<CvsResponse> getAllCvByUserId(int idUser, Pageable pageable) {
 	    Page<Cv> cvsPage = cvRepository.findByUserId(idUser, pageable);
@@ -75,7 +66,6 @@ public class CvService {
 	            response.setValueExpType(detailPost.getExperienceJobCode().getValue());
 	        }
 	    }
-
 	    return response;
 	}
 }
