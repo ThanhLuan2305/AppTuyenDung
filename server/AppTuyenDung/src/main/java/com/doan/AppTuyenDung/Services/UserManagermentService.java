@@ -3,12 +3,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
+import com.doan.AppTuyenDung.DTO.Request.ProfileUserRequest;
+import com.doan.AppTuyenDung.DTO.Request.ReqRes;
+import com.doan.AppTuyenDung.DTO.Request.UserSettingDTO;
+import com.doan.AppTuyenDung.DTO.Request.UserUpdateRequest;
+import com.doan.AppTuyenDung.Exception.AppException;
+import com.doan.AppTuyenDung.Exception.ErrorCode;
 import com.doan.AppTuyenDung.Repositories.AccountRepository;
 import com.doan.AppTuyenDung.Repositories.CodeGenderRepository;
 import com.doan.AppTuyenDung.Repositories.CodeRuleRepository;
 import com.doan.AppTuyenDung.entity.Account;
+import com.doan.AppTuyenDung.entity.CodeExpType;
 import com.doan.AppTuyenDung.entity.CodeGender;
+import com.doan.AppTuyenDung.entity.CodeJobType;
+import com.doan.AppTuyenDung.entity.CodeProvince;
 import com.doan.AppTuyenDung.entity.CodeRule;
+import com.doan.AppTuyenDung.entity.CodeSalaryType;
 
 import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,15 +31,24 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestHeader;
 
+
 import com.doan.AppTuyenDung.DTO.InfoPostDetailDto;
 import com.doan.AppTuyenDung.DTO.ReqRes;
 import com.doan.AppTuyenDung.DTO.UserAccountDTO;
 import com.doan.AppTuyenDung.DTO.UserUpdateRequest;
-import com.doan.AppTuyenDung.Repositories.UserRepository;
-import com.doan.AppTuyenDung.entity.User;
 
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import com.doan.AppTuyenDung.Repositories.UserRepository;
+import com.doan.AppTuyenDung.Repositories.UserSettingRepository;
+import com.doan.AppTuyenDung.Repositories.UserSkillRepository;
+import com.doan.AppTuyenDung.Repositories.AllCode.CodeExpTypeRepository;
+import com.doan.AppTuyenDung.Repositories.AllCode.CodeJobTypeRepository;
+import com.doan.AppTuyenDung.Repositories.AllCode.CodeProvinceRepository;
+import com.doan.AppTuyenDung.Repositories.AllCode.CodeSalaryTypeRepository;
+import com.doan.AppTuyenDung.entity.User;
+import com.doan.AppTuyenDung.entity.UserSetting;
+import com.doan.AppTuyenDung.entity.UserSkill;
+
+
 
 @Service
 public class UserManagermentService {
@@ -41,6 +60,18 @@ public class UserManagermentService {
     private CodeGenderRepository codeGenderRepo;
     @Autowired
     private CodeRuleRepository ruleRepo;
+    @Autowired
+    private UserSettingRepository userSettingRepository;
+    @Autowired
+    private UserSkillRepository userSkillRepository;
+    @Autowired
+    private CodeJobTypeRepository codeJobTypeRepository;
+    @Autowired
+    private CodeSalaryTypeRepository codeSalaryTypeRepository;
+    @Autowired
+    private CodeProvinceRepository codeProvinceRepository;
+    @Autowired
+    private CodeExpTypeRepository codeExpTypeRepository;
 	@Autowired
 	private JWTUtils jwtUtils;
 	@Autowired
@@ -201,11 +232,8 @@ public class UserManagermentService {
                 User existingUser = userOptional.get();
                 existingUser.setFirstName(updatedUser.getFirstName());
                 existingUser.setLastName(updatedUser.getLastName());
-                existingUser.setEmail(updatedUser.getEmail());
                 existingUser.setAddress(updatedUser.getAddress());
-                existingUser.setEmail(updatedUser.getEmail());
                 existingUser.setLastName(updatedUser.getLastName());
-                existingUser.setEmail(updatedUser.getEmail());
                 CodeGender gender = codeGenderRepo.findByCode(updatedUser.getGenderCode());
                 existingUser.setGenderCode(gender);
                 existingUser.setImage(null); // Cần chỉnh lại sau
@@ -228,6 +256,23 @@ public class UserManagermentService {
         }
         return reqRes;
     }
+    public ProfileUserRequest getProfile(String token) {
+    	String phoneNumber = jwtUtils.extractUserName(token);
+    	Account account = accountRepo.findByPhonenumber(phoneNumber);
+    	User user = account.getUser();
+    	ProfileUserRequest profile = new ProfileUserRequest();
+    	profile.setFirstName(user.getFirstName());
+    	profile.setLastName(user.getLastName());
+    	profile.setAddress(user.getAddress());
+    	profile.setDob(user.getDob());
+    	profile.setEmail(user.getEmail());
+    	profile.setGender(user.getGenderCode().getValue());
+    	profile.setImage(user.getImage());
+    	profile.setPhonenumber(account.getPhonenumber());
+    	//profile.setStatus(account.getStatusCode().getValue()); chưa có status tam thoi de active
+    	profile.setStatus("active");
+    	return profile;
+    }
 
     private boolean checkAccountExist(String phoneNumber) {
         return accountRepo.existsByPhonenumber(phoneNumber);
@@ -235,10 +280,61 @@ public class UserManagermentService {
 	public ReqRes updateUser( UserUpdateRequest reqres) {
 		return null;
 	}
+	public String setDataUserSetting(UserSettingDTO data) {
+	    try {
+	    	if (data.getIdUser() == null) {
+		        return "Missing required parameters!";
+		    }
+
+		    User user = usersRepo.findById(data.getIdUser()).orElse(null);
+		    System.out.print(data.getCategoryJobCode());
+		    if (user == null) {
+		        return "Không tồn tại người dùng này";
+		    }
+
+		    createOrUpdateUserSetting(data, user);
+
+		    if (data.getSkill() != null && !data.getSkill().isEmpty()) {
+		        userSkillRepository.deleteByUserId(user.getId());
+		        List<UserSkill> userSkills = data.getSkill().stream().map(skillId -> {
+		            UserSkill userSkill = new UserSkill();
+		            userSkill.setUserId(user.getId());
+		            userSkill.setSkillId(skillId);
+		            return userSkill;
+		        }).toList();
+		        userSkillRepository.saveAll(userSkills);
+		    }
+		} catch (Exception e) {
+			throw new AppException(ErrorCode.UNCATEGORIZED_EXCEPTION);
+		}
+
+	    return "Hệ thống đã ghi nhận lựa chọn";
+	}
+
+	private void createOrUpdateUserSetting(UserSettingDTO data, User user) {
+	    UserSetting userSetting = userSettingRepository.findByUserId(user.getId());
+	    if (userSetting == null) {
+	        userSetting = new UserSetting();
+	        userSetting.setUser(user);
+	    }
+	    CodeJobType categoryJobCode = codeJobTypeRepository.findByCode(data.getCategoryJobCode());
+	    CodeSalaryType salaryJobCode = codeSalaryTypeRepository.findByCode(data.getSalaryJobCode());
+	    CodeProvince addressCode = codeProvinceRepository.findByCode(data.getAddressCode());
+	    CodeExpType experienceJobCode = codeExpTypeRepository.findByCode(data.getExperienceJobCode());
+	    userSetting.setCategoryJobCode(categoryJobCode);
+	    userSetting.setSalaryJobCode(salaryJobCode);
+	    userSetting.setAddressCode(addressCode);
+	    userSetting.setExperienceJobCode(experienceJobCode);
+	    userSetting.setFile(data.getFile());
+	    userSetting.setIsTakeMail(data.getIsTakeMail());
+	    userSetting.setIsFindJob(data.getIsFindJob());
+
+	    userSettingRepository.save(userSetting);
+	}
     public Account getUserFromToken(String token) {
         String phonenumber = jwtUtils.extractUserName(token);
         return accountRepo.findByPhonenumber(phonenumber);
     }
-    
+
 }
 

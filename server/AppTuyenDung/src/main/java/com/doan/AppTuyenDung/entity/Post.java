@@ -47,6 +47,117 @@ public class Post {
     }
 
 
+	public Integer getId() {
+		return id;
+	}
+
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+
+	public CodePostStatus getStatusCode() {
+		return statusCode;
+	}
+
+
+	public void setStatusCode(CodePostStatus statusCode) {
+		this.statusCode = statusCode;
+	}
+
+
+	public String getTimeEnd() {
+		return timeEnd;
+	}
+
+
+	public void setTimeEnd(String timeEnd) {
+		this.timeEnd = timeEnd;
+	}
+
+
+	public String getTimePost() {
+		return timePost;
+	}
+
+
+	public void setTimePost(String timePost) {
+		this.timePost = timePost;
+	}
+
+
+	public Integer getIsHot() {
+		return isHot;
+	}
+
+
+	public void setIsHot(Integer isHot) {
+		this.isHot = isHot;
+	}
+
+
+	public java.util.Date getCreatedAt() {
+		return createdAt;
+	}
+
+
+	public void setCreatedAt(java.util.Date createdAt) {
+		this.createdAt = createdAt;
+	}
+
+
+	public java.util.Date getUpdatedAt() {
+		return updatedAt;
+	}
+
+
+	public void setUpdatedAt(java.util.Date updatedAt) {
+		this.updatedAt = updatedAt;
+	}
+
+
+	public User getUser() {
+		return user;
+	}
+
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+
+	public DetailPost getDetailPost() {
+		return detailPost;
+	}
+
+
+	public void setDetailPost(DetailPost detailPost) {
+		this.detailPost = detailPost;
+	}
+
+
+	public Set<Cv> getCvs() {
+		return cvs;
+	}
+
+
+	public void setCvs(Set<Cv> cvs) {
+		this.cvs = cvs;
+	}
+
+
+	public Set<Note> getNotes() {
+		return notes;
+	}
+
+
+	public void setNotes(Set<Note> notes) {
+		this.notes = notes;
+	}
+
+
 
     // Getters and Setters
+    
 }

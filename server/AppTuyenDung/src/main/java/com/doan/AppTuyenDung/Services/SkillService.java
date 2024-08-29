@@ -1,29 +1,31 @@
 package com.doan.AppTuyenDung.Services;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
+import com.doan.AppTuyenDung.DTO.Response.SkillResponse;
 import com.doan.AppTuyenDung.Repositories.SkillRepository;
 import com.doan.AppTuyenDung.entity.Skill;
 
 @Service
-public class SkillService{
-    @Autowired
-    private SkillRepository skillRepository;
+public class SkillService {
+	@Autowired
+	private SkillRepository skillRepository;
+	 public List<SkillResponse> GetSkillByCodeJob(String categoryJobCode) {
+	        List<Skill> skills = skillRepository.findByCategoryJobCode(categoryJobCode);
+	        
+	        return skills.stream()
+	            .map(skill -> mapToSkillResponse(skill))
+	            .collect(Collectors.toList());
+	    }
 
-    // public ResponseEntity<?> getAllSkillByJobCode(String categoryJobCode) {
-    //     List<Skill> skills;
-    //     if (categoryJobCode.equals("getAll")) {
-    //         return ResponseEntity.ok(skills = skillRepository.findAll());
-    //     } else {
-    //         return ResponseEntity.ok(skills = skillRepository.findAllByCategoryJobCode(categoryJobCode));
-    //     }
-        
-    // }
+	    private SkillResponse mapToSkillResponse(Skill skill) {
+	        SkillResponse response = new SkillResponse();
+	        response.setId(skill.getId());
+	        response.setName(skill.getName());
+	        response.setCategoryJobCode(skill.getCategoryJobCode());
+	        return response;
+	    }
 
 }

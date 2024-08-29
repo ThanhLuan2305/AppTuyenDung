@@ -6,5 +6,5 @@ import com.doan.AppTuyenDung.entity.CodeProvince;
 import org.springframework.stereotype.Repository;
 @Repository
 public interface CodeProvinceRepository extends JpaRepository<CodeProvince,String>{
-    
+	public CodeProvince findByCode(String code);
 }

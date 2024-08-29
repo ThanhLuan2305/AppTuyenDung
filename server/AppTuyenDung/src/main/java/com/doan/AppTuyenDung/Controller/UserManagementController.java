@@ -12,9 +12,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import com.doan.AppTuyenDung.entity.User;
-import com.doan.AppTuyenDung.DTO.ReqRes;
+import com.doan.AppTuyenDung.DTO.Request.ProfileUserRequest;
+import com.doan.AppTuyenDung.DTO.Request.ReqRes;
+import com.doan.AppTuyenDung.DTO.Request.UserSettingDTO;
+import com.doan.AppTuyenDung.DTO.Request.UserUpdateRequest;
+import com.doan.AppTuyenDung.DTO.Response.ApiResponse;
 import com.doan.AppTuyenDung.DTO.UserAccountDTO;
-import com.doan.AppTuyenDung.DTO.UserUpdateRequest;
 import com.doan.AppTuyenDung.Repositories.AccountRepository;
 import com.doan.AppTuyenDung.Repositories.UserRepository;
 import com.doan.AppTuyenDung.Services.JWTUtils;
@@ -66,6 +69,18 @@ public class UserManagementController {
     public ResponseEntity<ReqRes> updateUser(@PathVariable Integer userId, @RequestBody UserUpdateRequest reqres){
         return ResponseEntity.ok(usersManagementService.updateUser(userId, reqres));
     }
+    @GetMapping("/public/get-profile/{token}")
+    public ResponseEntity<ProfileUserRequest> getProfile(@PathVariable String token){
+        return ResponseEntity.ok(usersManagementService.getProfile(token));
+
+    }
+    @PostMapping("/public/set-user-setting")
+    public ApiResponse setDataUserSetting(@RequestBody UserSettingDTO data) {
+    	ApiResponse apiRS = new ApiResponse<>();
+    	apiRS.setMessage(usersManagementService.setDataUserSetting(data));
+        return apiRS;
+    }
+
 
     @PostMapping("/public/get-info")
     public ResponseEntity<List<UserAccountDTO>> getUserInfo(@RequestHeader("Authorization") String token) {
