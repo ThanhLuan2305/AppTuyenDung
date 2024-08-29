@@ -6,10 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.cloudinary.Cloudinary;
-import com.doan.AppTuyenDung.Exception.ResourceNotFoundException;
-import com.doan.AppTuyenDung.utils.FileUploadUtil;
-
-import jakarta.annotation.sql.DataSourceDefinition;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

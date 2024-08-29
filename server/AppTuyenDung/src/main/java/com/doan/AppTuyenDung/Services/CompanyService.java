@@ -18,7 +18,7 @@ import com.doan.AppTuyenDung.DTO.Response.CompanyResponse;
 import com.doan.AppTuyenDung.Exception.AppException;
 import com.doan.AppTuyenDung.Exception.ErrorCode;
 import com.doan.AppTuyenDung.Repositories.CodeCensorstatusRepository;
-import com.doan.AppTuyenDung.Repositories.CodeStatusRepository;
+import com.doan.AppTuyenDung.Repositories.AllCode.CodeStatusRepository;
 import com.doan.AppTuyenDung.Repositories.CompanyRepository;
 import com.doan.AppTuyenDung.Repositories.UserRepository;
 import com.doan.AppTuyenDung.entity.CodeStatus;
@@ -39,7 +39,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.doan.AppTuyenDung.DTO.CloudinaryResponse;
 import com.doan.AppTuyenDung.Repositories.AccountRepository;
-import com.doan.AppTuyenDung.Repositories.CodeRuleRepositor
+import com.doan.AppTuyenDung.Repositories.CodeRuleRepository;
 import com.doan.AppTuyenDung.Repositories.AllCode.CodeCensorStatusRepository;
 import com.doan.AppTuyenDung.Repositories.AllCode.CodeStatusRepository;
 import com.doan.AppTuyenDung.entity.Account;
@@ -55,11 +55,9 @@ public class CompanyService {
     @Autowired
     private CodeStatusRepository codeStatusRepository;
     @Autowired
-    private AccountReposit
+    private AccountRepository accountRepository;
     @Autowired
     private CodeRuleRepository codeRuleRepository;
-    @Autowired
-    private CodeStatusRepository codeStatusRepository;
     @Autowired
     private CodeCensorstatusRepository censorstatusRepository;
 
@@ -68,8 +66,10 @@ public class CompanyService {
       Company company = companyOptional.get();
       String status = company.getStatusCode().getCode();
       if(status != "S2") {
-        CodeStatus code =		}
-      Company companyRs = companyRepository.save(company);
+        CodeStatus code = codeStatusRepository.findByCode("S2");
+        company.setStatusCode(code);
+    }
+        Company companyRs = companyRepository.save(company);
       return convertEntityToDTO(company);
     }
     public CompanyResponse unBanCompany(int id) {
@@ -167,7 +167,7 @@ public class CompanyService {
         companyResponse.setUpdatedAt(company.getUpdatedAt() != null ? company.getUpdatedAt() : null);
 
         return companyResponse;
-
+    }
     public Map<String, Object> getDetailCompanyByUserId(Integer userId, Integer companyId) {
         Map<String, Object> response = new HashMap<>();
 
@@ -253,7 +253,7 @@ public class CompanyService {
             company.setStatusCode(status);
 
             // Set CensorCode nếu cần
-            CodeCensorstatus censorCode = codeCensorStatusRepository.findById(company.getFile() != null ? "CS3" : "CS2")
+            CodeCensorstatus censorCode = censorstatusRepository.findById(company.getFile() != null ? "CS3" : "CS2")
                     .orElseThrow(() -> new RuntimeException("CodeCensorstatus not found"));
             company.setCensorCode(censorCode);
 
