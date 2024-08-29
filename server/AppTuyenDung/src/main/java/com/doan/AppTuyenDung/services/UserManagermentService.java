@@ -330,8 +330,6 @@ public class UserManagermentService {
 
 	    userSettingRepository.save(userSetting);
 	}
-
-
     public Account getUserFromToken(String token) {
         String phonenumber = jwtUtils.extractUserName(token);
         return accountRepo.findByPhonenumber(phonenumber);
