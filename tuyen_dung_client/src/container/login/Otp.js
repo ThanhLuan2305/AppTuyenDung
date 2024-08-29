@@ -1,9 +1,19 @@
 import React, { useEffect, useState } from "react";
 import "./Otp.scss";
-import firebase from "../utils/firebase";
+import { auth } from "../utils/firebase";
 import { toast } from "react-toastify";
 import { createNewUser, handleLoginService } from "../../service/userService";
 import axios from "axios";
+import {
+  getAuth,
+  RecaptchaVerifier,
+  signInWithPhoneNumber,
+  PhoneAuthProvider 
+} from "firebase/auth";
+// const auth = getAuth(app);
+
+
+
 const Otp = (props) => {
   const [dataUser, setdataUser] = useState({});
   const [otpnumber, setotpnumber] = useState("");
@@ -15,7 +25,7 @@ const Otp = (props) => {
     so5: "",
     so6: "",
   });
-
+  
   useEffect(() => {
     if (props.dataUser) {
       let fetchOtp = async () => {
@@ -24,24 +34,60 @@ const Otp = (props) => {
       fetchOtp();
     }
   }, [props.dataUser]);
-
   const handleOnChange = (event) => {
     const { name, value } = event.target;
     setInputValues({ ...inputValues, [name]: value });
   };
 
+  // const configureCaptcha = () => {
+  //   if (window.recaptchaVerifier) {
+  //     window.recaptchaVerifier.clear();
+  //   }
+  //   window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
+  //     "sign-in-button",
+  //     {
+  //       'size': 'normal',
+  //       // theme: "dark", // Chủ đề của ReCAPTCHA
+  //       'callback': (response) => {
+  //       // reCAPTCHA solved, allow signInWithPhoneNumber.
+  //       // this.onSignInSubmit();
+  //       console.log("reCAPTCHA verified");
+  //     }
+  //     }
+  //   );
+  // };
   const configureCaptcha = () => {
-    if (window.recaptchaVerifier) {
-      window.recaptchaVerifier.clear();
-    }
-    window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
+  if (!window.recaptchaVerifier) {
+    window.recaptchaVerifier = new RecaptchaVerifier(
       "sign-in-button",
       {
         size: "invisible",
-        // theme: "dark", // Chủ đề của ReCAPTCHA
-      }
+        callback: (response) => {
+          console.log(response)
+        },
+        "expired-callback": () => {},
+      },
+      auth
     );
-  };
+  }
+}
+
+  // window.recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {
+  //   "size": "invisible",
+    
+  // }, auth);
+    // window.recaptchaVerifier = new RecaptchaVerifier(
+    //   "sign-in-button",
+    //   {
+    //     "size": "invisible",
+
+    //     callback: (response) => {
+    //       // reCAPTCHA solved, allow signInWithPhoneNumber.
+    //     },
+    //   },
+    //   auth
+    // );
+  // };
 
   let onSignInSubmit = async (isResend) => {
     if (!isResend) {
@@ -54,17 +100,29 @@ const Otp = (props) => {
     }
 
     console.log("check phonenumber", phoneNumber);
-    const appVerifier = window.recaptchaVerifier;
-    console.log(appVerifier)
-    try {
-      const confirmationResult = await firebase
-        .auth()
-        .signInWithPhoneNumber(phoneNumber, appVerifier);
-      window.confirmationResult = confirmationResult;
-      toast.success("Đã gửi mã OTP vào điện thoại");
-    } catch (error) {
-      toast.error("Gửi mã thất bại !");
-    }
+
+
+
+    
+    let appVerifier = window.recaptchaVerifier;
+    // signInWithPhoneNumber(auth, `+84374852925`, appVerifier)
+    signInWithPhoneNumber(auth, `+84374852925`, appVerifier)
+      .then((confirmationResult) => {
+        window.confirmationResult = confirmationResult;
+        console.log("success in " + confirmationResult);
+
+    //     // swal({
+    //     //   text: "OTP Sent",
+    //     //   icon: "success",
+    //     //   buttons: false,
+    //     //   timer: 3000,
+    //     // });
+    //     // setOtpSent(true);
+    //     // setLoading(false);
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+      });
   };
   let submitOTP = async () => {
     const code = +(
@@ -136,7 +194,7 @@ const Otp = (props) => {
             )
             .then((response) => {
               if (response.data && response.data.length > 0) {
-                const userData = response.data[0]; // Lấy object đầu tiên trong mảng
+                const userData = response.data[0]; // Lấy object đầu tiên 
                 localStorage.setItem("userData", JSON.stringify(userData));
                 // console.log("User data saved to localStorage:", userData.codeRoleAccount);
                 // Chuyển hướng sau khi lưu

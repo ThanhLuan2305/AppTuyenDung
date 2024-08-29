@@ -48,7 +48,7 @@ public interface PostRepositoriesQuery extends JpaRepository<Post,Integer>{
                 "WHERE p.status_Code = 'PS1' \n" + //
                 "AND ( :categoryJobCode is null or ac1.code = :categoryJobCode )\n" + //
                 "AND ( :addressCode is null or ac6.code = :addressCode )\n" + //
-                "AND ( :search is null or dp.name like '%:search%' )\n" + //
+                "AND ( :search is null or dp.name like CONCAT('%', :search, '%' )\n" + //
                 "AND ( :experienceJobCodes is null or ac4.code in (:experienceJobCodes) )\n" + //
                 "AND ( :categoryWorktypeCodes is null or ac3.code in (:categoryWorktypeCodes) )\n" + //
                 "AND ( :salaryJobCodes is null or ac7.code in (:salaryJobCodes) )\n" + //

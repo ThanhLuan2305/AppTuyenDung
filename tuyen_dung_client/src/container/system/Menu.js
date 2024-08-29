@@ -361,7 +361,7 @@ const Menu = () => {
             </li>
           </>
         )}
-        {user && user.roleCode === "COMPANY" && (
+        {user && user.codeRoleAccount === "COMPANY" && (
           <>
             <li className="nav-item relative">
               <a
@@ -547,7 +547,7 @@ const Menu = () => {
           </>
         )}
 
-        {user && user.roleCode === "EMPLOYER" && (
+        {user && user.codeRoleAccount === "EMPLOYER" && (
           <>
             {!user.companyId && (
               <li className="nav-item relative">

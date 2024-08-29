@@ -7,6 +7,7 @@ import Contact from "./container/Contact/Contact";
 import "react-toastify/dist/ReactToastify.css";
 import JobPage from "./container/JobPage/JobPage";
 import HomeAdmin from "./container/system/HomeAdmin";
+import HomeCandidate from "./container/Candidate/HomeCandidate";
 import { ToastContainer } from "react-toastify";
 import {
   BrowserRouter as Router,
@@ -86,7 +87,7 @@ function App() {
                 return (
                   <>
                     <Header />
-                    {/* <HomeCandidate /> */}
+                    <HomeCandidate />
                     <Footer />
                   </>
                 );

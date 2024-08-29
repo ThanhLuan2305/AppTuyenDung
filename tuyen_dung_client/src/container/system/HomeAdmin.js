@@ -10,6 +10,9 @@ import {
     Route,
     Link
 } from "react-router-dom";
+import AddCompany from './Company/AddCompany';
+
+
 const HomeAdmin = () => {
     return (
         <Router>
@@ -194,7 +197,9 @@ const HomeAdmin = () => {
                         {/* partial */}
                         <div className="main-panel">
                             <div className="content-wrapper">
-                                
+                            <Route exact path="/admin/add-company">
+                                    <AddCompany />
+                                </Route> 
                         </div>
                             {/* content-wrapper ends */}
                             {/* partial:partials/_footer.html */}

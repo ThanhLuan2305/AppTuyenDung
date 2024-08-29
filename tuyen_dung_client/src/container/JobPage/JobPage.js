@@ -3,7 +3,7 @@ import ReactPaginate from "react-paginate";
 import LeftBar from "./LeftPage/LeftBar";
 import { PAGINATION } from "../utils/constant";
 import RightContent from "./RightPage/RightContent";
-
+import qs from 'qs'
 import CommonUtils from "../utils/CommonUtils";
 import axios from "axios";
 const JobPage = () => {
@@ -27,10 +27,10 @@ const JobPage = () => {
       offset: offset,
       categoryJobCode: jobType,
       addressCode: jobLocation,
-      salaryJobCode: salary,
-      categoryJoblevelCode: jobLevel,
-      categoryWorktypeCode: workType,
-      experienceJobCode: exp,
+      salaryJobCodes: salary,
+      categoryJoblevelCodes : jobLevel,
+      categoryWorktypeCodes : workType,
+      experienceJobCodes: exp,
       // sortName: '1',
       search: CommonUtils.removeSpace(search),
     };
@@ -38,6 +38,7 @@ const JobPage = () => {
       .filter((key) => params[key] && params[key].length !== 0)
       .reduce((obj, key) => {
         obj[key] = params[key];
+        console.log(obj)
         return obj;
       }, {});
 
@@ -116,10 +117,10 @@ const JobPage = () => {
         offset: 0,
         categoryJobCode: jobType,
         addressCode: jobLocation,
-        salaryJobCode: salary,
-        categoryJoblevelCode: jobLevel,
-        categoryWorktypeCode: workType,
-        experienceJobCode: exp,
+        salaryJobCodes:  jobType,
+        categoryJoblevelCodes : jobLevel,
+        categoryWorktypeCodes : workType,
+        experienceJobCodes: exp,
         search: CommonUtils.removeSpace(search),
       };
       let filteredParams = Object.keys(params)
@@ -131,6 +132,9 @@ const JobPage = () => {
       axios
         .get("http://localhost:8080/public/get-filter-post", {
           params: filteredParams,
+          paramsSerializer: params => {
+            return qs.stringify(params, { arrayFormat: 'repeat' });
+          }
         })
         .then((responseFeature) => {
           console.log(responseFeature.data.content);

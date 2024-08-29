@@ -120,12 +120,13 @@ const useFetchDataCodeRole = () => {
 };
 
 const useFetchDataCodeGender = () => {
-  const [dataCodeGender, setdataCodeGender] = useState([]);
+  const [dataGender, setdataGender] = useState([]);
   useEffect(() => {
     try {
       let fetchData = async () => {
         axios.get("http://localhost:8080/public/get-all-code/genders-user").then((res) => {
-          setdataCodeGender(res.data);
+          console.log(res.data)
+          setdataGender(res.data);
         })
         };
       fetchData();
@@ -133,7 +134,7 @@ const useFetchDataCodeGender = () => {
       console.log(error);
     }
   }, []);
-  return { dataCodeGender };
+  return { dataGender };
 };
 
 export { useFetchDataJobType,useFetchDataJobLevel,useFetchDataSalaryType,useFetchDataExpType,
