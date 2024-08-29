@@ -2,6 +2,8 @@ package com.doan.AppTuyenDung.entity;
 
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -33,7 +35,7 @@ public class User {
     private String image;
     private String dob;
     private Integer companyId;
-
+	@JsonIgnore
     @OneToMany(mappedBy = "user")
     private Set<Account> accounts;
 

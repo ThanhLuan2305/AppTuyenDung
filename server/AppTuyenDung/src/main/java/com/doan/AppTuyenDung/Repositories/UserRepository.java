@@ -28,4 +28,8 @@ public interface UserRepository extends JpaRepository<User, Integer>{
                 "LEFT JOIN code_rule ac4 ON acc.role_code = ac4.code \n" + //
                 "where acc.phonenumber = :phoneNumber ",nativeQuery= true)
     List<UserAccountDTO> findInfoUser(String phoneNumber);
+
+    
+
+    Optional<User> findById(Integer id);
 }
