@@ -15,8 +15,9 @@ public class Cv {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Column(columnDefinition = "longblob")
-    private byte[] file;
+
+    @Column(columnDefinition = "LONGBLOB")
+    private byte[] file; 
     private Boolean isChecked;
     private String status;
     private java.util.Date interviewTime;

@@ -6,6 +6,8 @@ import About from "./container/About/About";
 import Contact from "./container/Contact/Contact";
 import "react-toastify/dist/ReactToastify.css";
 import JobPage from "./container/JobPage/JobPage";
+import HomeAdmin from "./container/system/HomeAdmin";
+import HomeCandidate from "./container/Candidate/HomeCandidate";
 import { ToastContainer } from "react-toastify";
 import {
   BrowserRouter as Router,
@@ -19,7 +21,7 @@ import Login from "./container/login/Login";
 import Register from "./container/login/Register";
 import ForgetPassword from "./container/login/ForgetPassword";
 import JobDetail from "./container/JobDetail/JobDetail";
-
+// import HomeCandidate from "./container/Candidate/HomeCandidate";
 function App() {
   return (
     <Router>
@@ -56,6 +58,44 @@ function App() {
             {/* <DetailCompany /> */}
             <Footer />
           </Route>
+          <Route
+            path="/admin/"
+            render={() => {
+              if (
+                JSON.parse(localStorage.getItem("userData")) &&
+                (JSON.parse(localStorage.getItem("userData")).codeRoleAccount ===
+                  "ADMIN" ||
+                  JSON.parse(localStorage.getItem("userData")).codeRoleAccount ===
+                    "EMPLOYER" ||
+                  JSON.parse(localStorage.getItem("userData")).codeRoleAccount ===
+                    "COMPANY")
+              ) {
+                return <HomeAdmin />;
+              } else {
+                return <Redirect to={"/login"} />;
+              }
+            }}
+          ></Route>
+          <Route
+            path="/candidate/"
+            render={() => {
+              if (
+                JSON.parse(localStorage.getItem("userData")) &&
+                JSON.parse(localStorage.getItem("userData")).codeRoleAccount ===
+                  "CANDIDATE"
+              ) {
+                return (
+                  <>
+                    <Header />
+                    <HomeCandidate />
+                    <Footer />
+                  </>
+                );
+              } else {
+                return <Redirect to={"/login"} />;
+              }
+            }}
+          ></Route>
 
           <Route path="/login">
             <Header />

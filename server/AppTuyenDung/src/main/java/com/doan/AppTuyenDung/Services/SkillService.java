@@ -2,10 +2,8 @@ package com.doan.AppTuyenDung.Services;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.doan.AppTuyenDung.DTO.Response.SkillResponse;
 import com.doan.AppTuyenDung.Repositories.SkillRepository;
 import com.doan.AppTuyenDung.entity.Skill;
@@ -29,4 +27,5 @@ public class SkillService {
 	        response.setCategoryJobCode(skill.getCategoryJobCode());
 	        return response;
 	    }
+
 }

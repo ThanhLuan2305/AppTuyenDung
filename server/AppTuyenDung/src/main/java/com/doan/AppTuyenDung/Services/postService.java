@@ -100,7 +100,10 @@ public class postService {
                                                       List<String> experienceJobCodes, List<String> categoryWorktypeCodes,
                                                       List<String> salaryJobCodes, List<String> categoryJoblevelCodes,
                                                       Integer isHot, Pageable pageable) {
-        
+        if (search != null && !search.isEmpty()) 
+        {
+            search = "%" + search + "%";
+        }
         
         return postRepositoriesQuery.findFilteredPosts(categoryJobCode, 
                                                             addressCode, 

@@ -2,6 +2,8 @@ package com.doan.AppTuyenDung.entity;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
@@ -15,10 +17,19 @@ public class CodeGender {
     private String type;
     private String value;
     private String image;
-
-    @OneToMany(mappedBy = "genderCode")
+	@JsonIgnore
+	@OneToMany(mappedBy = "genderCode")
     private List<User> users;
 
+	public CodeGender(String code, String type, String value, String image, List<User> users) {
+		this.code = code;
+		this.type = type;
+		this.value = value;
+		this.image = image;
+		this.users = users;
+	}
+	public CodeGender() {
+	}
 	public String getCode() {
 		return code;
 	}

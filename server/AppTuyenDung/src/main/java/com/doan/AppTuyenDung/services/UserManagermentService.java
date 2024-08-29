@@ -20,14 +20,22 @@ import com.doan.AppTuyenDung.entity.CodeProvince;
 import com.doan.AppTuyenDung.entity.CodeRule;
 import com.doan.AppTuyenDung.entity.CodeSalaryType;
 
+import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestHeader;
 
+
+import com.doan.AppTuyenDung.DTO.InfoPostDetailDto;
+import com.doan.AppTuyenDung.DTO.ReqRes;
+import com.doan.AppTuyenDung.DTO.UserAccountDTO;
+import com.doan.AppTuyenDung.DTO.UserUpdateRequest;
 import com.doan.AppTuyenDung.Repositories.UserRepository;
 import com.doan.AppTuyenDung.Repositories.UserSettingRepository;
 import com.doan.AppTuyenDung.Repositories.UserSkillRepository;
@@ -116,13 +124,33 @@ public class UserManagermentService {
 		ReqRes resp = new ReqRes();
 
 		try {
+            // Kiểm tra thông tin đăng nhập
+            if (loginRequest.getPhonenumber() == null || loginRequest.getPassword() == null) {
+                resp.setStatusCode(400);
+                resp.setError("Các trường phải đảm bảo đầy đủ!");
+                return resp;
+            }
+            // check tài khoản tồn tại = số điện thoại
+            var account = accountRepo.findByPhonenumber(loginRequest.getPhonenumber());
+            if (account == null) {
+                resp.setStatusCode(404);
+                resp.setError("Không tìm thấy số điện thoại! ");
+                return resp;
+            }
+            // xác thực user
 			authenticationManager
 							.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getPhonenumber()
 									, loginRequest.getPassword()));
-			var account = accountRepo.findByPhonenumber(loginRequest.getPhonenumber());
+            // check acc bị ban
+            if ("S1".equals(account.getStatusCode())) {
+                resp.setStatusCode(403);
+                resp.setError("Tài khoản của bạn đã bị khoá. Vui lòng liên hệ hỗ trợ!");
+                return resp;
+            }
 			var jwt = jwtUtils.generateToken(account);
             var refreshToken = jwtUtils.generateRefreshToken(new HashMap<>(), account);
 			CodeRule rule = ruleRepo.findByCode(account.getRoleCode().getCode());
+            // done
 			resp.setStatusCode(200);
 			resp.setRoleCode(rule.getCode());
 			resp.setToken(jwt);
@@ -304,6 +332,10 @@ public class UserManagermentService {
 	}
 
 
+    public Account getUserFromToken(String token) {
+        String phonenumber = jwtUtils.extractUserName(token);
+        return accountRepo.findByPhonenumber(phonenumber);
+    }
 
 }
 

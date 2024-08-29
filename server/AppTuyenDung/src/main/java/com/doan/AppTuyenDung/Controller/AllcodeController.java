@@ -12,11 +12,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.doan.AppTuyenDung.Repositories.AllCode.CodeGendersRepository;
 import com.doan.AppTuyenDung.Services.AllCodeService;
 import com.doan.AppTuyenDung.entity.CodeExpType;
+import com.doan.AppTuyenDung.entity.CodeGender;
 import com.doan.AppTuyenDung.entity.CodeJobLevel;
 import com.doan.AppTuyenDung.entity.CodeJobType;
 import com.doan.AppTuyenDung.entity.CodeProvince;
+import com.doan.AppTuyenDung.entity.CodeRule;
 import com.doan.AppTuyenDung.entity.CodeSalaryType;
 import com.doan.AppTuyenDung.entity.CodeWorkType;
 
@@ -54,5 +57,13 @@ public class AllcodeController {
     @GetMapping("/work-types")
     public ResponseEntity<List<CodeWorkType>> getWorkTypes() {
         return ResponseEntity.ok(codeService.getAllWorkTypes());
+    }
+    @GetMapping("/rules-user")
+    public ResponseEntity<List<CodeRule>> getCodeRules() {
+        return ResponseEntity.ok(codeService.getAllCodeRules());
+    }
+    @GetMapping("/genders-user")
+    public ResponseEntity<List<CodeGender>> getCodeGenders() {
+        return ResponseEntity.ok(codeService.getAllCodeGenders());
     }
 }
