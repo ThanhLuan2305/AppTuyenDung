@@ -78,9 +78,6 @@ public class CompanyController {
     private JWTUtils jwtUtils; 
     @Autowired
     private AccountRepository accountRepo;
-
-    @Autowired
-	  CompanyService companyService;
 	 @PutMapping("/company/ban/{copanyId}")
 	 public ApiResponse<CompanyResponse> banCompany(@PathVariable int copanyId) {
 		 ApiResponse<CompanyResponse> apiResponse = new ApiResponse<>();
@@ -116,7 +113,7 @@ public class CompanyController {
 		 apiResponse.setResult(companyService.getCompanyByID(companyID));
 		 apiResponse.setMessage("Tìm thấy công ti với id: "+companyID );
 		 return apiResponse;
-     
+    }
     @GetMapping("api/get-detail-company-by-userId")
     public ResponseEntity<?> getDetailCompanyByUserId(
             @RequestParam(value = "userId", required = false) String userId,

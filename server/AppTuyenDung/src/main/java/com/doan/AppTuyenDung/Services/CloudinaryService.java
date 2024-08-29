@@ -24,7 +24,5 @@ public class CloudinaryService {
         } catch (Exception e) {
             throw new com.doan.AppTuyenDung.Exception.ResourceNotFoundException("Error uploading file");
         }
-
-
     }
 }

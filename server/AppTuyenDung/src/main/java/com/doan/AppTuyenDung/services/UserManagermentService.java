@@ -33,9 +33,8 @@ import org.springframework.web.bind.annotation.RequestHeader;
 
 
 import com.doan.AppTuyenDung.DTO.InfoPostDetailDto;
-import com.doan.AppTuyenDung.DTO.ReqRes;
 import com.doan.AppTuyenDung.DTO.UserAccountDTO;
-import com.doan.AppTuyenDung.DTO.UserUpdateRequest;
+
 import com.doan.AppTuyenDung.Repositories.UserRepository;
 import com.doan.AppTuyenDung.Repositories.UserSettingRepository;
 import com.doan.AppTuyenDung.Repositories.UserSkillRepository;
