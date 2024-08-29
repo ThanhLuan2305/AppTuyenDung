@@ -239,6 +239,6 @@ public class UserManagermentService {
         String phonenumber = jwtUtils.extractUserName(token);
         return accountRepo.findByPhonenumber(phonenumber);
     }
-
+    
 }
 
