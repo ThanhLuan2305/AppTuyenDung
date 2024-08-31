@@ -16,6 +16,7 @@ import com.doan.AppTuyenDung.DTO.Request.ProfileUserRequest;
 import com.doan.AppTuyenDung.DTO.Request.ReqRes;
 import com.doan.AppTuyenDung.DTO.Request.UserSettingDTO;
 import com.doan.AppTuyenDung.DTO.Request.UserUpdateRequest;
+import com.doan.AppTuyenDung.DTO.Response.AccountResponse;
 import com.doan.AppTuyenDung.DTO.Response.ApiResponse;
 import com.doan.AppTuyenDung.DTO.UserAccountDTO;
 import com.doan.AppTuyenDung.Repositories.AccountRepository;
@@ -60,8 +61,11 @@ public class UserManagementController {
     }
 
     @GetMapping("/public/get-users/{userId}")
-    public ResponseEntity<ReqRes> getUSerByID(@PathVariable Integer userId){
-        return ResponseEntity.ok(usersManagementService.getUsersById(userId));
+    public ApiResponse<AccountResponse> getUSerByID(@PathVariable Integer userId) throws Exception{
+    	ApiResponse apiResponse = new ApiResponse<>();
+    	apiResponse.setMessage("Tìm thấy người dùng với id: "+userId);
+    	apiResponse.setResult(usersManagementService.getUsersById(userId));
+        return apiResponse;
 
     }
 

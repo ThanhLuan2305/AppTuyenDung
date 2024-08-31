@@ -2,11 +2,19 @@ package com.doan.AppTuyenDung.Services;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.doan.AppTuyenDung.DTO.Request.ProfileUserRequest;
 import com.doan.AppTuyenDung.DTO.Request.ReqRes;
 import com.doan.AppTuyenDung.DTO.Request.UserSettingDTO;
 import com.doan.AppTuyenDung.DTO.Request.UserUpdateRequest;
+import com.doan.AppTuyenDung.DTO.Response.AccountResponse;
+import com.doan.AppTuyenDung.DTO.Response.CodeResponse;
+import com.doan.AppTuyenDung.DTO.Response.SkillIdRespones;
+import com.doan.AppTuyenDung.DTO.Response.SkillResponse;
+import com.doan.AppTuyenDung.DTO.Response.UserResponse;
+import com.doan.AppTuyenDung.DTO.Response.UserSettingResponse;
 import com.doan.AppTuyenDung.Exception.AppException;
 import com.doan.AppTuyenDung.Exception.ErrorCode;
 import com.doan.AppTuyenDung.Repositories.AccountRepository;
@@ -33,9 +41,9 @@ import org.springframework.web.bind.annotation.RequestHeader;
 
 
 import com.doan.AppTuyenDung.DTO.InfoPostDetailDto;
-import com.doan.AppTuyenDung.DTO.ReqRes;
+
 import com.doan.AppTuyenDung.DTO.UserAccountDTO;
-import com.doan.AppTuyenDung.DTO.UserUpdateRequest;
+
 import com.doan.AppTuyenDung.Repositories.UserRepository;
 import com.doan.AppTuyenDung.Repositories.UserSettingRepository;
 import com.doan.AppTuyenDung.Repositories.UserSkillRepository;
@@ -98,6 +106,7 @@ public class UserManagermentService {
             user.setFirstName(registrationRequest.getFirstName());
             user.setLastName(registrationRequest.getLastName());
             user.setEmail(registrationRequest.getEmail());
+            user.setImage(registrationRequest.getImage());
             user.setGenderCode(gender);
             User UserResult = usersRepo.save(user);
             if (user!=null) {
@@ -209,18 +218,14 @@ public class UserManagermentService {
     }
 
 
-    public ReqRes getUsersById(Integer id) {
-        ReqRes reqRes = new ReqRes();
+    public AccountResponse getUsersById(Integer id) throws Exception {
+        AccountResponse accountResponse = new AccountResponse();
         try {
-            User usersById = usersRepo.findById(id).orElseThrow(() -> new RuntimeException("User Not found"));
-            reqRes.setUser(usersById);
-            reqRes.setStatusCode(200);
-            reqRes.setMessage("Users with id '" + id + "' found successfully");
+           accountResponse = mapToUserResponse(id);
         } catch (Exception e) {
-            reqRes.setStatusCode(500);
-            reqRes.setMessage("Error occurred: " + e.getMessage());
+        	throw new Exception(e);
         }
-        return reqRes;
+        return accountResponse;
     }
 
     public ReqRes updateUser(Integer userId, UserUpdateRequest updatedUser) {
@@ -293,9 +298,9 @@ public class UserManagermentService {
 
 		    createOrUpdateUserSetting(data, user);
 
-		    if (data.getSkill() != null && !data.getSkill().isEmpty()) {
+		    if (data.getSkills() != null && !data.getSkills().isEmpty()) {
 		        userSkillRepository.deleteByUserId(user.getId());
-		        List<UserSkill> userSkills = data.getSkill().stream().map(skillId -> {
+		        List<UserSkill> userSkills = data.getSkills().stream().map(skillId -> {
 		            UserSkill userSkill = new UserSkill();
 		            userSkill.setUserId(user.getId());
 		            userSkill.setSkillId(skillId);
@@ -333,6 +338,70 @@ public class UserManagermentService {
     public Account getUserFromToken(String token) {
         String phonenumber = jwtUtils.extractUserName(token);
         return accountRepo.findByPhonenumber(phonenumber);
+    }
+    private AccountResponse mapToUserResponse(Integer Id) {
+    	Account account = accountRepo.findByUserId(Id);
+        AccountResponse accountResponse = new AccountResponse();
+        
+        CodeResponse roleDataResponse = new CodeResponse();
+        roleDataResponse.setValue(account.getRoleCode().getValue());
+        roleDataResponse.setCode(account.getRoleCode().getCode());
+        accountResponse.setRoleData(roleDataResponse);
+
+        UserResponse userAccountResponse = new UserResponse();
+        userAccountResponse.setId(account.getUser().getId());
+        userAccountResponse.setFirstName(account.getUser().getFirstName());
+        userAccountResponse.setLastName(account.getUser().getLastName());
+        userAccountResponse.setEmail(account.getUser().getEmail());
+        userAccountResponse.setAddress(account.getUser().getAddress());
+        userAccountResponse.setImage(account.getUser().getImage());
+        userAccountResponse.setDob(account.getUser().getDob());
+        userAccountResponse.setCompanyId(account.getUser().getCompanyId());
+        accountResponse.setUserAccountData(userAccountResponse);
+
+        CodeResponse genderCode = new CodeResponse();
+        genderCode.setValue(account.getUser().getGenderCode().getValue());
+        genderCode.setCode(account.getUser().getGenderCode().getCode());
+        userAccountResponse.setGenderCode(genderCode);
+
+        UserSettingResponse userSettingResponse = new UserSettingResponse();
+        userSettingResponse.setId(account.getUser().getUserSetting().getId());
+        userSettingResponse.setCategoryJobCode(account.getUser().getUserSetting().getCategoryJobCode().getValue());
+        userSettingResponse.setAddressCode(account.getUser().getUserSetting().getAddressCode().getCode());
+        userSettingResponse.setSalaryJobCode(account.getUser().getUserSetting().getSalaryJobCode().getCode());
+        userSettingResponse.setExperienceJobCode(account.getUser().getUserSetting().getExperienceJobCode().getCode());
+        userSettingResponse.setIsTakeMail(account.getUser().getUserSetting().getIsTakeMail());
+        userSettingResponse.setIsFindJob(account.getUser().getUserSetting().getIsFindJob());
+        userSettingResponse.setUserId(account.getUser().getId());
+        userSettingResponse.setFile(account.getUser().getUserSetting().getFile());
+        userAccountResponse.setUserSettingData(userSettingResponse);
+
+        List<UserSkill> lstUSkill = userSkillRepository.findByUserId(Id);
+        List<SkillIdRespones> skillResponses = lstUSkill.stream()
+            .map(userSkill -> {
+                SkillIdRespones skillIdResponse = new SkillIdRespones();
+               
+                skillIdResponse.setSkillId(userSkill.getSkill().getId());
+                skillIdResponse.setUserId(userSkill.getUserId());
+                SkillResponse skillResponse = new SkillResponse();
+                skillResponse.setId(userSkill.getSkill().getId());
+                skillResponse.setName(userSkill.getSkill().getName());
+                skillResponse.setCategoryJobCode(userSkill.getSkill().getCategoryJobCode());
+                
+                skillIdResponse.setSkill(skillResponse);
+                
+                return skillIdResponse;
+            })
+            .collect(Collectors.toList());
+
+        accountResponse.setListSkills(skillResponses);
+    	accountResponse.setId(account.getId());
+    	accountResponse.setPhonenumber(account.getPhonenumber());
+    	accountResponse.setStatusCode(account.getStatusCode().getCode());
+    	accountResponse.setUserId(account.getUser().getId());
+    	accountResponse.setCreatedAt(account.getCreatedAt());
+    	accountResponse.setUpdatedAt(account.getUpdatedAt());
+        return accountResponse;
     }
 
 }
