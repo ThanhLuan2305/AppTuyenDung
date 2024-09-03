@@ -1,4 +1,5 @@
 package com.doan.AppTuyenDung.Services;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -196,29 +197,29 @@ public class UserManagermentService {
     }
 
 
-    public ReqRes getAllUsers() {
-        ReqRes reqRes = new ReqRes();
-
+    public List<AccountResponse> getAllUsers() throws Exception {
+        AccountResponse accountResponse = new AccountResponse();
+        List<User> lstUser = usersRepo.findAll();
+        List<AccountResponse> lstRP = new ArrayList<AccountResponse>();
         try {
-            List<User> result = usersRepo.findAll();
-            if (!result.isEmpty()) {
-                reqRes.setUsersList(result);
-                reqRes.setStatusCode(200);
-                reqRes.setMessage("Successful");
-            } else {
-                reqRes.setStatusCode(404);
-                reqRes.setMessage("No users found");
+            if(lstUser==null) {
+            	throw new AppException(ErrorCode.LISTISNULL);
             }
-            return reqRes;
+            else {
+                for(User u : lstUser) {
+                	lstRP.add(mapToUserResponse(u.getId()));
+                }
+            }
+            
         } catch (Exception e) {
-            reqRes.setStatusCode(500);
-            reqRes.setMessage("Error occurred: " + e.getMessage());
-            return reqRes;
+        	throw new Exception(e);
         }
+        return lstRP;
     }
 
 
     public AccountResponse getUsersById(Integer id) throws Exception {
+
         AccountResponse accountResponse = new AccountResponse();
         try {
            accountResponse = mapToUserResponse(id);
@@ -340,69 +341,88 @@ public class UserManagermentService {
         return accountRepo.findByPhonenumber(phonenumber);
     }
     private AccountResponse mapToUserResponse(Integer Id) {
-    	Account account = accountRepo.findByUserId(Id);
+        Account account = accountRepo.findByUserId(Id);
         AccountResponse accountResponse = new AccountResponse();
-        
-        CodeResponse roleDataResponse = new CodeResponse();
-        roleDataResponse.setValue(account.getRoleCode().getValue());
-        roleDataResponse.setCode(account.getRoleCode().getCode());
-        accountResponse.setRoleData(roleDataResponse);
 
-        UserResponse userAccountResponse = new UserResponse();
-        userAccountResponse.setId(account.getUser().getId());
-        userAccountResponse.setFirstName(account.getUser().getFirstName());
-        userAccountResponse.setLastName(account.getUser().getLastName());
-        userAccountResponse.setEmail(account.getUser().getEmail());
-        userAccountResponse.setAddress(account.getUser().getAddress());
-        userAccountResponse.setImage(account.getUser().getImage());
-        userAccountResponse.setDob(account.getUser().getDob());
-        userAccountResponse.setCompanyId(account.getUser().getCompanyId());
-        accountResponse.setUserAccountData(userAccountResponse);
+        if (account != null) {
+            CodeResponse roleDataResponse = new CodeResponse();
+            if (account.getRoleCode() != null) {
+                roleDataResponse.setValue(account.getRoleCode().getValue());
+                roleDataResponse.setCode(account.getRoleCode().getCode());
+            }
+            accountResponse.setRoleData(roleDataResponse);
 
-        CodeResponse genderCode = new CodeResponse();
-        genderCode.setValue(account.getUser().getGenderCode().getValue());
-        genderCode.setCode(account.getUser().getGenderCode().getCode());
-        userAccountResponse.setGenderCode(genderCode);
+            UserResponse userAccountResponse = new UserResponse();
+            if (account.getUser() != null) {
+                userAccountResponse.setId(account.getUser().getId());
+                userAccountResponse.setFirstName(account.getUser().getFirstName());
+                userAccountResponse.setLastName(account.getUser().getLastName());
+                userAccountResponse.setEmail(account.getUser().getEmail());
+                userAccountResponse.setAddress(account.getUser().getAddress());
+                userAccountResponse.setImage(account.getUser().getImage());
+                userAccountResponse.setDob(account.getUser().getDob());
+                userAccountResponse.setCompanyId(account.getUser().getCompanyId());
 
-        UserSettingResponse userSettingResponse = new UserSettingResponse();
-        userSettingResponse.setId(account.getUser().getUserSetting().getId());
-        userSettingResponse.setCategoryJobCode(account.getUser().getUserSetting().getCategoryJobCode().getValue());
-        userSettingResponse.setAddressCode(account.getUser().getUserSetting().getAddressCode().getCode());
-        userSettingResponse.setSalaryJobCode(account.getUser().getUserSetting().getSalaryJobCode().getCode());
-        userSettingResponse.setExperienceJobCode(account.getUser().getUserSetting().getExperienceJobCode().getCode());
-        userSettingResponse.setIsTakeMail(account.getUser().getUserSetting().getIsTakeMail());
-        userSettingResponse.setIsFindJob(account.getUser().getUserSetting().getIsFindJob());
-        userSettingResponse.setUserId(account.getUser().getId());
-        userSettingResponse.setFile(account.getUser().getUserSetting().getFile());
-        userAccountResponse.setUserSettingData(userSettingResponse);
+                CodeResponse genderCode = new CodeResponse();
+                if (account.getUser().getGenderCode() != null) {
+                    genderCode.setValue(account.getUser().getGenderCode().getValue());
+                    genderCode.setCode(account.getUser().getGenderCode().getCode());
+                }
+                userAccountResponse.setGenderCode(genderCode);
 
-        List<UserSkill> lstUSkill = userSkillRepository.findByUserId(Id);
-        List<SkillIdRespones> skillResponses = lstUSkill.stream()
-            .map(userSkill -> {
-                SkillIdRespones skillIdResponse = new SkillIdRespones();
-               
-                skillIdResponse.setSkillId(userSkill.getSkill().getId());
-                skillIdResponse.setUserId(userSkill.getUserId());
-                SkillResponse skillResponse = new SkillResponse();
-                skillResponse.setId(userSkill.getSkill().getId());
-                skillResponse.setName(userSkill.getSkill().getName());
-                skillResponse.setCategoryJobCode(userSkill.getSkill().getCategoryJobCode());
-                
-                skillIdResponse.setSkill(skillResponse);
-                
-                return skillIdResponse;
-            })
-            .collect(Collectors.toList());
+                UserSettingResponse userSettingResponse = new UserSettingResponse();
+                if (account.getUser().getUserSetting() != null) {
+                    userSettingResponse.setId(account.getUser().getUserSetting().getId());
+                    if (account.getUser().getUserSetting().getCategoryJobCode() != null) {
+                        userSettingResponse.setCategoryJobCode(account.getUser().getUserSetting().getCategoryJobCode().getValue());
+                    }
+                    if (account.getUser().getUserSetting().getAddressCode() != null) {
+                        userSettingResponse.setAddressCode(account.getUser().getUserSetting().getAddressCode().getCode());
+                    }
+                    if (account.getUser().getUserSetting().getSalaryJobCode() != null) {
+                        userSettingResponse.setSalaryJobCode(account.getUser().getUserSetting().getSalaryJobCode().getCode());
+                    }
+                    if (account.getUser().getUserSetting().getExperienceJobCode() != null) {
+                        userSettingResponse.setExperienceJobCode(account.getUser().getUserSetting().getExperienceJobCode().getCode());
+                    }
+                    userSettingResponse.setIsTakeMail(account.getUser().getUserSetting().getIsTakeMail());
+                    userSettingResponse.setIsFindJob(account.getUser().getUserSetting().getIsFindJob());
+                    userSettingResponse.setUserId(account.getUser().getId());
+                    userSettingResponse.setFile(account.getUser().getUserSetting().getFile());
+                }
+                userAccountResponse.setUserSettingData(userSettingResponse);
+            }
+            accountResponse.setUserAccountData(userAccountResponse);
 
-        accountResponse.setListSkills(skillResponses);
-    	accountResponse.setId(account.getId());
-    	accountResponse.setPhonenumber(account.getPhonenumber());
-    	accountResponse.setStatusCode(account.getStatusCode().getCode());
-    	accountResponse.setUserId(account.getUser().getId());
-    	accountResponse.setCreatedAt(account.getCreatedAt());
-    	accountResponse.setUpdatedAt(account.getUpdatedAt());
+            List<UserSkill> lstUSkill = userSkillRepository.findByUserId(Id);
+            List<SkillIdRespones> skillResponses = lstUSkill.stream()
+                .map(userSkill -> {
+                    SkillIdRespones skillIdResponse = new SkillIdRespones();
+                    skillIdResponse.setSkillId(userSkill.getSkill().getId());
+                    skillIdResponse.setUserId(userSkill.getUserId());
+
+                    SkillResponse skillResponse = new SkillResponse();
+                    if (userSkill.getSkill() != null) {
+                        skillResponse.setId(userSkill.getSkill().getId());
+                        skillResponse.setName(userSkill.getSkill().getName());
+                        skillResponse.setCategoryJobCode(userSkill.getSkill().getCategoryJobCode());
+                    }
+
+                    skillIdResponse.setSkill(skillResponse);
+                    return skillIdResponse;
+                })
+                .collect(Collectors.toList());
+
+            accountResponse.setListSkills(skillResponses);
+            accountResponse.setId(account.getId());
+            accountResponse.setPhonenumber(account.getPhonenumber());
+            accountResponse.setStatusCode(account.getStatusCode() != null ? account.getStatusCode().getCode() : null);
+            accountResponse.setUserId(account.getUser() != null ? account.getUser().getId() : null);
+            accountResponse.setCreatedAt(account.getCreatedAt());
+            accountResponse.setUpdatedAt(account.getUpdatedAt());
+        }
+
         return accountResponse;
     }
-
 }
 

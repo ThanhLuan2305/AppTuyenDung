@@ -55,9 +55,17 @@ public class UserManagementController {
     }
 
     @GetMapping("/admin/get-all-users")
-    public ResponseEntity<ReqRes> getAllUsers(){
-        return ResponseEntity.ok(usersManagementService.getAllUsers());
+    public ApiResponse<List<AccountResponse>> getAllUsers() throws Exception{
 
+    	ApiResponse apiResponse = new ApiResponse<>();
+    	try {
+        	apiResponse.setMessage("Danh sách người dừng: ");
+        	apiResponse.setResult(usersManagementService.getAllUsers());
+		} catch (Exception e) {
+        	apiResponse.setMessage(e.getMessage());
+        	apiResponse.setCode(404);
+		}
+        return apiResponse;
     }
 
     @GetMapping("/public/get-users/{userId}")
