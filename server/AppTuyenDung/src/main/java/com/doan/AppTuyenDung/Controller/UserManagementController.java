@@ -68,7 +68,7 @@ public class UserManagementController {
         return apiResponse;
     }
 
-    @GetMapping("/public/get-users/{userId}")
+    @GetMapping("/public/get-user/{userId}")
     public ApiResponse<AccountResponse> getUSerByID(@PathVariable Integer userId) throws Exception{
     	ApiResponse apiResponse = new ApiResponse<>();
     	apiResponse.setMessage("Tìm thấy người dùng với id: "+userId);
