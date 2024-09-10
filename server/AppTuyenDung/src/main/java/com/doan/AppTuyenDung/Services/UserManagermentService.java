@@ -1,10 +1,10 @@
 package com.doan.AppTuyenDung.Services;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import com.doan.AppTuyenDung.DTO.Request.ProfileUserRequest;
 import com.doan.AppTuyenDung.DTO.Request.ReqRes;
@@ -241,12 +241,8 @@ public class UserManagermentService {
                 existingUser.setLastName(updatedUser.getLastName());
                 CodeGender gender = codeGenderRepo.findByCode(updatedUser.getGenderCode());
                 existingUser.setGenderCode(gender);
-                existingUser.setImage(null); // Cần chỉnh lại sau
+                existingUser.setImage(updatedUser.getImage());
                 existingUser.setDob(updatedUser.getDob());
-//                if (updatedUser.getPassword() != null && !updatedUser.getPassword().isEmpty()) {
-//                    // Encode the password and update it
-//                    existingUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
-//                }
                 User savedUser = usersRepo.save(existingUser);
                 reqRes.setUser(savedUser);
                 reqRes.setStatusCode(200);
@@ -374,7 +370,7 @@ public class UserManagermentService {
                 if (account.getUser().getUserSetting() != null) {
                     userSettingResponse.setId(account.getUser().getUserSetting().getId());
                     if (account.getUser().getUserSetting().getCategoryJobCode() != null) {
-                        userSettingResponse.setCategoryJobCode(account.getUser().getUserSetting().getCategoryJobCode().getValue());
+                        userSettingResponse.setCategoryJobCode(account.getUser().getUserSetting().getCategoryJobCode().getCode());
                     }
                     if (account.getUser().getUserSetting().getAddressCode() != null) {
                         userSettingResponse.setAddressCode(account.getUser().getUserSetting().getAddressCode().getCode());
@@ -388,7 +384,9 @@ public class UserManagermentService {
                     userSettingResponse.setIsTakeMail(account.getUser().getUserSetting().getIsTakeMail());
                     userSettingResponse.setIsFindJob(account.getUser().getUserSetting().getIsFindJob());
                     userSettingResponse.setUserId(account.getUser().getId());
-                    userSettingResponse.setFile(account.getUser().getUserSetting().getFile());
+                    byte[] pdfBytes = account.getUser().getUserSetting().getFile();
+                    String dataFile = new String(pdfBytes, StandardCharsets.UTF_8);
+                    userSettingResponse.setFile(dataFile);
                 }
                 userAccountResponse.setUserSettingData(userSettingResponse);
             }

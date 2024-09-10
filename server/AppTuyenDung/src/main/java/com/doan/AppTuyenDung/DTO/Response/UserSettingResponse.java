@@ -11,6 +11,6 @@ public class UserSettingResponse {
     private String experienceJobCode;
     private Boolean isTakeMail;
     private Boolean isFindJob;
-    private byte[] file;
+    private String file;
     private int userId;
 }
