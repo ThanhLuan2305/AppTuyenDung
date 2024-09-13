@@ -23,7 +23,7 @@ public class CvController {
 	@Autowired
 	private CvService cvService;
 	@GetMapping("/public/cv/get-all-cv-by-userId")
-	public ApiResponse<Page<CvsResponse>> getAllCvByUserId(@RequestParam(defaultValue = "10") int limit
+	public ApiResponse<Page<CvsResponse>> getAllCvByUserId(@RequestParam(defaultValue = "5") int limit
 															,@RequestParam(defaultValue = "0") int offset
 															,@RequestParam (required = false) Integer userId) {
 		ApiResponse<Page<CvsResponse>> apiRs = new ApiResponse<>();

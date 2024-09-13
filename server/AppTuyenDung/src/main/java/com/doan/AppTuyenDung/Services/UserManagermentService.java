@@ -1,12 +1,23 @@
 package com.doan.AppTuyenDung.Services;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
-
+import java.util.Random;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import org.springframework.transaction.annotation.Transactional;
 import com.doan.AppTuyenDung.DTO.Request.ProfileUserRequest;
 import com.doan.AppTuyenDung.DTO.Request.ReqRes;
 import com.doan.AppTuyenDung.DTO.Request.UserSettingDTO;
 import com.doan.AppTuyenDung.DTO.Request.UserUpdateRequest;
+import com.doan.AppTuyenDung.DTO.Response.AccountResponse;
+import com.doan.AppTuyenDung.DTO.Response.CodeResponse;
+import com.doan.AppTuyenDung.DTO.Response.SkillIdRespones;
+import com.doan.AppTuyenDung.DTO.Response.SkillResponse;
+import com.doan.AppTuyenDung.DTO.Response.UserResponse;
+import com.doan.AppTuyenDung.DTO.Response.UserSettingResponse;
 import com.doan.AppTuyenDung.Exception.AppException;
 import com.doan.AppTuyenDung.Exception.ErrorCode;
 import com.doan.AppTuyenDung.Repositories.AccountRepository;
@@ -30,12 +41,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.multipart.MultipartFile;
 
-
+import com.doan.AppTuyenDung.DTO.CloudinaryResponse;
 import com.doan.AppTuyenDung.DTO.InfoPostDetailDto;
-import com.doan.AppTuyenDung.DTO.ReqRes;
-import com.doan.AppTuyenDung.DTO.UserAccountDTO;
-import com.doan.AppTuyenDung.DTO.UserUpdateRequest;
+
 
 import com.doan.AppTuyenDung.Repositories.UserRepository;
 import com.doan.AppTuyenDung.Repositories.UserSettingRepository;
@@ -78,6 +88,8 @@ public class UserManagermentService {
 	private AuthenticationManager authenticationManager;
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+    @Autowired
+    private CloudinaryService cloudinaryService;
 
 	public ReqRes register(ReqRes registrationRequest) {
 		ReqRes resp = new ReqRes();
@@ -99,6 +111,7 @@ public class UserManagermentService {
             user.setFirstName(registrationRequest.getFirstName());
             user.setLastName(registrationRequest.getLastName());
             user.setEmail(registrationRequest.getEmail());
+            user.setImage(registrationRequest.getImage());
             user.setGenderCode(gender);
             User UserResult = usersRepo.save(user);
             if (user!=null) {
@@ -188,60 +201,65 @@ public class UserManagermentService {
     }
 
 
-    public ReqRes getAllUsers() {
-        ReqRes reqRes = new ReqRes();
-
+    public List<AccountResponse> getAllUsers() throws Exception {
+        AccountResponse accountResponse = new AccountResponse();
+        List<User> lstUser = usersRepo.findAll();
+        List<AccountResponse> lstRP = new ArrayList<AccountResponse>();
         try {
-            List<User> result = usersRepo.findAll();
-            if (!result.isEmpty()) {
-                reqRes.setUsersList(result);
-                reqRes.setStatusCode(200);
-                reqRes.setMessage("Successful");
-            } else {
-                reqRes.setStatusCode(404);
-                reqRes.setMessage("No users found");
+            if(lstUser==null) {
+            	throw new AppException(ErrorCode.LISTISNULL);
             }
-            return reqRes;
+            else {
+                for(User u : lstUser) {
+                	lstRP.add(mapToUserResponse(u.getId()));
+                }
+            }
+            
         } catch (Exception e) {
-            reqRes.setStatusCode(500);
-            reqRes.setMessage("Error occurred: " + e.getMessage());
-            return reqRes;
+        	throw new Exception(e);
         }
+        return lstRP;
     }
 
 
-    public ReqRes getUsersById(Integer id) {
-        ReqRes reqRes = new ReqRes();
+    public AccountResponse getUsersById(Integer id) throws Exception {
+
+        AccountResponse accountResponse = new AccountResponse();
         try {
-            User usersById = usersRepo.findById(id).orElseThrow(() -> new RuntimeException("User Not found"));
-            reqRes.setUser(usersById);
-            reqRes.setStatusCode(200);
-            reqRes.setMessage("Users with id '" + id + "' found successfully");
+           accountResponse = mapToUserResponse(id);
         } catch (Exception e) {
-            reqRes.setStatusCode(500);
-            reqRes.setMessage("Error occurred: " + e.getMessage());
+        	throw new Exception(e);
         }
-        return reqRes;
+        return accountResponse;
     }
 
-    public ReqRes updateUser(Integer userId, UserUpdateRequest updatedUser) {
+    public ReqRes updateUser(UserUpdateRequest updatedUser, MultipartFile fileImage) throws Exception {
         ReqRes reqRes = new ReqRes();
         try {
-            Optional<User> userOptional = usersRepo.findById(userId);
+            Optional<User> userOptional = usersRepo.findById(updatedUser.getId());
             if (userOptional.isPresent()) {
                 User existingUser = userOptional.get();
+                existingUser.setId(updatedUser.getId());
                 existingUser.setFirstName(updatedUser.getFirstName());
                 existingUser.setLastName(updatedUser.getLastName());
                 existingUser.setAddress(updatedUser.getAddress());
                 existingUser.setLastName(updatedUser.getLastName());
                 CodeGender gender = codeGenderRepo.findByCode(updatedUser.getGenderCode());
                 existingUser.setGenderCode(gender);
-                existingUser.setImage(null); // Cần chỉnh lại sau
+                // existingUser.setImage(updatedUser.getImage());
+                String imageUrl = "";
+                String imageJobType = updatedUser.getFirstName()+updatedUser.getLastName()+generateRandomNumbers(10)+"Images";
+                if (fileImage != null) {
+                try {
+                    CloudinaryResponse thumbnailResponse = cloudinaryService.uploadFile(fileImage,imageJobType);
+                    imageUrl = thumbnailResponse.getUrl();
+                } catch (Exception e) {
+                    reqRes.setStatusCode(405);
+                    reqRes.setMessage("Lỗi đường truyền lên Cloud!");
+                }
+                }
+                existingUser.setImage(imageUrl);
                 existingUser.setDob(updatedUser.getDob());
-//                if (updatedUser.getPassword() != null && !updatedUser.getPassword().isEmpty()) {
-//                    // Encode the password and update it
-//                    existingUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
-//                }
                 User savedUser = usersRepo.save(existingUser);
                 reqRes.setUser(savedUser);
                 reqRes.setStatusCode(200);
@@ -277,26 +295,24 @@ public class UserManagermentService {
     private boolean checkAccountExist(String phoneNumber) {
         return accountRepo.existsByPhonenumber(phoneNumber);
     }
-	public ReqRes updateUser( UserUpdateRequest reqres) {
-		return null;
-	}
+    @Transactional
 	public String setDataUserSetting(UserSettingDTO data) {
 	    try {
 	    	if (data.getIdUser() == null) {
 		        return "Missing required parameters!";
 		    }
-
 		    User user = usersRepo.findById(data.getIdUser()).orElse(null);
-		    System.out.print(data.getCategoryJobCode());
 		    if (user == null) {
 		        return "Không tồn tại người dùng này";
 		    }
 
 		    createOrUpdateUserSetting(data, user);
 
-		    if (data.getSkill() != null && !data.getSkill().isEmpty()) {
-		        userSkillRepository.deleteByUserId(user.getId());
-		        List<UserSkill> userSkills = data.getSkill().stream().map(skillId -> {
+		    if (data.getListSkills() != null && !data.getListSkills().isEmpty()) {
+		        
+                userSkillRepository.deleteByUserId(user.getId());
+
+		        List<UserSkill> userSkills = data.getListSkills().stream().map(skillId -> {
 		            UserSkill userSkill = new UserSkill();
 		            userSkill.setUserId(user.getId());
 		            userSkill.setSkillId(skillId);
@@ -335,6 +351,103 @@ public class UserManagermentService {
         String phonenumber = jwtUtils.extractUserName(token);
         return accountRepo.findByPhonenumber(phonenumber);
     }
+    private AccountResponse mapToUserResponse(Integer Id) {
+        Account account = accountRepo.findByUserId(Id);
+        AccountResponse accountResponse = new AccountResponse();
 
+        if (account != null) {
+            CodeResponse roleDataResponse = new CodeResponse();
+            if (account.getRoleCode() != null) {
+                roleDataResponse.setValue(account.getRoleCode().getValue());
+                roleDataResponse.setCode(account.getRoleCode().getCode());
+            }
+            accountResponse.setRoleData(roleDataResponse);
+
+            UserResponse userAccountResponse = new UserResponse();
+            if (account.getUser() != null) {
+                userAccountResponse.setId(account.getUser().getId());
+                userAccountResponse.setFirstName(account.getUser().getFirstName());
+                userAccountResponse.setLastName(account.getUser().getLastName());
+                userAccountResponse.setEmail(account.getUser().getEmail());
+                userAccountResponse.setAddress(account.getUser().getAddress());
+                userAccountResponse.setImage(account.getUser().getImage());
+                userAccountResponse.setDob(account.getUser().getDob());
+                userAccountResponse.setCompanyId(account.getUser().getCompanyId());
+
+                CodeResponse genderCode = new CodeResponse();
+                if (account.getUser().getGenderCode() != null) {
+                    genderCode.setValue(account.getUser().getGenderCode().getValue());
+                    genderCode.setCode(account.getUser().getGenderCode().getCode());
+                }
+                userAccountResponse.setGenderCode(genderCode);
+
+                UserSettingResponse userSettingResponse = new UserSettingResponse();
+                if (account.getUser().getUserSetting() != null) {
+                    userSettingResponse.setId(account.getUser().getUserSetting().getId());
+                    if (account.getUser().getUserSetting().getCategoryJobCode() != null) {
+                        userSettingResponse.setCategoryJobCode(account.getUser().getUserSetting().getCategoryJobCode().getCode());
+                    }
+                    if (account.getUser().getUserSetting().getAddressCode() != null) {
+                        userSettingResponse.setAddressCode(account.getUser().getUserSetting().getAddressCode().getCode());
+                    }
+                    if (account.getUser().getUserSetting().getSalaryJobCode() != null) {
+                        userSettingResponse.setSalaryJobCode(account.getUser().getUserSetting().getSalaryJobCode().getCode());
+                    }
+                    if (account.getUser().getUserSetting().getExperienceJobCode() != null) {
+                        userSettingResponse.setExperienceJobCode(account.getUser().getUserSetting().getExperienceJobCode().getCode());
+                    }
+                    userSettingResponse.setIsTakeMail(account.getUser().getUserSetting().getIsTakeMail());
+                    userSettingResponse.setIsFindJob(account.getUser().getUserSetting().getIsFindJob());
+                    userSettingResponse.setUserId(account.getUser().getId());
+                    byte[] pdfBytes = account.getUser().getUserSetting().getFile();
+                    String dataFile = new String(pdfBytes, StandardCharsets.UTF_8);
+                    userSettingResponse.setFile(dataFile);
+                }
+                userAccountResponse.setUserSettingData(userSettingResponse);
+            }
+            accountResponse.setUserAccountData(userAccountResponse);
+
+            List<UserSkill> lstUSkill = userSkillRepository.findByUserId(Id);
+            List<SkillIdRespones> skillResponses = lstUSkill.stream()
+                .map(userSkill -> {
+                    SkillIdRespones skillIdResponse = new SkillIdRespones();
+                    skillIdResponse.setSkillId(userSkill.getSkill().getId());
+                    skillIdResponse.setUserId(userSkill.getUserId());
+
+                    SkillResponse skillResponse = new SkillResponse();
+                    if (userSkill.getSkill() != null) {
+                        skillResponse.setId(userSkill.getSkill().getId());
+                        skillResponse.setName(userSkill.getSkill().getName());
+                        skillResponse.setCategoryJobCode(userSkill.getSkill().getCategoryJobCode());
+                    }
+
+                    skillIdResponse.setSkill(skillResponse);
+                    return skillIdResponse;
+                })
+                .collect(Collectors.toList());
+
+            accountResponse.setListSkills(skillResponses);
+            accountResponse.setId(account.getId());
+            accountResponse.setPhonenumber(account.getPhonenumber());
+            accountResponse.setStatusCode(account.getStatusCode() != null ? account.getStatusCode().getCode() : null);
+            accountResponse.setUserId(account.getUser() != null ? account.getUser().getId() : null);
+            accountResponse.setCreatedAt(account.getCreatedAt());
+            accountResponse.setUpdatedAt(account.getUpdatedAt());
+        }
+
+        return accountResponse;
+    }
+
+
+    public static String generateRandomNumbers(int count) {
+        Random random = new Random();
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for (int i = 0; i < count; i++) {
+            int randomNumber = random.nextInt(100); // Số ngẫu nhiên từ 0 đến 99
+            stringBuilder.append(randomNumber);
+        }
+
+        return stringBuilder.toString();
+    }
 }
-

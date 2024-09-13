@@ -2,6 +2,7 @@ package com.doan.AppTuyenDung.Controller;
 
 import com.doan.AppTuyenDung.entity.Account;
 
+import java.util.Base64;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,12 +11,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.doan.AppTuyenDung.entity.User;
 import com.doan.AppTuyenDung.DTO.Request.ProfileUserRequest;
 import com.doan.AppTuyenDung.DTO.Request.ReqRes;
 import com.doan.AppTuyenDung.DTO.Request.UserSettingDTO;
 import com.doan.AppTuyenDung.DTO.Request.UserUpdateRequest;
+import com.doan.AppTuyenDung.DTO.Response.AccountResponse;
 import com.doan.AppTuyenDung.DTO.Response.ApiResponse;
 import com.doan.AppTuyenDung.DTO.UserAccountDTO;
 import com.doan.AppTuyenDung.Repositories.AccountRepository;
@@ -54,20 +57,32 @@ public class UserManagementController {
     }
 
     @GetMapping("/admin/get-all-users")
-    public ResponseEntity<ReqRes> getAllUsers(){
-        return ResponseEntity.ok(usersManagementService.getAllUsers());
+    public ApiResponse<List<AccountResponse>> getAllUsers() throws Exception{
 
+    	ApiResponse apiResponse = new ApiResponse<>();
+    	try {
+        	apiResponse.setMessage("Danh sách người dừng: ");
+        	apiResponse.setResult(usersManagementService.getAllUsers());
+		} catch (Exception e) {
+        	apiResponse.setMessage(e.getMessage());
+        	apiResponse.setCode(404);
+		}
+        return apiResponse;
     }
 
     @GetMapping("/public/get-users/{userId}")
-    public ResponseEntity<ReqRes> getUSerByID(@PathVariable Integer userId){
-        return ResponseEntity.ok(usersManagementService.getUsersById(userId));
+    public ApiResponse<AccountResponse> getUSerByID(@PathVariable Integer userId) throws Exception{
+    	ApiResponse apiResponse = new ApiResponse<>();
+    	apiResponse.setMessage("Tìm thấy người dùng với id: "+userId);
+    	apiResponse.setResult(usersManagementService.getUsersById(userId));
+        return apiResponse;
 
     }
 
-    @PutMapping("/admin/update/{userId}")
-    public ResponseEntity<ReqRes> updateUser(@PathVariable Integer userId, @RequestBody UserUpdateRequest reqres){
-        return ResponseEntity.ok(usersManagementService.updateUser(userId, reqres));
+    @PutMapping("/public/update")
+    public ResponseEntity<ReqRes> updateUser(@ModelAttribute UserUpdateRequest reqres,
+                                             @RequestPart(value="fileImage",required = false) MultipartFile fileImage) throws Exception{
+        return ResponseEntity.ok(usersManagementService.updateUser(reqres,fileImage));
     }
     @GetMapping("/public/get-profile/{token}")
     public ResponseEntity<ProfileUserRequest> getProfile(@PathVariable String token){
@@ -75,8 +90,40 @@ public class UserManagementController {
 
     }
     @PostMapping("/public/set-user-setting")
-    public ApiResponse setDataUserSetting(@RequestBody UserSettingDTO data) {
-    	ApiResponse apiRS = new ApiResponse<>();
+    public ApiResponse setDataUserSetting(@RequestHeader("Authorization") String token,@ModelAttribute UserSettingDTO data,
+                                          @RequestPart(value="filepdf",required = false) MultipartFile filepdf ) 
+    {
+        // check user 
+        ApiResponse apiRS = new ApiResponse<>();
+        if (token.startsWith("Bearer ")) {
+            token = token.substring(7).trim();
+        }
+        // Giải mã token 
+        String phonenumber = jwtUtils.extractUserName(token);
+
+        var account = accountRepo.findByPhonenumber(phonenumber);
+        if (account == null ) {
+            apiRS.setCode(-1);
+            apiRS.setMessage("Lỗi không tìm thấy account");
+        }
+        if(account.getId() != data.getIdUser())
+        {
+            apiRS.setCode(-1);
+            apiRS.setMessage("Không thể cập nhật thông tin người dùng");
+            return apiRS;
+        }
+
+
+        try{
+            String base64Pdf = Base64.getEncoder().encodeToString(filepdf.getBytes());
+            String result = "data:application/pdf;base64," + base64Pdf;
+            data.setFile(result.getBytes());
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+
+
+    	
     	apiRS.setMessage(usersManagementService.setDataUserSetting(data));
         return apiRS;
     }

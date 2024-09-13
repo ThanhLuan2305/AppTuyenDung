@@ -6,7 +6,7 @@ const useFetchDataJobType = () => {
   useEffect(() => {
     try {
       let fetchData = async () => {
-      axios.get("http://localhost:8080/api/get-all-code/job-types").then((responseFeature) => {
+      axios.get("http://localhost:8080/public/get-all-code/job-types").then((responseFeature) => {
         setdataJobType(responseFeature.data);
       })
       };
@@ -15,6 +15,7 @@ const useFetchDataJobType = () => {
       console.log(error);
     }
   }, []);
+  return { dataJobType };
 };
 
 const useFetchDataJobLevel = () => {
@@ -22,7 +23,7 @@ const useFetchDataJobLevel = () => {
   useEffect(() => {
     try {
       let fetchData = async () => {
-        axios.get("http://localhost:8080/api/get-all-code/job-levels").then((responseFeature) => {
+        axios.get("http://localhost:8080/public/get-all-code/job-levels").then((responseFeature) => {
           setdataJobLevel(responseFeature.data);
         })
         };
@@ -39,7 +40,7 @@ const useFetchDataSalaryType = () => {
   useEffect(() => {
     try {
       let fetchData = async () => {
-        axios.get("http://localhost:8080/api/get-all-code/salary-types").then((responseFeature) => {
+        axios.get("http://localhost:8080/public/get-all-code/salary-types").then((responseFeature) => {
           setdataSalaryType(responseFeature.data);
         })
         };
@@ -56,7 +57,7 @@ const useFetchDataExpType = () => {
   useEffect(() => {
     try {
       let fetchData = async () => {
-        axios.get("http://localhost:8080/api/get-all-code/exp-types").then((responseFeature) => {
+        axios.get("http://localhost:8080/public/get-all-code/exp-types").then((responseFeature) => {
           setdataExpType(responseFeature.data);
         })
         };
@@ -73,7 +74,7 @@ const useFetchDataWorkType = () => {
   useEffect(() => {
     try {
       let fetchData = async () => {
-        axios.get("http://localhost:8080/api/get-all-code/work-types").then((responseFeature) => {
+        axios.get("http://localhost:8080/public/get-all-code/work-types").then((responseFeature) => {
           setdataWorkType(responseFeature.data);
         })
         };
@@ -90,8 +91,9 @@ const useFetchDataJobLocation = () => {
   useEffect(() => {
     try {
       let fetchData = async () => {
-        axios.get("http://localhost:8080/api/get-all-code/provinces").then((responseFeature) => {
+        axios.get("http://localhost:8080/public/get-all-code/provinces").then((responseFeature) => {
           setdataJobLocation(responseFeature.data);
+
         })
         };
       fetchData();
@@ -137,6 +139,25 @@ const useFetchDataCodeGender = () => {
   return { dataGender };
 };
 
+const useFetchRuleUser = () => {
+  const [dataRulesuser, setRulesuser] = useState([]);
+  useEffect(() => {
+    try {
+      let fetchData = async () => {
+        axios.get("http://localhost:8080/public/get-all-code/rules-user").then((res) => {
+          console.log(res.data)
+          setRulesuser(res.data);
+        })
+        };
+      fetchData();
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+  return { dataRulesuser };
+};
+
+
 export { useFetchDataJobType,useFetchDataJobLevel,useFetchDataSalaryType,useFetchDataExpType,
-  useFetchDataWorkType,useFetchDataCodeRole,useFetchDataCodeGender
+  useFetchDataWorkType,useFetchDataCodeRole,useFetchDataCodeGender,useFetchDataJobLocation,useFetchRuleUser
  };

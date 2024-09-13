@@ -4,16 +4,26 @@ package com.doan.AppTuyenDung.Controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.doan.AppTuyenDung.DTO.GetAllJobTypeAdmin.JobtypeDTO;
+import com.doan.AppTuyenDung.DTO.GetAllJobTypeAdmin.ResponseAllJobType;
+import com.doan.AppTuyenDung.DTO.GetAllUserAdmin.AccountDTO;
+
+import com.doan.AppTuyenDung.Repositories.AccountRepository;
 import com.doan.AppTuyenDung.Repositories.AllCode.CodeGendersRepository;
 import com.doan.AppTuyenDung.Services.AllCodeService;
+import com.doan.AppTuyenDung.Services.JWTUtils;
 import com.doan.AppTuyenDung.entity.CodeExpType;
 import com.doan.AppTuyenDung.entity.CodeGender;
 import com.doan.AppTuyenDung.entity.CodeJobLevel;
@@ -28,6 +38,15 @@ import com.doan.AppTuyenDung.entity.CodeWorkType;
 public class AllcodeController {
     @Autowired
     private AllCodeService codeService;    
+
+    @Autowired
+    private JWTUtils jwtUtils; 
+
+    @Autowired
+    private AccountRepository accountRepo;
+
+    @Autowired
+    private AllCodeService allCodeService;
 
     @GetMapping("/exp-types")
     public ResponseEntity<List<CodeExpType>> getExpTypes() {
@@ -66,4 +85,8 @@ public class AllcodeController {
     public ResponseEntity<List<CodeGender>> getCodeGenders() {
         return ResponseEntity.ok(codeService.getAllCodeGenders());
     }
+
+
+    
+
 }

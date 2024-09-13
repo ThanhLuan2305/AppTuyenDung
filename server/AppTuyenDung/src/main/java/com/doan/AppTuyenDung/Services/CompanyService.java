@@ -10,7 +10,10 @@ import java.util.Optional;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.doan.AppTuyenDung.DTO.Request.CompanyDTO;
@@ -38,6 +41,9 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.doan.AppTuyenDung.DTO.CloudinaryResponse;
+import com.doan.AppTuyenDung.DTO.CompanyGetListDTO;
+import com.doan.AppTuyenDung.DTO.GetAllUserAdmin.AccountDTO;
+import com.doan.AppTuyenDung.DTO.GetAllUserAdmin.CustomResponse;
 import com.doan.AppTuyenDung.Repositories.AccountRepository;
 import com.doan.AppTuyenDung.Repositories.CodeRuleRepository;
 import com.doan.AppTuyenDung.Repositories.AllCode.CodeCensorStatusRepository;
@@ -331,6 +337,26 @@ public class CompanyService {
             response.put("errMessage", "An error occurred");
         }
 
+        return response;
+    }
+
+
+
+    public Map<String, Object> GetListCompany(String search, Pageable pageable) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+			if (search != null && !search.isEmpty()) 
+			{
+				search = "%" + search + "%";
+			}
+            Page<CompanyGetListDTO> company = companyRepository.getListCompany(search, pageable);
+            response.put("errCode", 0);
+            response.put("errMessage","Get list company successfully");
+            response.put("data", company);
+        } catch (Exception e) {
+            response.put("errCode", 3);
+            response.put("errMessage", "Error Query");
+        }
         return response;
     }
 

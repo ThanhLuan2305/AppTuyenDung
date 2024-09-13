@@ -2,6 +2,8 @@ package com.doan.AppTuyenDung.entity;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
@@ -15,11 +17,11 @@ public class CodeStatus {
     private String type;
     private String value;
     private String image;
-
+    @JsonIgnore
     @OneToMany(mappedBy = "statusCode")
     private List<Company> companies;
     
-    
+    @JsonIgnore
     @OneToMany(mappedBy = "statusCode")
     private List<Account> accounts;
 

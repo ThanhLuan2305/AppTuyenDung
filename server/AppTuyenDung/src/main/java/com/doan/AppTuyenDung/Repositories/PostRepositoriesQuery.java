@@ -37,18 +37,18 @@ public interface PostRepositoriesQuery extends JpaRepository<Post,Integer>{
                 "p.time_Post as TimePostValue \n"+
                 "FROM Posts p \n" + //
                 "JOIN detailposts dp ON dp.id = p.detail_post_id \n" + //
-                "JOIN companies c ON c.user_id = p.user_id \n" + //
-                "LEFT JOIN code_job_type ac1 ON dp.code_job_type = ac1.code \n" + //
-                "LEFT JOIN code_job_level ac2 ON dp.code_job_level = ac2.code \n" + //
-                "LEFT JOIN code_work_type ac3 ON dp.code_work_type = ac3.code \n" + //
-                "LEFT JOIN code_exp_type ac4 ON dp.code_exp_type = ac4.code \n" + //
-                "LEFT JOIN code_gender_post ac5 ON dp.code_gender_post = ac5.code \n" + //
-                "LEFT JOIN code_province ac6 ON dp.code_adress_code = ac6.code\n" + //
-                "LEFT JOIN code_salary_type ac7 ON dp.code_salary_type = ac7.code\n" + //
+                "JOIN companies c ON c.user_id = p.user_id \n " + //
+                "LEFT JOIN code_job_type ac1 ON dp.code_job_type = ac1.code \n " + //
+                "LEFT JOIN code_job_level ac2 ON dp.code_job_level = ac2.code \n " + //
+                "LEFT JOIN code_work_type ac3 ON dp.code_work_type = ac3.code \n " + //
+                "LEFT JOIN code_exp_type ac4 ON dp.code_exp_type = ac4.code \n " + //
+                "LEFT JOIN code_gender_post ac5 ON dp.code_gender_post = ac5.code \n " + //
+                "LEFT JOIN code_province ac6 ON dp.code_adress_code = ac6.code \n " + //
+                "LEFT JOIN code_salary_type ac7 ON dp.code_salary_type = ac7.code \n " + //
                 "WHERE p.status_Code = 'PS1' \n" + //
-                "AND ( :categoryJobCode is null or ac1.code = :categoryJobCode )\n" + //
+                "AND ( :categoryJobCode is null or ac1.code = :categoryJobCode ) \n " + //
                 "AND ( :addressCode is null or ac6.code = :addressCode )\n" + //
-                "AND ( :search is null or dp.name like CONCAT('%', :search, '%' )\n" + //
+                "AND ( :search is null or dp.name like '%:search%' )\n" + //
                 "AND ( :experienceJobCodes is null or ac4.code in (:experienceJobCodes) )\n" + //
                 "AND ( :categoryWorktypeCodes is null or ac3.code in (:categoryWorktypeCodes) )\n" + //
                 "AND ( :salaryJobCodes is null or ac7.code in (:salaryJobCodes) )\n" + //

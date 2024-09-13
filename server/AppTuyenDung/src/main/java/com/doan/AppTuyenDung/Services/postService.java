@@ -56,10 +56,6 @@ public class postService {
 
     @Autowired
     private SearchRepository searchRepository;
-    // public PageResponse<?> advanceSearchByCriteria(int pageNo,int pageSize,String sortBy, Integer isHot,String... search)
-    // {
-    //     return searchRepository.advanceSearchDetailPost(pageNo, pageSize, sortBy,isHot, search);
-    // }
 
     //amount post and get 
     public Page<PostJobTypeCountDTO> getPostJobTypeAndCountPost(Pageable pageable) {

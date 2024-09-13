@@ -10,6 +10,8 @@ import java.util.Optional;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,7 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
+import java.util.Base64;
 import com.doan.AppTuyenDung.DTO.Request.CompanyDTO;
 import com.doan.AppTuyenDung.DTO.Response.ApiResponse;
 import com.doan.AppTuyenDung.DTO.Response.CompanyResponse;
@@ -46,7 +48,7 @@ import com.doan.AppTuyenDung.entity.Company;
 import com.doan.AppTuyenDung.entity.User;
 
 @RestController
-@RequestMapping("/public/admin")
+@RequestMapping("/public")
 public class CompanyController {
 
     @Autowired
@@ -78,21 +80,21 @@ public class CompanyController {
     private JWTUtils jwtUtils; 
     @Autowired
     private AccountRepository accountRepo;
-	 @PutMapping("/company/ban/{copanyId}")
+	 @PutMapping("/admin/company/ban/{copanyId}")
 	 public ApiResponse<CompanyResponse> banCompany(@PathVariable int copanyId) {
 		 ApiResponse<CompanyResponse> apiResponse = new ApiResponse<>();
 		 apiResponse.setResult(companyService.banCompany(copanyId));
 		 apiResponse.setMessage("Công ty đã bị cấm");
 		 return apiResponse;
 	 }
-	 @PutMapping("/company/unban/{copanyId}")
+	 @PutMapping("/admin/company/unban/{copanyId}")
 	 public ApiResponse<CompanyResponse> unBanCompany(@PathVariable int copanyId) {
 		 ApiResponse<CompanyResponse> apiResponse = new ApiResponse<>();
 		 apiResponse.setResult(companyService.unBanCompany(copanyId));
 		 apiResponse.setMessage("Công ty đã được mở cấm");
 		 return apiResponse;
 	 }
-	 @PutMapping("/company/update/{companyID}")
+	 @PutMapping("/admin/company/update/{companyID}")
 	 public ApiResponse<CompanyResponse> updateCompany(@PathVariable int companyID, @RequestBody CompanyDTO companyDTO) {
 		 CompanyResponse updateCPN = companyService.updateCompany(companyID, companyDTO);
 		 ApiResponse<CompanyResponse> apiResponse = new ApiResponse<>();
@@ -100,21 +102,21 @@ public class CompanyController {
 		 apiResponse.setMessage("Sửa công ty thành công");
 		 return apiResponse;
 	 }
-	 @GetMapping("/company/get_all_company")
+	 @GetMapping("/admin/company/get_all_company")
 	 public ApiResponse<List<CompanyResponse>> getAllCompany() {
 		 ApiResponse<List<CompanyResponse>> lstCpn = new ApiResponse<>();
 		 lstCpn.setResult(companyService.getCompanies());
 		 lstCpn.setMessage("Hiện tất cả công ty thành công" );
 		 return lstCpn;
 	 }
-	 @GetMapping("/company/get_company/{companyID}")
+	 @GetMapping("/admin/company/get_company/{companyID}")
 	 public ApiResponse<CompanyResponse> getAllCompany(@PathVariable int companyID) {
 		 ApiResponse<CompanyResponse> apiResponse = new ApiResponse<>();
 		 apiResponse.setResult(companyService.getCompanyByID(companyID));
 		 apiResponse.setMessage("Tìm thấy công ti với id: "+companyID );
 		 return apiResponse;
     }
-    @GetMapping("api/get-detail-company-by-userId")
+    @GetMapping("/admin/api/get-detail-company-by-userId")
     public ResponseEntity<?> getDetailCompanyByUserId(
             @RequestParam(value = "userId", required = false) String userId,
             @RequestParam(value = "companyId", required = false) String companyId) 
@@ -132,10 +134,10 @@ public class CompanyController {
 
     }
 
-    @PostMapping("/create-company")
+    @PostMapping("/admin/create-company")
     public ResponseEntity<Map<String, Object>> createNewCompany(@RequestHeader("Authorization") String token, 
     @ModelAttribute Company company,@RequestPart("filethumb" ) MultipartFile filethumb,
-    @RequestPart("fileCover")MultipartFile fileCover, @RequestPart("filepdf")MultipartFile filepdf) throws IOException
+    @RequestPart("fileCover")MultipartFile fileCover, @RequestPart(value="file",required = false)MultipartFile file) throws IOException
     {
         if (token.startsWith("Bearer ")) {
             token = token.substring(7).trim();
@@ -149,10 +151,32 @@ public class CompanyController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
         company.setUser(account.getUser());
-        if (filepdf != null && !filepdf.isEmpty()) {
-            company.setFile(filepdf.getBytes()); 
+
+        try{
+            String base64Pdf = Base64.getEncoder().encodeToString(file.getBytes());
+            String result = "data:application/pdf;base64," + base64Pdf;
+            company.setFile(result.getBytes());
+        } catch(Exception e) {
+            e.printStackTrace();
         }
+
         Map<String, Object> response = companyService.createNewCompany(company,filethumb,fileCover);
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/get-list-company")
+    public ResponseEntity<Map<String, Object>> getListCompany(@RequestParam(defaultValue = "10") int limit,
+                                                              @RequestParam(defaultValue = "0") int offset,
+                                                              @RequestParam(required = false) String search) {
+        Pageable pageable = PageRequest.of(offset, limit);
+        if (search != null && !search.isEmpty()) 
+        {
+            search = "%" + search + "%";
+        }
+        Map<String, Object> response = companyService.GetListCompany(search,pageable);
+        return ResponseEntity.ok(response);
+    }
+    
+
+
 }

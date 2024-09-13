@@ -1,19 +1,9 @@
 import React, { useEffect, useState } from "react";
 import "./Otp.scss";
-import { auth } from "../utils/firebase";
+import firebase from "../utils/firebase";
 import { toast } from "react-toastify";
 import { createNewUser, handleLoginService } from "../../service/userService";
 import axios from "axios";
-import {
-  getAuth,
-  RecaptchaVerifier,
-  signInWithPhoneNumber,
-  PhoneAuthProvider 
-} from "firebase/auth";
-// const auth = getAuth(app);
-
-
-
 const Otp = (props) => {
   const [dataUser, setdataUser] = useState({});
   const [otpnumber, setotpnumber] = useState("");
@@ -25,7 +15,6 @@ const Otp = (props) => {
     so5: "",
     so6: "",
   });
-  
   useEffect(() => {
     if (props.dataUser) {
       let fetchOtp = async () => {
@@ -39,90 +28,41 @@ const Otp = (props) => {
     setInputValues({ ...inputValues, [name]: value });
   };
 
-  // const configureCaptcha = () => {
-  //   if (window.recaptchaVerifier) {
-  //     window.recaptchaVerifier.clear();
-  //   }
-  //   window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
-  //     "sign-in-button",
-  //     {
-  //       'size': 'normal',
-  //       // theme: "dark", // Chủ đề của ReCAPTCHA
-  //       'callback': (response) => {
-  //       // reCAPTCHA solved, allow signInWithPhoneNumber.
-  //       // this.onSignInSubmit();
-  //       console.log("reCAPTCHA verified");
-  //     }
-  //     }
-  //   );
-  // };
   const configureCaptcha = () => {
-  if (!window.recaptchaVerifier) {
-    window.recaptchaVerifier = new RecaptchaVerifier(
+    if (window.recaptchaVerifier) {
+      window.recaptchaVerifier.clear();
+    }
+    window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
       "sign-in-button",
       {
         size: "invisible",
-        callback: (response) => {
-          console.log(response)
-        },
-        "expired-callback": () => {},
-      },
-      auth
+        // theme: "dark", // Chủ đề của ReCAPTCHA
+        defaultCountry: "VN",
+      }
     );
-  }
-}
-
-  // window.recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {
-  //   "size": "invisible",
-    
-  // }, auth);
-    // window.recaptchaVerifier = new RecaptchaVerifier(
-    //   "sign-in-button",
-    //   {
-    //     "size": "invisible",
-
-    //     callback: (response) => {
-    //       // reCAPTCHA solved, allow signInWithPhoneNumber.
-    //     },
-    //   },
-    //   auth
-    // );
-  // };
-
+  };
+  
   let onSignInSubmit = async (isResend) => {
     if (!isResend) {
       configureCaptcha();
     }
     let phoneNumber = props.dataUser.phonenumber;
     if (phoneNumber) {
-      // cắt số 0 đổi thành +84 đúng định dạng
       phoneNumber = "+84" + phoneNumber.slice(1);
     }
 
     console.log("check phonenumber", phoneNumber);
-
-
-
+    const appVerifier = window.recaptchaVerifier;
     
-    let appVerifier = window.recaptchaVerifier;
-    // signInWithPhoneNumber(auth, `+84374852925`, appVerifier)
-    signInWithPhoneNumber(auth, `+84374852925`, appVerifier)
-      .then((confirmationResult) => {
-        window.confirmationResult = confirmationResult;
-        console.log("success in " + confirmationResult);
-
-    //     // swal({
-    //     //   text: "OTP Sent",
-    //     //   icon: "success",
-    //     //   buttons: false,
-    //     //   timer: 3000,
-    //     // });
-    //     // setOtpSent(true);
-    //     // setLoading(false);
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-      });
+    try {
+      const confirmationResult = await firebase
+        .auth()
+        .signInWithPhoneNumber(phoneNumber, appVerifier);
+      window.confirmationResult = confirmationResult;
+      toast.success("Đã gửi mã OTP vào điện thoại");
+    } catch (error) {
+      toast.error("Gửi mã thất bại !");
+    }
   };
   let submitOTP = async () => {
     const code = +(
@@ -148,10 +88,10 @@ const Otp = (props) => {
             phonenumber: props.dataUser.phonenumber,
             roleCode: props.dataUser.roleCode,
             email: props.dataUser.email,
-            // image:
-            //   "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSH-bmqm7mCI2OBNsFo6PDo9QD3NPzXnpn9vA&s",
+            genderCode: props.dataUser.genderCode,
+            image: props.dataUser.image,
           });
-          if (res && res.errCode === 0) {
+          if (res && res.statusCode === 200) {
             toast.success("Tạo tài khoản thành công");
             handleLogin(props.dataUser.phonenumber, props.dataUser.password);
           } else {
@@ -159,20 +99,22 @@ const Otp = (props) => {
           }
         };
         createUser();
+
+        // ...
       })
       .catch((error) => {
+        // User couldn't sign in (bad verification code?)
+        // ...
         toast.error("Mã OTP không đúng !");
       });
   };
-
   let resendOTP = async () => {
     await onSignInSubmit(true);
   };
-
   let handleLogin = async () => {
     let paramsLogin = {
-      phonenumber: inputValues.phonenumber,
-      password: inputValues.password,
+      phonenumber: props.dataUser.phonenumber,
+      password: props.dataUser.password,
     };
     axios
       .post("http://localhost:8080/auth/login", paramsLogin)
@@ -232,17 +174,14 @@ const Otp = (props) => {
       <div className="container d-flex justify-content-center align-items-center container_Otp">
         <div className="card text-center">
           <div className="card-header p-5">
-            <img src="https://icons.veryicon.com/png/o/business/blue-business-icon/send-message-4.png" />
-            <h5 style={{ color: "#fff", fontWeight: "bold" }} className="mb-2">
+            <img src="https://raw.githubusercontent.com/Rustcodeweb/OTP-Verification-Card-Design/main/mobile.png" />
+            <h5 style={{ color: "#fff" }} className="mb-2">
               XÁC THỰC OTP
             </h5>
             <div>
               <small>
-                Mã đã được gửi tới số điện thoại{" "}
-                <p style={{ color: "#fff", fontWeight: "bold" }}>
-                  {" "}
-                  {props.dataUser && props.dataUser.phonenumber}
-                </p>
+                mã đã được gửi tới sdt{" "}
+                {props.dataUser && props.dataUser.phonenumber}
               </small>
             </div>
           </div>
@@ -300,9 +239,7 @@ const Otp = (props) => {
             <small>
               bạn không nhận được Otp ?
               <a
-                onClick={() => {
-                  resendOTP();
-                }}
+                onClick={() => resendOTP()}
                 style={{ color: "#3366FF" }}
                 className="text-decoration-none ml-2"
               >
@@ -313,9 +250,7 @@ const Otp = (props) => {
           <div className="mt-3 mb-5">
             <div id="sign-in-button"></div>
             <button
-              onClick={() => {
-                submitOTP();
-              }}
+              onClick={() => submitOTP()}
               className="btn btn-success px-4 verify-btn"
             >
               Xác thực

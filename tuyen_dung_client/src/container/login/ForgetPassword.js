@@ -1,9 +1,11 @@
 import React from 'react'
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-
+import handleValidate from '../utils/Validation';
+import { checkUserPhoneService, changePasswordByphone, handleLoginService } from '../../service/userService';
 import { Link } from 'react-router-dom';
-
+import OtpForgetPassword from './OtpForgetPassword';
+import axios from 'axios';
 const ForgetPassword = () => {
     const [inputValidates, setValidates] = useState({
         phonenumber: true, newPassword: true, confirmPassword: true
@@ -17,6 +19,118 @@ const ForgetPassword = () => {
         setInputValues({ ...inputValues, [name]: value });
 
     };
+
+    let handleOpenVerifyOTP = async () => {
+        let checkPhone = handleValidate(inputValues.phonenumber, "phone")
+        if (!(checkPhone === true)) {
+            setValidates({
+                ...inputValidates,
+                phonenumber: checkPhone
+            })
+            return
+        }
+        let res = await checkUserPhoneService(inputValues.phonenumber)
+        if (res.result === true) {
+            setInputValues({ ...inputValues, ["isOpen"]: true })
+        } else {
+            setValidates({
+                ...inputValidates,
+                phonenumber: true
+            })
+            toast.error("Số điện thoại không tồn tại!")
+        }
+
+    }
+
+    const recieveVerify = (success) => {
+        setInputValues({ ...inputValues, ["isOpen"]: false, ["isSuccess"]: true })
+    }
+    let handleLogin = async () => {
+        let paramsLogin = {
+          phonenumber: inputValues.phonenumber,
+          password: inputValues.newPassword,
+        };
+        axios
+          .post("http://localhost:8080/auth/login", paramsLogin)
+          .then((res) => {
+            if (res.data.statusCode === 200) {
+              console.log(res.data);
+              localStorage.setItem("token_user", res.data.token);
+              const token = localStorage.getItem("token_user");
+              console.log(`token:  ${token}`);
+              axios
+                .post(
+                  "http://localhost:8080/public/get-info",
+                  {},
+                  {
+                    headers: {
+                      Authorization: `Bearer ${token}`,
+                    },
+                  }
+                )
+                .then((response) => {
+                  if (response.data && response.data.length > 0) {
+                    const userData = response.data[0]; // Lấy object đầu tiên trong mảng
+                    localStorage.setItem("userData", JSON.stringify(userData));
+                    // console.log("User data saved to localStorage:", userData.codeRoleAccount);
+                    // Chuyển hướng sau khi lưu
+                    if (
+                      res.data.roleCode === "ADMIN" ||
+                      res.data.roleCode === "EMPLOYER" ||
+                      res.data.roleCode === "COMPANY"
+                    )
+                      window.location.href = "/admin/";
+                    else {
+                      const lastUrl = localStorage.getItem("lastUrl");
+                      if (lastUrl) {
+                        localStorage.removeItem("lastUrl");
+                        window.location.href = lastUrl;
+                      } else {
+                        window.location.href = "/";
+                      }
+                    }
+                  } else {
+                    console.log("No user data found.");
+                  }
+                });
+            } else {
+              // toast.error(res.data.error)
+              toast.error("Đăng nhập thất bại");
+            }
+          })
+          .catch((error) => {
+            toast.error("Có lỗi khi đăng nhập");
+            // console.log("lỗi")
+          });
+      };
+    let handleForgetPassword = async () => {
+        let checkNewPass = handleValidate(inputValues.newPassword, "password") // data and type of check case 
+        if (!(checkNewPass === true)) {
+            setValidates({
+                ...inputValidates,
+                newPassword: checkNewPass
+            })
+            if (inputValues.confirmPassword !== inputValues.newPassword) {
+                setValidates({
+                    ...inputValidates,
+                    confirmPassword: "Mật khẩu nhập lại không trùng"
+                })
+                return
+            }
+            return
+        }
+        let res = await changePasswordByphone({
+            phonenumber: inputValues.phonenumber,
+            password: inputValues.newPassword,
+        })
+        if (res && res.errCode === 0) {
+            toast.success("Đổi mật khẩu thành công")
+            handleLogin(inputValues.phonenumber, inputValues.newPassword)
+        } else {
+            toast.error(res.errMessage)
+        }
+    }
+
 
     return (
         <>
@@ -45,7 +159,7 @@ const ForgetPassword = () => {
                                                         {inputValidates.confirmPassword && <p style={{ color: 'red' }}>{inputValidates.confirmPassword}</p>}
                                                     </div>
                                                     <div className="mt-3">
-                                                        <a onClick={{/*() => handleForgetPassword()*/}} className="btn1 btn1-block btn1-primary1 btn1-lg font-weight-medium auth-form-btn1" >Xác nhận</a>
+                                                        <a onClick={() => handleForgetPassword()} className="btn1 btn1-block btn1-primary1 btn1-lg font-weight-medium auth-form-btn1" >Xác nhận</a>
                                                     </div>
                                                 </>
                                             }
@@ -56,7 +170,7 @@ const ForgetPassword = () => {
                                                         {inputValidates.phonenumber && <p style={{ color: 'red' }}>{inputValidates.phonenumber}</p>}
                                                     </div>
                                                     <div className="mt-3">
-                                                        <a onClick={{/*() => {handleOpenVerifyOTP() */}} className="btn1 btn1-block btn1-primary1 btn1-lg font-weight-medium auth-form-btn1" >Xác nhận</a>
+                                                        <a onClick={() => handleOpenVerifyOTP() } className="btn1 btn1-block btn1-primary1 btn1-lg font-weight-medium auth-form-btn1" >Xác nhận</a>
                                                     </div>
                                                 </>
                                             }
@@ -77,7 +191,7 @@ const ForgetPassword = () => {
                 </div>
             }
             {inputValues.isOpen === true &&
-                {/* <OtpForgetPassword dataUser={inputValues.phonenumber} recieveVerify={recieveVerify} /> */}
+                <OtpForgetPassword dataUser={inputValues.phonenumber} recieveVerify={recieveVerify} />
             }
         </>
     )

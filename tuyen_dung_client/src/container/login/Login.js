@@ -47,9 +47,12 @@ const Login = () => {
                 if (
                   res.data.roleCode === "ADMIN" ||
                   res.data.roleCode === "EMPLOYER" ||
-                  res.data.roleCode === "COMPANY"
-                )
-                  window.location.href = "/admin/";
+                  res.data.roleCode === "COMPANY")
+                  {
+                    toast.success("Đăng nhập thành công ");
+                    window.location.href = "/admin/";
+                    
+                  }
                 else {
                   const lastUrl = localStorage.getItem("lastUrl");
                   if (lastUrl) {
