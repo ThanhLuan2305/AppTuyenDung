@@ -24,7 +24,6 @@ const SettingUser = () => {
             setInputValues({ ...inputValues, file: base64 })
         }
     }
-
     const handleChange = async(value,detail) => {
         if (Array.isArray(detail)) {
             setInputValues({
