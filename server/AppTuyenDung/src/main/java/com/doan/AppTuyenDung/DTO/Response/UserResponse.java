@@ -1,8 +1,11 @@
 package com.doan.AppTuyenDung.DTO.Response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import lombok.Data;
 
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserResponse {
 	private int id;
     private String firstName;

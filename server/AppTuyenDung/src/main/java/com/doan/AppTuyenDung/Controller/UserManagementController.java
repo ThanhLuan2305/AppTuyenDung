@@ -73,16 +73,29 @@ public class UserManagementController {
     @GetMapping("/public/get-users/{userId}")
     public ApiResponse<AccountResponse> getUSerByID(@PathVariable Integer userId) throws Exception{
     	ApiResponse apiResponse = new ApiResponse<>();
-    	apiResponse.setMessage("Tìm thấy người dùng với id: "+userId);
-    	apiResponse.setResult(usersManagementService.getUsersById(userId));
+    	try {
+        	apiResponse.setMessage("Tìm thấy người dùng với id: "+userId);
+        	apiResponse.setResult(usersManagementService.getUsersById(userId));
+		} catch (Exception e) {
+			apiResponse.setMessage(e.getMessage());
+        	apiResponse.setCode(404);
+		}
         return apiResponse;
 
     }
 
     @PutMapping("/public/update")
-    public ResponseEntity<ReqRes> updateUser(@ModelAttribute UserUpdateRequest reqres,
+    public ApiResponse<AccountResponse> updateUser(@ModelAttribute UserUpdateRequest reqres,
                                              @RequestPart(value="fileImage",required = false) MultipartFile fileImage) throws Exception{
-        return ResponseEntity.ok(usersManagementService.updateUser(reqres,fileImage));
+    	ApiResponse apiResponse = new ApiResponse<>();
+    	try {
+        	apiResponse.setMessage("Cập nhật user thành công với id: "+reqres.getId());
+        	apiResponse.setResult(usersManagementService.updateUser(reqres,fileImage));
+		} catch (Exception e) {
+			apiResponse.setMessage(e.getMessage());
+        	apiResponse.setCode(404);
+		}
+    	return apiResponse;
     }
     @GetMapping("/public/get-profile/{token}")
     public ResponseEntity<ProfileUserRequest> getProfile(@PathVariable String token){
