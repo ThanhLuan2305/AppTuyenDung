@@ -20,6 +20,7 @@ import com.doan.AppTuyenDung.DTO.Request.UserSettingDTO;
 import com.doan.AppTuyenDung.DTO.Request.UserUpdateRequest;
 import com.doan.AppTuyenDung.DTO.Response.AccountResponse;
 import com.doan.AppTuyenDung.DTO.Response.ApiResponse;
+import com.doan.AppTuyenDung.DTO.Response.UserUpdateResponse;
 import com.doan.AppTuyenDung.DTO.UserAccountDTO;
 import com.doan.AppTuyenDung.Repositories.AccountRepository;
 import com.doan.AppTuyenDung.Repositories.UserRepository;
@@ -57,7 +58,7 @@ public class UserManagementController {
     }
 
     @GetMapping("/admin/get-all-users")
-    public ApiResponse<List<AccountResponse>> getAllUsers() throws Exception{
+    public ApiResponse<List<UserUpdateResponse>> getAllUsers() throws Exception{
 
     	ApiResponse apiResponse = new ApiResponse<>();
     	try {
