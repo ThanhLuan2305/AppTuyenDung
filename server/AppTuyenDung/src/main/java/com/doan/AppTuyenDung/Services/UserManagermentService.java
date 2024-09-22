@@ -35,6 +35,10 @@ import com.doan.AppTuyenDung.entity.CodeSalaryType;
 
 import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -52,6 +56,7 @@ import com.doan.AppTuyenDung.DTO.InfoPostDetailDto;
 import com.doan.AppTuyenDung.Repositories.UserRepository;
 import com.doan.AppTuyenDung.Repositories.UserSettingRepository;
 import com.doan.AppTuyenDung.Repositories.UserSkillRepository;
+import com.doan.AppTuyenDung.Repositories.UserSpecification;
 import com.doan.AppTuyenDung.Repositories.AllCode.CodeExpTypeRepository;
 import com.doan.AppTuyenDung.Repositories.AllCode.CodeJobTypeRepository;
 import com.doan.AppTuyenDung.Repositories.AllCode.CodeProvinceRepository;
@@ -483,5 +488,19 @@ public class UserManagermentService {
         }
 
         return stringBuilder.toString();
+    }
+    public Page<AccountResponse> searchUsers(String firstName, String lastName, String categoryJobCode, 
+            String salaryJobCode, String experienceJobCode, String skillName, Pageable pageable) {
+    	Specification<User> spec = UserSpecification.filterUsers(firstName, lastName, categoryJobCode, 
+	                                           salaryJobCode, experienceJobCode, skillName);
+    	Page<AccountResponse> pageRs = mapUserPageToUserResponsePage(usersRepo.findAll(spec, pageable));
+    	return pageRs;
+    }
+    public Page<AccountResponse> mapUserPageToUserResponsePage(Page<User> userPage) {
+        List<AccountResponse> userResponses = userPage.getContent().stream()
+            .map(user -> mapToUserResponse(user.getId()))
+            .collect(Collectors.toList());
+
+        return new PageImpl<>(userResponses, userPage.getPageable(), userPage.getTotalElements());
     }
 }

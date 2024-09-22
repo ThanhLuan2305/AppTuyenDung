@@ -6,6 +6,9 @@ import java.util.Base64;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -171,6 +174,21 @@ public class UserManagementController {
         else {
             return ResponseEntity.ok(phonenumber);
         }
+    }
+    @GetMapping("/public/search-users")
+    public ApiResponse<Page<AccountResponse>> searchUsers(@RequestParam(required = false) String firstName,
+                                  @RequestParam(required = false) String lastName,
+                                  @RequestParam(required = false) String categoryJobCode,
+                                  @RequestParam(required = false) String salaryJobCode,
+                                  @RequestParam(required = false) String experienceJobCode,
+                                  @RequestParam(required = false) String skillName,
+                                  @RequestParam(defaultValue = "0") int page, 
+                                  @RequestParam(defaultValue = "10") int size) { 
+        Pageable pageable = PageRequest.of(page, size);
+        ApiResponse<Page<AccountResponse>> apiRs = new ApiResponse<Page<AccountResponse>>();
+        apiRs.setMessage("Tìm kiếm user thành công");
+        apiRs.setResult(usersManagementService.searchUsers(firstName, lastName, categoryJobCode, salaryJobCode, experienceJobCode, skillName, pageable));
+        return apiRs;
     }
     
 }
