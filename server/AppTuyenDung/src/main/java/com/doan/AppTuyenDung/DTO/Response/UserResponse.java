@@ -7,14 +7,14 @@ import lombok.Data;
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserResponse {
-	private int id;
+	private long id;
     private String firstName;
     private String lastName;
     private String email;
-    private String address;
-    private CodeResponse genderCode;
+    private String addressUser;
+    private CodeResponse genderCodeValue;
     private String image;
-    private String dob;
-    private Integer companyId;
+    private String dobUser;
+    private Integer idCompany;
     private UserSettingResponse userSettingData;
 }

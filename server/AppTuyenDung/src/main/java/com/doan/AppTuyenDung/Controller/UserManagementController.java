@@ -6,6 +6,9 @@ import java.util.Base64;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -20,6 +23,7 @@ import com.doan.AppTuyenDung.DTO.Request.UserSettingDTO;
 import com.doan.AppTuyenDung.DTO.Request.UserUpdateRequest;
 import com.doan.AppTuyenDung.DTO.Response.AccountResponse;
 import com.doan.AppTuyenDung.DTO.Response.ApiResponse;
+import com.doan.AppTuyenDung.DTO.Response.UserUpdateResponse;
 import com.doan.AppTuyenDung.DTO.UserAccountDTO;
 import com.doan.AppTuyenDung.Repositories.AccountRepository;
 import com.doan.AppTuyenDung.Repositories.UserRepository;
@@ -57,7 +61,7 @@ public class UserManagementController {
     }
 
     @GetMapping("/admin/get-all-users")
-    public ApiResponse<List<AccountResponse>> getAllUsers() throws Exception{
+    public ApiResponse<List<UserUpdateResponse>> getAllUsers() throws Exception{
 
     	ApiResponse apiResponse = new ApiResponse<>();
     	try {
@@ -73,8 +77,13 @@ public class UserManagementController {
     @GetMapping("/public/get-users/{userId}")
     public ApiResponse<AccountResponse> getUSerByID(@PathVariable Integer userId) throws Exception{
     	ApiResponse apiResponse = new ApiResponse<>();
-    	apiResponse.setMessage("Tìm thấy người dùng với id: "+userId);
-    	apiResponse.setResult(usersManagementService.getUsersById(userId));
+    	try {
+        	apiResponse.setMessage("Tìm thấy người dùng với id: "+userId);
+        	apiResponse.setResult(usersManagementService.getUsersById(userId));
+		} catch (Exception e) {
+			apiResponse.setMessage(e.getMessage());
+        	apiResponse.setCode(404);
+		}
         return apiResponse;
 
     }
@@ -164,6 +173,21 @@ public class UserManagementController {
         else {
             return ResponseEntity.ok(phonenumber);
         }
+    }
+    @GetMapping("/public/search-users")
+    public ApiResponse<Page<AccountResponse>> searchUsers(@RequestParam(required = false) String firstName,
+                                  @RequestParam(required = false) String lastName,
+                                  @RequestParam(required = false) String categoryJobCode,
+                                  @RequestParam(required = false) String salaryJobCode,
+                                  @RequestParam(required = false) String experienceJobCode,
+                                  @RequestParam(required = false) String skillName,
+                                  @RequestParam(defaultValue = "0") int page, 
+                                  @RequestParam(defaultValue = "10") int size) { 
+        Pageable pageable = PageRequest.of(page, size);
+        ApiResponse<Page<AccountResponse>> apiRs = new ApiResponse<Page<AccountResponse>>();
+        apiRs.setMessage("Tìm kiếm user thành công");
+        apiRs.setResult(usersManagementService.searchUsers(firstName, lastName, categoryJobCode, salaryJobCode, experienceJobCode, skillName, pageable));
+        return apiRs;
     }
     
 }

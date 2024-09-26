@@ -1,6 +1,7 @@
 package com.doan.AppTuyenDung.Services;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +19,7 @@ import com.doan.AppTuyenDung.DTO.Response.SkillIdRespones;
 import com.doan.AppTuyenDung.DTO.Response.SkillResponse;
 import com.doan.AppTuyenDung.DTO.Response.UserResponse;
 import com.doan.AppTuyenDung.DTO.Response.UserSettingResponse;
+import com.doan.AppTuyenDung.DTO.Response.UserUpdateResponse;
 import com.doan.AppTuyenDung.Exception.AppException;
 import com.doan.AppTuyenDung.Exception.ErrorCode;
 import com.doan.AppTuyenDung.Repositories.AccountRepository;
@@ -33,6 +35,10 @@ import com.doan.AppTuyenDung.entity.CodeSalaryType;
 
 import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -50,6 +56,7 @@ import com.doan.AppTuyenDung.DTO.InfoPostDetailDto;
 import com.doan.AppTuyenDung.Repositories.UserRepository;
 import com.doan.AppTuyenDung.Repositories.UserSettingRepository;
 import com.doan.AppTuyenDung.Repositories.UserSkillRepository;
+import com.doan.AppTuyenDung.Repositories.UserSpecification;
 import com.doan.AppTuyenDung.Repositories.AllCode.CodeExpTypeRepository;
 import com.doan.AppTuyenDung.Repositories.AllCode.CodeJobTypeRepository;
 import com.doan.AppTuyenDung.Repositories.AllCode.CodeProvinceRepository;
@@ -223,7 +230,6 @@ public class UserManagermentService {
 
 
     public AccountResponse getUsersById(Integer id) throws Exception {
-
         AccountResponse accountResponse = new AccountResponse();
         try {
            accountResponse = mapToUserResponse(id);
@@ -233,8 +239,10 @@ public class UserManagermentService {
         return accountResponse;
     }
 
-    public AccountResponse updateUser(UserUpdateRequest updatedUser, MultipartFile fileImage) throws Exception {
-    	AccountResponse reqRes = new AccountResponse();
+
+    public UserUpdateResponse updateUser(UserUpdateRequest updatedUser, MultipartFile fileImage) throws Exception {
+    	UserUpdateResponse reqRes = new UserUpdateResponse();
+
         try {
             Optional<User> userOptional = usersRepo.findById(updatedUser.getId());
             if (userOptional.isPresent()) {
@@ -260,7 +268,8 @@ public class UserManagermentService {
                 existingUser.setImage(imageUrl);
                 existingUser.setDob(updatedUser.getDob());
                 User savedUser = usersRepo.save(existingUser);
-                reqRes = mapToUserResponse(existingUser.getId());
+                reqRes = mapToUserUpdateResponse(existingUser.getId());
+
                 //reqRes.setMessage("User updated successfully");
             } else {
             	throw new AppException(ErrorCode.USER_EXISTED);
@@ -270,6 +279,42 @@ public class UserManagermentService {
         }
         return reqRes;
     }
+    private UserUpdateResponse mapToUserUpdateResponse(Integer id) {
+    	 Account account = accountRepo.findByUserId(id);
+        if (account == null) {
+            return null;
+        }
+
+        UserUpdateResponse userUpdateResponse = new UserUpdateResponse();
+
+        if (account.getUser() != null) {
+            userUpdateResponse.setId(account.getUser().getId());
+            userUpdateResponse.setFirstName(account.getUser().getFirstName());
+            userUpdateResponse.setLastName(account.getUser().getLastName());
+            userUpdateResponse.setEmail(account.getUser().getEmail());
+            userUpdateResponse.setAddressUser(account.getUser().getAddress());
+            userUpdateResponse.setImage(account.getUser().getImage());
+            userUpdateResponse.setDobUser(account.getUser().getDob() != null ? account.getUser().getDob().toString() : null);
+            userUpdateResponse.setIdCompany(account.getUser().getCompanyId());
+
+            if (account.getUser().getGenderCode() != null) {
+                userUpdateResponse.setGenderCodeValue(account.getUser().getGenderCode().getValue());
+            }
+        }
+
+        if (account.getRoleCode() != null) {
+            userUpdateResponse.setCodeRoleAccount(account.getRoleCode().getCode());
+            userUpdateResponse.setCodeRoleValue(account.getRoleCode().getValue());
+        }
+        userUpdateResponse.setPhoneNumber(account.getPhonenumber());
+        if (account.getStatusCode() != null) {
+            userUpdateResponse.setCodeStatusValue(account.getStatusCode().getValue());
+        }
+        userUpdateResponse.setCreatedAtUser(account.getCreatedAt() != null ? account.getCreatedAt().toString() : null);
+
+        return userUpdateResponse;
+    }
+
     public ProfileUserRequest getProfile(String token) {
     	String phoneNumber = jwtUtils.extractUserName(token);
     	Account account = accountRepo.findByPhonenumber(phoneNumber);
@@ -357,7 +402,7 @@ public class UserManagermentService {
                 roleDataResponse.setValue(account.getRoleCode().getValue());
                 roleDataResponse.setCode(account.getRoleCode().getCode());
             }
-            accountResponse.setRoleData(roleDataResponse);
+            accountResponse.setCodeRoleAccount(roleDataResponse);
 
             UserResponse userAccountResponse = new UserResponse();
             if (account.getUser() != null) {
@@ -365,17 +410,17 @@ public class UserManagermentService {
                 userAccountResponse.setFirstName(account.getUser().getFirstName());
                 userAccountResponse.setLastName(account.getUser().getLastName());
                 userAccountResponse.setEmail(account.getUser().getEmail());
-                userAccountResponse.setAddress(account.getUser().getAddress());
+                userAccountResponse.setAddressUser(account.getUser().getAddress());
                 userAccountResponse.setImage(account.getUser().getImage());
-                userAccountResponse.setDob(account.getUser().getDob());
-                userAccountResponse.setCompanyId(account.getUser().getCompanyId());
+                userAccountResponse.setDobUser(account.getUser().getDob());
+                userAccountResponse.setIdCompany(account.getUser().getCompanyId());
 
                 CodeResponse genderCode = new CodeResponse();
                 if (account.getUser().getGenderCode() != null) {
                     genderCode.setValue(account.getUser().getGenderCode().getValue());
                     genderCode.setCode(account.getUser().getGenderCode().getCode());
                 }
-                userAccountResponse.setGenderCode(genderCode);
+                userAccountResponse.setGenderCodeValue(genderCode);
 
                 UserSettingResponse userSettingResponse = new UserSettingResponse();
                 if (account.getUser().getUserSetting() != null) {
@@ -424,11 +469,11 @@ public class UserManagermentService {
 
             accountResponse.setListSkills(skillResponses);
             accountResponse.setId(account.getId());
-            accountResponse.setPhonenumber(account.getPhonenumber());
-            accountResponse.setStatusCode(account.getStatusCode() != null ? account.getStatusCode().getCode() : null);
+            accountResponse.setPhoneNumber(account.getPhonenumber());
+            accountResponse.setCodeStatusValue(account.getStatusCode() != null ? account.getStatusCode().getCode() : null);
             accountResponse.setUserId(account.getUser() != null ? account.getUser().getId() : null);
-            accountResponse.setCreatedAt(account.getCreatedAt());
-            accountResponse.setUpdatedAt(account.getUpdatedAt());
+            accountResponse.setCreatedAtUser(account.getCreatedAt());
+            accountResponse.setUpdatedAtUser(new Date());
         }
 
         return accountResponse;
@@ -445,5 +490,19 @@ public class UserManagermentService {
         }
 
         return stringBuilder.toString();
+    }
+    public Page<AccountResponse> searchUsers(String firstName, String lastName, String categoryJobCode, 
+            String salaryJobCode, String experienceJobCode, String skillName, Pageable pageable) {
+    	Specification<User> spec = UserSpecification.filterUsers(firstName, lastName, categoryJobCode, 
+	                                           salaryJobCode, experienceJobCode, skillName);
+    	Page<AccountResponse> pageRs = mapUserPageToUserResponsePage(usersRepo.findAll(spec, pageable));
+    	return pageRs;
+    }
+    public Page<AccountResponse> mapUserPageToUserResponsePage(Page<User> userPage) {
+        List<AccountResponse> userResponses = userPage.getContent().stream()
+            .map(user -> mapToUserResponse(user.getId()))
+            .collect(Collectors.toList());
+
+        return new PageImpl<>(userResponses, userPage.getPageable(), userPage.getTotalElements());
     }
 }

@@ -17,16 +17,21 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.doan.AppTuyenDung.DTO.Request.CompanyDTO;
+import com.doan.AppTuyenDung.DTO.Response.CodeResponse;
 import com.doan.AppTuyenDung.DTO.Response.CompanyResponse;
+import com.doan.AppTuyenDung.DTO.Response.PostResponse;
+import com.doan.AppTuyenDung.DTO.Response.postDetailResponse;
 import com.doan.AppTuyenDung.Exception.AppException;
 import com.doan.AppTuyenDung.Exception.ErrorCode;
 import com.doan.AppTuyenDung.Repositories.CodeCensorstatusRepository;
 import com.doan.AppTuyenDung.Repositories.AllCode.CodeStatusRepository;
 import com.doan.AppTuyenDung.Repositories.CompanyRepository;
+import com.doan.AppTuyenDung.Repositories.PostRepository;
 import com.doan.AppTuyenDung.Repositories.UserRepository;
 import com.doan.AppTuyenDung.entity.CodeStatus;
 import com.doan.AppTuyenDung.entity.CodeCensorstatus;
 import com.doan.AppTuyenDung.entity.Company;
+import com.doan.AppTuyenDung.entity.Post;
 import com.doan.AppTuyenDung.entity.User;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -66,6 +71,8 @@ public class CompanyService {
     private CodeRuleRepository codeRuleRepository;
     @Autowired
     private CodeCensorstatusRepository censorstatusRepository;
+    @Autowired
+    private PostRepository postRepository;
 
     public CompanyResponse banCompany(int id) {
       Optional<Company> companyOptional = companyRepository.findById(id);
@@ -159,7 +166,7 @@ public class CompanyService {
         }
         else {
         	byte[] byteArray = company.getFile();
-        	String encodedString = Base64.getEncoder().encodeToString(byteArray);
+        	//String encodedString = Base64.getEncoder().encodeToString(byteArray);
         	String decodedString = new String(byteArray, StandardCharsets.UTF_8);
         	companyResponse.setFile(decodedString);
         }
@@ -168,10 +175,87 @@ public class CompanyService {
         companyResponse.setAllowCvFree(company.getAllowCvFree() != null ? company.getAllowCvFree() : 0);
         companyResponse.setAllowCV(company.getAllowCV() != null ? company.getAllowCV() : 0);
         companyResponse.setCensorCode(company.getCensorCode() != null ? company.getCensorCode().getCode() : "Chưa có mã kiểm duyệt");
-        companyResponse.setIdUser(company.getUser() != null ? company.getUser().getId() : null);
+        companyResponse.setUserId(company.getUser() != null ? company.getUser().getId() : null);
         companyResponse.setCreatedAt(company.getCreatedAt() != null ? company.getCreatedAt() : null);
         companyResponse.setUpdatedAt(company.getUpdatedAt() != null ? company.getUpdatedAt() : null);
-
+        
+        CodeResponse censorData = new CodeResponse();
+        if(company.getCensorCode() != null) {
+        	censorData.setCode(company.getCensorCode().getCode());
+        	censorData.setValue(company.getCensorCode().getValue());
+            companyResponse.setCensorData(censorData);
+        }
+        List<PostResponse> lstPostResponse = new ArrayList<PostResponse>();
+        PostResponse postData = new PostResponse();
+        if(company.getUser() != null) {
+        	User user = company.getUser();
+        	List<Post> lstPost = postRepository.findByUserId(user.getId());
+        	if(!lstPost.isEmpty()) {
+        		for(Post p : lstPost) {
+                	postData.setUserId(p.getId());
+                	postData.setCreatedAt(p.getCreatedAt());
+                	postData.setId(p.getId());
+                	postData.setIsHot(p.getIsHot());
+                	postData.setStatusCode(p.getStatusCode().getCode());
+                	postData.setTimeEnd(p.getTimeEnd());
+                	postData.setTimePost(p.getTimePost());
+                	postData.setUpdatedAt(p.getUpdatedAt());
+            		postDetailResponse postDetailResponse = new postDetailResponse();
+                	if(postData.getPostDetailData()!=null) {
+                		postDetailResponse.setId(postData.getPostDetailData().getId());
+                		postDetailResponse.setName(postData.getPostDetailData().getName());
+                		postDetailResponse.setDescriptionHTML(postData.getPostDetailData().getDescriptionHTML());
+                		postDetailResponse.setDescriptionMarkdown(postData.getPostDetailData().getDescriptionMarkdown());
+                		postDetailResponse.setAmount(postData.getPostDetailData().getAmount());
+                		CodeResponse jobTypePostData = new CodeResponse();
+                        if(postData.getPostDetailData().getJobTypePostData() != null) {
+                        	jobTypePostData.setCode(postData.getPostDetailData().getJobTypePostData().getCode());
+                        	jobTypePostData.setValue(postData.getPostDetailData().getJobTypePostData().getValue());
+                        	postDetailResponse.setJobTypePostData(jobTypePostData);
+                        }
+                        CodeResponse workTypePostData = new CodeResponse();
+                        if(postData.getPostDetailData().getWorkTypePostData() != null) {
+                        	workTypePostData.setCode(postData.getPostDetailData().getWorkTypePostData().getCode());
+                        	workTypePostData.setValue(postData.getPostDetailData().getWorkTypePostData().getValue());
+                        	postDetailResponse.setWorkTypePostData(workTypePostData);
+                        }
+                        CodeResponse salaryTypePostData = new CodeResponse();
+                        if(postData.getPostDetailData().getSalaryTypePostData() != null) {
+                        	salaryTypePostData.setCode(postData.getPostDetailData().getSalaryTypePostData().getCode());
+                        	salaryTypePostData.setValue(postData.getPostDetailData().getSalaryTypePostData().getValue());
+                        	postDetailResponse.setSalaryTypePostData(salaryTypePostData);
+                        }
+                        CodeResponse jobLevelPostData = new CodeResponse();
+                        if(postData.getPostDetailData().getJobTypePostData() != null) {
+                        	jobLevelPostData.setCode(postData.getPostDetailData().getJobTypePostData().getCode());
+                        	jobLevelPostData.setValue(postData.getPostDetailData().getJobTypePostData().getValue());
+                        	postDetailResponse.setJobLevelPostData(jobLevelPostData);
+                        }
+                        CodeResponse genderPostData = new CodeResponse();
+                        if(postData.getPostDetailData().getGenderPostData() != null) {
+                        	genderPostData.setCode(postData.getPostDetailData().getGenderPostData() .getCode());
+                        	genderPostData.setValue(postData.getPostDetailData().getGenderPostData() .getValue());
+                        	postDetailResponse.setGenderPostData(genderPostData);
+                        }
+                        CodeResponse provincePostData = new CodeResponse();
+                        if(postData.getPostDetailData().getProvincePostData() != null) {
+                        	provincePostData.setCode(postData.getPostDetailData().getGenderPostData().getCode());
+                        	provincePostData.setValue(postData.getPostDetailData().getGenderPostData().getValue());
+                        	postDetailResponse.setProvincePostData(provincePostData);
+                        }
+                        CodeResponse expTypePostData = new CodeResponse();
+                        if(postData.getPostDetailData().getExpTypePostData() != null) {
+                        	expTypePostData.setCode(postData.getPostDetailData().getExpTypePostData().getCode());
+                        	expTypePostData.setValue(postData.getPostDetailData().getExpTypePostData().getValue());
+                        	postDetailResponse.setExpTypePostData(expTypePostData);
+                        }
+                        postData.setPostDetailData(postDetailResponse);
+                	}
+                	lstPostResponse.add(postData);
+        		}
+        	}
+        }
+        companyResponse.setPostData(lstPostResponse);
         return companyResponse;
     }
     public Map<String, Object> getDetailCompanyByUserId(Integer userId, Integer companyId) {
