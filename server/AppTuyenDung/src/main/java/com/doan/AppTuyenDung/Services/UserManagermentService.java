@@ -52,7 +52,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.doan.AppTuyenDung.DTO.CloudinaryResponse;
 import com.doan.AppTuyenDung.DTO.InfoPostDetailDto;
 
-
 import com.doan.AppTuyenDung.Repositories.UserRepository;
 import com.doan.AppTuyenDung.Repositories.UserSettingRepository;
 import com.doan.AppTuyenDung.Repositories.UserSkillRepository;
@@ -349,14 +348,13 @@ public class UserManagermentService {
 
 		    createOrUpdateUserSetting(data, user);
 
-		    if (data.getListSkills() != null && !data.getListSkills().isEmpty()) {
-		        
-                userSkillRepository.deleteByUserId(user.getId());
 
-		        List<UserSkill> userSkills = data.getListSkills().stream().map(skillId -> {
-		            UserSkill userSkill = new UserSkill();
-		            userSkill.setUserId(user.getId());
-		            userSkill.setSkillId(skillId);
+		    if (data.getListSkills() != null && !data.getListSkills().isEmpty()) {
+              userSkillRepository.deleteByUserId(user.getId());
+		          List<UserSkill> userSkills = data.getListSkills().stream().map(skillId -> {
+		          UserSkill userSkill = new UserSkill();
+		           userSkill.setUserId(user.getId());
+		           userSkill.setSkillId(skillId);
 		            return userSkill;
 		        }).toList();
 		        userSkillRepository.saveAll(userSkills);
@@ -395,7 +393,6 @@ public class UserManagermentService {
     private AccountResponse mapToUserResponse(Integer Id) {
         Account account = accountRepo.findByUserId(Id);
         AccountResponse accountResponse = new AccountResponse();
-
         if (account != null) {
             CodeResponse roleDataResponse = new CodeResponse();
             if (account.getRoleCode() != null) {
@@ -461,12 +458,10 @@ public class UserManagermentService {
                         skillResponse.setName(userSkill.getSkill().getName());
                         skillResponse.setCategoryJobCode(userSkill.getSkill().getCategoryJobCode());
                     }
-
                     skillIdResponse.setSkill(skillResponse);
                     return skillIdResponse;
                 })
                 .collect(Collectors.toList());
-
             accountResponse.setListSkills(skillResponses);
             accountResponse.setId(account.getId());
             accountResponse.setPhoneNumber(account.getPhonenumber());
@@ -475,7 +470,6 @@ public class UserManagermentService {
             accountResponse.setCreatedAtUser(account.getCreatedAt());
             accountResponse.setUpdatedAtUser(new Date());
         }
-
         return accountResponse;
     }
 
