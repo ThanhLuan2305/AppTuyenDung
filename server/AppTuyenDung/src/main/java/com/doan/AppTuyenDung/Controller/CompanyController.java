@@ -114,36 +114,36 @@ public class CompanyController {
         Map<String, Object> response = companyService.getDetailCompanyByUserId(parsedUserId, parsedCompanyId);
         return ResponseEntity.ok(response);
     }
-    @GetMapping("path")
-    public Map<String, Object >getDetailCompanyById(@RequestParam Integer id) {
-        Map<String, Object> Response = new HashMap<>();
-        if (id == null) {
-            Response.put("errCode", 1);
-            Response.put("errMessage", "Missing required parameters!");
-        }
-        Optional<Company> optionalCompany = companyRepository.findById(id);
-        if (!optionalCompany.isPresent()) {
-            Response.put("errCode", 2);
-            Response.put("errMessage", "Company not found!");
-            return Response;
-        }
-        
-        Company company = optionalCompany.get();
-        List<User> users = userRepository.findByCompanyId(company.getId());
-        List<Integer> userIds = users.stream().map(User::getId).toList();
-        List<Post> posts = postRepository.findTop5ByStatusCodeAndUserIdIn("PS1", userIds);
-
-        // Assuming you want to set postData in the company object
-        // company.setPostData(posts);
-
-        // Handle file conversion if needed
-        if (company.getFile() != null) {
-               
-        }
-        Response.put("Error", 0);
-        Response.put("errMessage", "Successfully");
-        return Response;
-    }
+//    @GetMapping("path")
+//    public Map<String, Object >getDetailCompanyById(@RequestParam Integer id) {
+//        Map<String, Object> Response = new HashMap<>();
+//        if (id == null) {
+//            Response.put("errCode", 1);
+//            Response.put("errMessage", "Missing required parameters!");
+//        }
+//        Optional<Company> optionalCompany = companyRepository.findById(id);
+//        if (!optionalCompany.isPresent()) {
+//            Response.put("errCode", 2);
+//            Response.put("errMessage", "Company not found!");
+//            return Response;
+//        }
+//        
+//        Company company = optionalCompany.get();
+//        List<User> users = userRepository.findByCompanyId(company.getId());
+//        List<Integer> userIds = users.stream().map(User::getId).toList();
+//        List<Post> posts = postRepository.findTop5ByStatusCodeAndUserIdIn("PS1", userIds);
+//
+//        // Assuming you want to set postData in the company object
+//        // company.setPostData(posts);
+//
+//        // Handle file conversion if needed
+//        if (company.getFile() != null) {
+//               
+//        }
+//        Response.put("Error", 0);
+//        Response.put("errMessage", "Successfully");
+//        return Response;
+//    }
     
 
     @PostMapping("/admin/create-company")
