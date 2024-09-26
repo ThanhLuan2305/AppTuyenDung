@@ -22,6 +22,7 @@ import Register from "./container/login/Register";
 import ForgetPassword from "./container/login/ForgetPassword";
 import JobDetail from "./container/JobDetail/JobDetail";
 import ListCompany from "./container/Company/ListCompany";
+import DetailCompany from "./container/Company/DetailCompany";
 // import HomeCandidate from "./container/Candidate/HomeCandidate";
 function App() {
   return (
@@ -56,7 +57,7 @@ function App() {
           </Route>
           <Route path="/detail-company/:id">
             <Header />
-            {/* <DetailCompany /> */}
+            <DetailCompany />
             <Footer />
           </Route>
           <Route

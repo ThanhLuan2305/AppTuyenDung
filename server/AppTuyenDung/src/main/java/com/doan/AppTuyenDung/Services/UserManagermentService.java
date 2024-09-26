@@ -239,7 +239,6 @@ public class UserManagermentService {
         }
         return accountResponse;
     }
-
     public UserUpdateResponse updateUser(UserUpdateRequest updatedUser, MultipartFile fileImage) throws Exception {
     	UserUpdateResponse reqRes = new UserUpdateResponse();
         try {
@@ -267,7 +266,8 @@ public class UserManagermentService {
                 existingUser.setImage(imageUrl);
                 existingUser.setDob(updatedUser.getDob());
                 User savedUser = usersRepo.save(existingUser);
-                reqRes = mapToUserUpdateResponse(existingUser.getId());
+              reqRes = mapToUserUpdateResponse(existingUser.getId());
+
                 //reqRes.setMessage("User updated successfully");
             } else {
             	throw new AppException(ErrorCode.USER_EXISTED);

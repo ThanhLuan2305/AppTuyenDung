@@ -11,10 +11,15 @@ import {
     Link
 } from "react-router-dom";
 import AddCompany from './Company/AddCompany';
+import Home from './Home';
 import AddUser from './User/AddUser';
 import ManageUser from './User/ManageUser';
 import ManageJobType from '../JobType/ManageJobType';
 import AddJobType from '../JobType/AddJobType';
+import ManageJobSkill from '../JobSkill/ManageJobSkill';
+import AddJobSkill from '../JobSkill/AddJobSkill';
+import ManageCompany from '../Company/DetailCompany';
+
 const HomeAdmin = () => {
     return (
         <Router>
@@ -200,7 +205,7 @@ const HomeAdmin = () => {
                         <div className="main-panel">
                             <div className="content-wrapper">
                             <Route exact path="/admin/">
-                                    {/* <Home /> */}
+                                    <Home />
                                 </Route>
                             <Route exact path="/admin/add-company">
                                     <AddCompany />
@@ -222,6 +227,19 @@ const HomeAdmin = () => {
                                 </Route>
                                 <Route exact path="/admin/edit-job-type/:code">
                                     <AddJobType />
+                                </Route>
+                                <Route exact path="/admin/add-job-skill">
+                                    <AddJobSkill />
+                                </Route>
+                                <Route exact path="/admin/list-job-skill">
+                                    <ManageJobSkill />
+                                </Route>
+                                <Route exact path="/admin/edit-job-skill/:code">
+                                    <AddJobSkill />
+                                </Route>
+
+                                <Route exact path="/admin/list-company-admin/">
+                                    <ManageCompany />
                                 </Route>
 
 

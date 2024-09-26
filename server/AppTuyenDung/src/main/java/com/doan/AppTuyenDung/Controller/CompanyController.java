@@ -27,9 +27,19 @@ import com.doan.AppTuyenDung.DTO.Request.CompanyDTO;
 import com.doan.AppTuyenDung.DTO.Response.ApiResponse;
 import com.doan.AppTuyenDung.DTO.Response.CompanyResponse;
 import com.doan.AppTuyenDung.Repositories.AccountRepository;
+
+import com.doan.AppTuyenDung.Repositories.CodeRuleRepository;
+import com.doan.AppTuyenDung.Repositories.CompanyRepository;
+import com.doan.AppTuyenDung.Repositories.PostRepository;
+import com.doan.AppTuyenDung.Repositories.UserRepository;
+import com.doan.AppTuyenDung.Repositories.AllCode.CodeCensorStatusRepository;
+import com.doan.AppTuyenDung.Repositories.AllCode.CodeStatusRepository;
+import com.doan.AppTuyenDung.Services.CloudinaryService;
 import com.doan.AppTuyenDung.Services.CompanyService;
 import com.doan.AppTuyenDung.Services.JWTUtils;
 import com.doan.AppTuyenDung.entity.Company;
+import com.doan.AppTuyenDung.entity.Post;
+import com.doan.AppTuyenDung.entity.User;
 @RestController
 @RequestMapping("/public")
 public class CompanyController {
@@ -41,6 +51,10 @@ public class CompanyController {
     private JWTUtils jwtUtils; 
     @Autowired
     private AccountRepository accountRepo;
+
+    @Autowired
+    private PostRepository postRepository;
+
 	 @PutMapping("/admin/company/ban/{copanyId}")
 	 public ApiResponse<CompanyResponse> banCompany(@PathVariable int copanyId) {
 		 ApiResponse<CompanyResponse> apiResponse = new ApiResponse<>();
@@ -74,7 +88,7 @@ public class CompanyController {
 	 public ApiResponse<CompanyResponse> getAllCompany(@PathVariable int companyID) {
 		 ApiResponse<CompanyResponse> apiResponse = new ApiResponse<>();
 		 apiResponse.setResult(companyService.getCompanyByID(companyID));
-		 apiResponse.setMessage("Tìm thấy công ti với id: "+companyID );
+		 apiResponse.setMessage("Tìm thấy công ty với id: "+companyID );
 		 return apiResponse;
     }
     @GetMapping("/admin/api/get-detail-company-by-userId")
@@ -92,8 +106,38 @@ public class CompanyController {
         }
         Map<String, Object> response = companyService.getDetailCompanyByUserId(parsedUserId, parsedCompanyId);
         return ResponseEntity.ok(response);
-
     }
+    @GetMapping("path")
+    public Map<String, Object >getDetailCompanyById(@RequestParam Integer id) {
+        Map<String, Object> Response = new HashMap<>();
+        if (id == null) {
+            Response.put("errCode", 1);
+            Response.put("errMessage", "Missing required parameters!");
+        }
+        Optional<Company> optionalCompany = companyRepository.findById(id);
+        if (!optionalCompany.isPresent()) {
+            Response.put("errCode", 2);
+            Response.put("errMessage", "Company not found!");
+            return Response;
+        }
+        
+        Company company = optionalCompany.get();
+        List<User> users = userRepository.findByCompanyId(company.getId());
+        List<Integer> userIds = users.stream().map(User::getId).toList();
+        List<Post> posts = postRepository.findTop5ByStatusCodeAndUserIdIn("PS1", userIds);
+
+        // Assuming you want to set postData in the company object
+        // company.setPostData(posts);
+
+        // Handle file conversion if needed
+        if (company.getFile() != null) {
+               
+        }
+        Response.put("Error", 0);
+        Response.put("errMessage", "Successfully");
+        return Response;
+    }
+    
 
     @PostMapping("/admin/create-company")
     public ResponseEntity<Map<String, Object>> createNewCompany(@RequestHeader("Authorization") String token, 

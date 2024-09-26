@@ -112,6 +112,27 @@ public class postService {
                                                      pageable);
     }
 
+
+    public Map<String, Object> getStatisticalTypePost(int limit) {
+        Map<String, Object> response = new HashMap<>();
+
+        // Lấy danh sách các loại bài đăng và số lượng
+        List<Map<String, Object>> statisticalTypePost = postRepository.findStatisticalTypePost(limit);
+
+        List<Post> allPosts = postRepository.findAll();
+            List<Post> filteredPosts = allPosts.stream()
+                    .filter(post -> "PS1".equals(post.getStatusCode().getCode()))
+                    .collect(Collectors.toList());
+            
+        long totalPosts = filteredPosts.size();
+
+        response.put("errCode", 0);
+        response.put("data", statisticalTypePost);
+        response.put("totalPost", totalPosts);
+
+        return response;
+    }
+
 }
 
 

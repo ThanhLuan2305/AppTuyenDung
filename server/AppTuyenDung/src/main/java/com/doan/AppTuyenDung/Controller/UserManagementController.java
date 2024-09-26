@@ -130,7 +130,6 @@ public class UserManagementController {
             return apiRS;
         }
 
-
         try{
             String base64Pdf = Base64.getEncoder().encodeToString(filepdf.getBytes());
             String result = "data:application/pdf;base64," + base64Pdf;

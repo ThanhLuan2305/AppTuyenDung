@@ -33,7 +33,7 @@ public interface UserRepository extends JpaRepository<User, Integer>{
                 "where acc.phonenumber = :phoneNumber ",nativeQuery= true)
     List<UserAccountDTO> findInfoUser(String phoneNumber);
 
-    
+    List<User> findByCompanyId(Integer companyId);
 
     Optional<User> findById(Integer id);
     Page<User> findAll(Specification<User> spec, Pageable pageable);

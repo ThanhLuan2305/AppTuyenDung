@@ -3,12 +3,12 @@ import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { getStatisticalTypePost, getStatisticalPackagePost, getStatisticalPackageCv } from '../../service/userService';
 import { getStatisticalCv } from '../../service/cvService';
-import { PAGINATION } from '../../util/constant';
+import { PAGINATION } from '../utils/constant';
 import { PieChart } from 'react-minimal-pie-chart';
 import ReactPaginate from 'react-paginate';
 import moment from 'moment';
 import { DatePicker } from 'antd';
-import CommonUtils from '../../util/CommonUtils';
+import CommonUtils from '../utils/CommonUtils';
 const Home = () => {
     const { RangePicker } = DatePicker;
     const today = new Date();
@@ -193,11 +193,14 @@ const Home = () => {
         let otherPercent = 100
         let color = ['red', 'yellow', 'green', 'blue', 'orange']
         if (res.errCode === 0) {
+            console.log(res.data)
             let newdata = res.data.map((item, index) => {
                 other -= item.amount
+                console.log(item.amount);
                 otherPercent -= Math.round((item.amount / res.totalPost * 100) * 100) / 100
+                
                 return {
-                    title: item.postDetailData.jobTypePostData.value,
+                    title: item.categoryJobValue,
                     value: Math.round((item.amount / res.totalPost * 100) * 100) / 100,
                     color: color[index],
                     amount: item.amount
@@ -288,7 +291,7 @@ const Home = () => {
                         )}
                         data={dataStatisticalTypePost}
 
-                    />;
+                    />
                 </div>
             </div>
             {

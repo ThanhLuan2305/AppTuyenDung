@@ -16,15 +16,15 @@ const Register = () => {
     againPass: true,
   });
   const [inputValues, setInputValues] = useState({
-    phonenumber: "",
-    firstName: "",
-    lastName: "",
-    password: "",
+    phonenumber: "+84374852925",
+    firstName: "123",
+    lastName: "123",
+    password: "123123123",
     isOpen: false,
     dataUser: {},
     roleCode: "CANDIDATE",
-    email: "",
-    againPass: "",
+    email: "123123@gmail.com",
+    againPass: "123123123",
     genderCode: "FE",
     images : ""
   });
