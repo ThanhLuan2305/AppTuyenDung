@@ -21,6 +21,7 @@ import com.doan.AppTuyenDung.DTO.GetAllJobTypeAdmin.ResponseDelete;
 import com.doan.AppTuyenDung.DTO.GetAllUserAdmin.AccountDTO;
 import com.doan.AppTuyenDung.Repositories.CodeGenderRepository;
 import com.doan.AppTuyenDung.Repositories.CodeRuleRepository;
+import com.doan.AppTuyenDung.Repositories.SkillRepository;
 import com.doan.AppTuyenDung.Repositories.AllCode.CodeExpTypeRepository;
 import com.doan.AppTuyenDung.Repositories.AllCode.CodeGendersRepository;
 import com.doan.AppTuyenDung.Repositories.AllCode.CodeJobLevelRepository;
@@ -38,6 +39,7 @@ import com.doan.AppTuyenDung.entity.CodeRule;
 import com.doan.AppTuyenDung.entity.CodeSalaryType;
 import com.doan.AppTuyenDung.entity.CodeWorkType;
 import com.doan.AppTuyenDung.entity.Company;
+import com.doan.AppTuyenDung.entity.Skill;
 @Service
 public class AllCodeService {
     @Autowired
@@ -67,6 +69,8 @@ public class AllCodeService {
     @Autowired
     private CloudinaryService cloudinaryService;
 
+    @Autowired
+    private SkillRepository skillRepository;
     public List<CodeExpType> getAllExpTypes() {
         return codeExpTypeRepository.findAll();
     }
@@ -96,6 +100,9 @@ public class AllCodeService {
     }
     public List<CodeGender> getAllCodeGenders(){
         return codeGendersRepository.findAll();
+    }
+    public List<Skill> getListSkillsById(String id){
+        return skillRepository.findByCategoryJobCode(id);
     }
 
     public Page<JobtypeDTO> GetAllJobType(String search, Pageable pageable) {

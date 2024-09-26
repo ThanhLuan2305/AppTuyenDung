@@ -233,8 +233,8 @@ public class UserManagermentService {
         return accountResponse;
     }
 
-    public ReqRes updateUser(UserUpdateRequest updatedUser, MultipartFile fileImage) throws Exception {
-        ReqRes reqRes = new ReqRes();
+    public AccountResponse updateUser(UserUpdateRequest updatedUser, MultipartFile fileImage) throws Exception {
+    	AccountResponse reqRes = new AccountResponse();
         try {
             Optional<User> userOptional = usersRepo.findById(updatedUser.getId());
             if (userOptional.isPresent()) {
@@ -254,23 +254,19 @@ public class UserManagermentService {
                     CloudinaryResponse thumbnailResponse = cloudinaryService.uploadFile(fileImage,imageJobType);
                     imageUrl = thumbnailResponse.getUrl();
                 } catch (Exception e) {
-                    reqRes.setStatusCode(405);
-                    reqRes.setMessage("Lỗi đường truyền lên Cloud!");
+                	throw new AppException(ErrorCode.ERRORCLOUD);
                 }
                 }
                 existingUser.setImage(imageUrl);
                 existingUser.setDob(updatedUser.getDob());
                 User savedUser = usersRepo.save(existingUser);
-                reqRes.setUser(savedUser);
-                reqRes.setStatusCode(200);
-                reqRes.setMessage("User updated successfully");
+                reqRes = mapToUserResponse(existingUser.getId());
+                //reqRes.setMessage("User updated successfully");
             } else {
-                reqRes.setStatusCode(404);
-                reqRes.setMessage("User not found for update");
+            	throw new AppException(ErrorCode.USER_EXISTED);
             }
         } catch (Exception e) {
-            reqRes.setStatusCode(500);
-            reqRes.setMessage("Error occurred while updating user: " + e.getMessage());
+        	throw new Exception(e);
         }
         return reqRes;
     }

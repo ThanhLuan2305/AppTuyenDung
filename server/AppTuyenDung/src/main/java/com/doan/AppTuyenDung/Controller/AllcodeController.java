@@ -32,21 +32,12 @@ import com.doan.AppTuyenDung.entity.CodeProvince;
 import com.doan.AppTuyenDung.entity.CodeRule;
 import com.doan.AppTuyenDung.entity.CodeSalaryType;
 import com.doan.AppTuyenDung.entity.CodeWorkType;
-
 @RestController
 @RequestMapping("/public/get-all-code")
 public class AllcodeController {
     @Autowired
     private AllCodeService codeService;    
 
-    @Autowired
-    private JWTUtils jwtUtils; 
-
-    @Autowired
-    private AccountRepository accountRepo;
-
-    @Autowired
-    private AllCodeService allCodeService;
 
     @GetMapping("/exp-types")
     public ResponseEntity<List<CodeExpType>> getExpTypes() {

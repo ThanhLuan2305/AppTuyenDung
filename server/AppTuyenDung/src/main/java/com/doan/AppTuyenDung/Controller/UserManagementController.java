@@ -80,9 +80,17 @@ public class UserManagementController {
     }
 
     @PutMapping("/public/update")
-    public ResponseEntity<ReqRes> updateUser(@ModelAttribute UserUpdateRequest reqres,
+    public ApiResponse<AccountResponse> updateUser(@ModelAttribute UserUpdateRequest reqres,
                                              @RequestPart(value="fileImage",required = false) MultipartFile fileImage) throws Exception{
-        return ResponseEntity.ok(usersManagementService.updateUser(reqres,fileImage));
+    	ApiResponse apiResponse = new ApiResponse<>();
+    	try {
+        	apiResponse.setMessage("Cập nhật user thành công với id: "+reqres.getId());
+        	apiResponse.setResult(usersManagementService.updateUser(reqres,fileImage));
+		} catch (Exception e) {
+			apiResponse.setMessage(e.getMessage());
+        	apiResponse.setCode(404);
+		}
+    	return apiResponse;
     }
     @GetMapping("/public/get-profile/{token}")
     public ResponseEntity<ProfileUserRequest> getProfile(@PathVariable String token){
@@ -112,7 +120,6 @@ public class UserManagementController {
             apiRS.setMessage("Không thể cập nhật thông tin người dùng");
             return apiRS;
         }
-
 
         try{
             String base64Pdf = Base64.getEncoder().encodeToString(filepdf.getBytes());

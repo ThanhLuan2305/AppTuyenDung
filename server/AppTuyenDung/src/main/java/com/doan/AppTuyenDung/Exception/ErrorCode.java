@@ -14,7 +14,8 @@ public enum ErrorCode {
     UNAUTHORIZED(1007, "You do not have permission", HttpStatus.FORBIDDEN),
     INVALID_DOB(1008, "Your age must be at least {min}", HttpStatus.BAD_REQUEST),
     NOTEXISTCOMPANY(1009, "Công ty không tồn tại", HttpStatus.BAD_REQUEST),
-    LISTISNULL(1009, "Danh sách rỗng", HttpStatus.BAD_REQUEST)
+    LISTISNULL(1009, "Danh sách rỗng", HttpStatus.BAD_REQUEST),
+    ERRORCLOUD(405, "Lỗi đường truyền lên Cloud!", HttpStatus.BAD_REQUEST)
     ;
 	private int code;
     private String message;

@@ -153,7 +153,7 @@ const CandidateInfo = () => {
     formData.append('dob', isChangeDate === false ? inputValues.dob : new Date(birthday).getTime());    
     formData.append('email', inputValues.email);
     
-    if (inputValues.image.startsWith("data:image/jpeg;base64,")) {
+    if (inputValues.image.startsWith("data:image/jpeg;base64,") || inputValues.image.startsWith("data:image/png;base64,")) {
       const blob = base64ToBlob(inputValues.image, 'image/jpeg');
       formData.append("fileImage", blob, "image.jpg");
   } else {
@@ -163,11 +163,8 @@ const CandidateInfo = () => {
     let res = await UpdateUserService(formData);
      if (res && res.statusCode === 200) {
       console.log(res)
-      // localStorage.setItem("userData", JSON.stringify(res.user));
       toast.success("Cập nhật người dùng thành công");
-      // setTimeout(() => {
-      //   window.location.reload();
-      // }, 1000);
+
     } else {
       toast.error(res.errMessage);
     }

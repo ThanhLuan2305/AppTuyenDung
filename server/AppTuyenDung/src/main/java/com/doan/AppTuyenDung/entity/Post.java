@@ -43,7 +43,23 @@ public class Post {
     private Set<Note> notes;
 
    
-    public Post() {
+	public Post(Integer id, CodePostStatus statusCode, String timeEnd, String timePost, Integer isHot, Date createdAt,
+			Date updatedAt, User user, DetailPost detailPost, Set<Cv> cvs, Set<Note> notes) {
+		this.id = id;
+		this.statusCode = statusCode;
+		this.timeEnd = timeEnd;
+		this.timePost = timePost;
+		this.isHot = isHot;
+		this.createdAt = createdAt;
+		this.updatedAt = updatedAt;
+		this.user = user;
+		this.detailPost = detailPost;
+		this.cvs = cvs;
+		this.notes = notes;
+	}
+
+
+	public Post() {
     }
 
 

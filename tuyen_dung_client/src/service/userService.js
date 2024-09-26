@@ -29,6 +29,11 @@ const getListCompany = (data) => {
 
 }
 
+const getDetailCompanyById = (id) => {
+  return axios.get(`/public/admin/company/get_company/${id}`)
+
+}
+
 const handleLoginService = (data) => {
   return axios.post(`http://localhost:8080/auth/login`, data);
 };
@@ -85,7 +90,7 @@ const changePasswordByphone = (data) => {
   return axios.post(`/public/change-password`, data);
 };
 const handleChangePassword = (data) => {
-  return axios.post(`/api/changepassword`, data);
+  return axios.post(`/public/change-password`, data);
 };
 
 const getAllUsers = (data) => {
@@ -132,9 +137,41 @@ const UnbanUserService = (userId) => {
 const AddNewUser = (data) => {
   return axios.post(`/api/create-new-user`, data);
 };
+const getListSkill = (data) => {
+  return axios.get(`/public/get-list-skill?categoryJobCode=${data.categoryJobCode}&limit=${data.limit}&offset=${data.offset}&search=${data.search}`)
+}
+const getDetailSkillById = (id) => {
+  return axios.get(`/public/getdetailsskillbyid?id=${id}`)
+}
 
+const DeleteSkillService = (skillId) => {
+  return axios.delete(`/public/delete-skill-id?id=${skillId}`);
+};
+const createSkill = (data) => {
+  return axios.post(`/public/createnewskill`, data)
+
+}
+const UpdateSkill = (data) => {
+  return axios.put(`/public/updateskill`, data)
+
+}
+
+
+// thống kê 
+const getStatisticalPackagePost = (data) => {
+  return axios.get(`/api/get-statistical-package?limit=${data.limit}&offset=${data.offset}&fromDate=${data.fromDate}&toDate=${data.toDate}`)
+}
+
+const getStatisticalTypePost = (limit) => {
+  return axios.get(`/public/get-statistical-post?limit=${limit}`)
+}
+
+const getStatisticalPackageCv = (data) => {
+  return axios.get(`/api/get-statistical-package-cv?limit=${data.limit}&offset=${data.offset}&fromDate=${data.fromDate}&toDate=${data.toDate}`)
+}
 export {
   getListCompany,
+  getDetailCompanyById,
   getListPostService,
   getListJobTypeAndCountPost,
   getAllCodeService,
@@ -160,4 +197,14 @@ export {
   DeleteJobtype,
   UpdateJobtype,
   getDetailJobTypeByCode,
+  getListSkill,
+  DeleteSkillService,
+  getDetailSkillById,
+  UpdateSkill,
+  createSkill,
+
+  getStatisticalPackagePost,
+  getStatisticalTypePost,
+  getStatisticalPackageCv
+
 };

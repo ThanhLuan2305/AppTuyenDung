@@ -28,42 +28,37 @@ const Otp = (props) => {
     setInputValues({ ...inputValues, [name]: value });
   };
 
-  const configureCaptcha = () => {
-    if (window.recaptchaVerifier) {
-      window.recaptchaVerifier.clear();
-    }
-    window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
-      "sign-in-button",
-      {
-        size: "invisible",
-        // theme: "dark", // Chủ đề của ReCAPTCHA
-        defaultCountry: "VN",
-      }
-    );
-  };
-  
-  let onSignInSubmit = async (isResend) => {
-    if (!isResend) {
-      configureCaptcha();
-    }
-    let phoneNumber = props.dataUser.phonenumber;
+  let configureCaptcha = () => {
+
+    window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('sign-in-button', {
+        'size': 'invisible',
+        defaultCountry: "VN"
+    });
+}
+let onSignInSubmit = async (isResend) => {
+    if (!isResend)
+        configureCaptcha()
+    let phoneNumber = props.dataUser.phonenumber
     if (phoneNumber) {
-      phoneNumber = "+84" + phoneNumber.slice(1);
+        phoneNumber = "+84" + phoneNumber.slice(1);
     }
 
-    console.log("check phonenumber", phoneNumber);
     const appVerifier = window.recaptchaVerifier;
-    
-    try {
-      const confirmationResult = await firebase
-        .auth()
-        .signInWithPhoneNumber(phoneNumber, appVerifier);
-      window.confirmationResult = confirmationResult;
-      toast.success("Đã gửi mã OTP vào điện thoại");
-    } catch (error) {
-      toast.error("Gửi mã thất bại !");
-    }
-  };
+
+
+    await firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
+        .then((confirmationResult) => {
+            // SMS sent. Prompt user to type the code from the message, then sign the
+            // user in with confirmationResult.confirm(code).
+            window.confirmationResult = confirmationResult;
+            toast.success("Đã gửi mã OTP vào điện thoại")
+
+            // ...
+        }).catch((error) => {
+            console.log(error)
+            toast.error("Gửi mã thất bại !")
+        });
+}
   let submitOTP = async () => {
     const code = +(
       inputValues.so1 +
@@ -136,7 +131,7 @@ const Otp = (props) => {
             )
             .then((response) => {
               if (response.data && response.data.length > 0) {
-                const userData = response.data[0]; // Lấy object đầu tiên 
+                const userData = response.data[0]; // Lấy object đầu tiên
                 localStorage.setItem("userData", JSON.stringify(userData));
                 // console.log("User data saved to localStorage:", userData.codeRoleAccount);
                 // Chuyển hướng sau khi lưu
