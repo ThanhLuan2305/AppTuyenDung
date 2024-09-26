@@ -76,5 +76,11 @@ public class postController {
         return postService.getPostDetailById(id);
     }
     
+    @GetMapping("/public/get-statistical-post")
+    public ResponseEntity<Map<String, Object>> getStatisticalTypePost(
+            @RequestParam int limit) {
 
+        Map<String, Object> response = postService.getStatisticalTypePost(limit);
+        return ResponseEntity.ok(response);
+    }
 }

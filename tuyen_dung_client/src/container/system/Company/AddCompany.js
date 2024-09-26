@@ -65,16 +65,6 @@ const AddCompany = () => {
         setInputValues({ ...inputValues, [name]: value });
 
     };
-    // let handleOnChangeImage = async (event) => {
-    //     let data = event.target.files;
-    //     let file = data[0];
-    //     console.log(file);
-    //     const { name } = event.target;
-    //     console.log(name);        
-    //     const fileURL = URL.createObjectURL(file); //path 
-    //     setInputValues({ ...inputValues, [name]:file, [`${name}Review`]: fileURL});
-    //     console.log(inputValues)
-    // }
 
     const handleOnChangeImage = async  (event) => {
         let data = event.target.files;
@@ -103,7 +93,6 @@ const AddCompany = () => {
                 coverImageReview: fileURL 
             }));
         }
-        
     };
     console.log(inputValues)
     const [fileBase64, setFileBase64] = useState(null);
@@ -118,10 +107,11 @@ const AddCompany = () => {
             }
             let base64 = await CommonUtils.getBase64(file);
             setFileBase64(base64);
-            setInputValues({ ...inputValues, file: file, isFileChange: true })
+            setInputValues({ ...inputValues, file: base64, isFileChange: true })
             
         }
     }
+    
     let openPreviewImage = (event) => {
         const name = event.target.getAttribute('name')
         if (!inputValues.imageReview && !inputValues.coverImageReview) return;
@@ -139,7 +129,7 @@ const AddCompany = () => {
             formData.append("phonenumber", inputValues.phonenumber);
             formData.append("amountEmployer", inputValues.amountEmployer);
             formData.append("taxnumber", inputValues.taxnumber);
-            formData.append("filepdf", inputValues.file);
+            formData.append("file", inputValues.file);
             formData.append("allowPost", "0");
             formData.append("allowHotPost", "0");
             formData.append("allowCvFree", "0");
@@ -373,7 +363,7 @@ const AddCompany = () => {
                         position: 'absolute', right: '50%',
                         justifyContent: 'center', alignItems: 'center'
                     }}>
-                        <Spinner animation="border"  ></Spinner>
+                        <Spinner animation="grow" variant="danger" />
                     </div>
 
                 </Modal>

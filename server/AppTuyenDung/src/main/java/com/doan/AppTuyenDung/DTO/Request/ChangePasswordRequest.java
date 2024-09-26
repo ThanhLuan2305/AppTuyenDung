@@ -1,18 +1,27 @@
 package com.doan.AppTuyenDung.DTO.Request;
 
 public class ChangePasswordRequest {
-	public String oldPassword;
-	public String newPassword;
-	public String getOldPassword() {
-		return oldPassword;
+	public String phonenumber;
+    public String password;
+	public ChangePasswordRequest(String phonenumber, String password) {
+		this.phonenumber = phonenumber;
+		this.password = password;
 	}
-	public void setOldPassword(String oldPassword) {
-		this.oldPassword = oldPassword;
+	public ChangePasswordRequest() {
 	}
-	public String getNewPassword() {
-		return newPassword;
+	public String getPhonenumber() {
+		return phonenumber;
 	}
-	public void setNewPassword(String newPassword) {
-		this.newPassword = newPassword;
+	public void setPhonenumber(String phonenumber) {
+		this.phonenumber = phonenumber;
 	}
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+    // Getters and Setters
+   
 }

@@ -14,5 +14,5 @@ public class UserSettingDTO {
     private Boolean isFindJob;
     private Boolean isTakeMail;
     private byte[] file;
-    private List<Integer> skills;
+    private List<Integer> listSkills;
 }

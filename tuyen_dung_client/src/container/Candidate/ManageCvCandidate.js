@@ -25,11 +25,12 @@ const ManageCvCandidate = (props) => {
                         offset: 0,
                         userId: userData.id
                     })
-                    if (arrData && arrData.errCode === 0) {
-                        setdataCv(arrData.data)
-                        console.log(arrData)
+                    console.log(arrData)
+                    if (arrData && arrData.data.code === 200) {
+                        setdataCv(arrData.data.result.content)
+                        console.log(arrData.data.result.content)
 
-                        setCount(Math.ceil(arrData.count / PAGINATION.pagerow))
+                        setCount(Math.ceil(arrData.data.result.totalElements / PAGINATION.pagerow))
                     }
                 }
                 fetchData();
@@ -47,12 +48,12 @@ const ManageCvCandidate = (props) => {
 
 
             limit: PAGINATION.pagerow,
-            offset: number.selected * PAGINATION.pagerow,
+            offset: number.selected,
             userId: user.id
 
         })
-        if (arrData && arrData.errCode === 0) {
-            setdataCv(arrData.data)
+        if (arrData && arrData.data.code === 200) {
+            setdataCv(arrData.data.content)
         
         }
     }
@@ -106,11 +107,11 @@ const ManageCvCandidate = (props) => {
                                             return (
                                                 <tr key={index}>
                                                     <td>{index + 1 + numberPage * PAGINATION.pagerow}</td>
-                                                    <td>{item.postCvData.postDetailData.name}</td>
-                                                    <td>{item.postCvData.postDetailData.jobTypePostData.value}</td>
-                                                    <td>{item.postCvData.postDetailData.jobLevelPostData.value}</td>
-                                                    <td>{item.postCvData.postDetailData.provincePostData.value}</td>
-                                                    <td>{moment(item.createdAt).format('DD-MM-YYYY HH:mm:ss')}</td>
+                                                    <td>{item.name}</td>
+                                                    <td>{item.valueWorkType}</td>
+                                                    <td>{item.valueJobLevel}</td>
+                                                    <td>{item.valueProvince}</td>
+                                                    <td>{moment(item.createdAtCv).format('DD-MM-YYYY HH:mm:ss')}</td>
                                                     <td>
     {(() => {
         if (item.status === 'accepted') {
@@ -126,11 +127,11 @@ const ManageCvCandidate = (props) => {
         }
     })()}
 </td>
-<td>{moment(item.interviewTime).format('DD-MM-YYYY HH:mm:ss')}</td>
+<td>{moment(item?.interviewTime).format('DD-MM-YYYY HH:mm:ss')}</td>
                                                     <td>
-                                                        <Link style={{ color: '#4B49AC', cursor: 'pointer' }} to={`/detail-job/${item.postCvData.id}/`}>Xem công việc</Link>
+                                                        <Link style={{ color: '#4B49AC', cursor: 'pointer' }} to={`/detail-job/${item.idPost}/`}>Xem công việc</Link>
                                                         &nbsp; &nbsp;
-                                                        <Link style={{ color: '#4B49AC', cursor: 'pointer' }} to={`/candidate/cv-detail/${item.id}`}>Xem CV đã nộp</Link>
+                                                        <Link style={{ color: '#4B49AC', cursor: 'pointer' }} to={`/candidate/cv-detail/${item.idCv}`}>Xem CV đã nộp</Link>
                                                         &nbsp; &nbsp;
                                                     </td>
                                                 </tr>

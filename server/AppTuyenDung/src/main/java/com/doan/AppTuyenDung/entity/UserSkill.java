@@ -1,5 +1,7 @@
 package com.doan.AppTuyenDung.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
@@ -17,11 +19,10 @@ public class UserSkill {
 
     @Id
     private Integer skillId;
-
+	@JsonIgnore
     @ManyToOne
     @JoinColumn(name = "userId", insertable = false, updatable = false)
     private User user;
-
     @ManyToOne
     @JoinColumn(name = "skillId", insertable = false, updatable = false)
     private Skill skill;

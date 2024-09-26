@@ -46,7 +46,7 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private Set<Cv> cvs;
-
+	
     @OneToMany(mappedBy = "user")
     private Set<Note> notes;
 
@@ -55,7 +55,7 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private Set<OrderPackage> orderPackages;
-
+	
     @OneToMany(mappedBy = "user")
     private Set<UserSkill> userSkills;
 

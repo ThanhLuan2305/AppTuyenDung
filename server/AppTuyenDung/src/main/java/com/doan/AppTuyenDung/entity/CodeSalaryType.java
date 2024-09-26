@@ -2,6 +2,8 @@ package com.doan.AppTuyenDung.entity;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
@@ -15,11 +17,11 @@ public class CodeSalaryType {
     private String type;
     private String value;
     private String image;
-
+    @JsonIgnore
     @OneToMany(mappedBy = "salaryJobCode")
     private List<DetailPost> detailPosts;
 
-
+    @JsonIgnore
     @OneToMany(mappedBy = "salaryJobCode")
     private List<UserSetting> usersettings;
 

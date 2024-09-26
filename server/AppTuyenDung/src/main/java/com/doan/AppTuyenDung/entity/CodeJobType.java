@@ -2,6 +2,8 @@ package com.doan.AppTuyenDung.entity;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -15,10 +17,10 @@ public class CodeJobType {
     private String type;
     private String value;
     private String image;
-
+    @JsonIgnore
     @OneToMany(mappedBy = "categoryJobCode")
     private List<DetailPost> detailPosts;
-
+    @JsonIgnore
     @OneToMany(mappedBy = "categoryJobCode")
     private List<UserSetting> userSettings;
 

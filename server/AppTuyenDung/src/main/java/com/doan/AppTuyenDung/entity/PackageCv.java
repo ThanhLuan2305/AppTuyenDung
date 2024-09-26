@@ -18,10 +18,50 @@ public class PackageCv {
     private String name;
     private String value;
     private Double price;
-    private Boolean isActive;
+    private Integer isActive;
+
 
     @OneToMany(mappedBy = "packageCv")
     private Set<OrderPackageCv> orderPackageCvs;
 
-    // Getters and Setters
+    
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
+    public Integer getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(Integer isActive) {
+        this.isActive = isActive;
+    }
 }

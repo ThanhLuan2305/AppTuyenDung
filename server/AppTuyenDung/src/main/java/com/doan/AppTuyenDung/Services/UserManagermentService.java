@@ -1,11 +1,14 @@
 package com.doan.AppTuyenDung.Services;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.stream.Collectors;
-
+import java.util.stream.Stream;
+import org.springframework.transaction.annotation.Transactional;
 import com.doan.AppTuyenDung.DTO.Request.ProfileUserRequest;
 import com.doan.AppTuyenDung.DTO.Request.ReqRes;
 import com.doan.AppTuyenDung.DTO.Request.UserSettingDTO;
@@ -16,6 +19,7 @@ import com.doan.AppTuyenDung.DTO.Response.SkillIdRespones;
 import com.doan.AppTuyenDung.DTO.Response.SkillResponse;
 import com.doan.AppTuyenDung.DTO.Response.UserResponse;
 import com.doan.AppTuyenDung.DTO.Response.UserSettingResponse;
+import com.doan.AppTuyenDung.DTO.Response.UserUpdateResponse;
 import com.doan.AppTuyenDung.Exception.AppException;
 import com.doan.AppTuyenDung.Exception.ErrorCode;
 import com.doan.AppTuyenDung.Repositories.AccountRepository;
@@ -31,6 +35,10 @@ import com.doan.AppTuyenDung.entity.CodeSalaryType;
 
 import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -39,15 +47,15 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.multipart.MultipartFile;
 
-
+import com.doan.AppTuyenDung.DTO.CloudinaryResponse;
 import com.doan.AppTuyenDung.DTO.InfoPostDetailDto;
-
-import com.doan.AppTuyenDung.DTO.UserAccountDTO;
 
 import com.doan.AppTuyenDung.Repositories.UserRepository;
 import com.doan.AppTuyenDung.Repositories.UserSettingRepository;
 import com.doan.AppTuyenDung.Repositories.UserSkillRepository;
+import com.doan.AppTuyenDung.Repositories.UserSpecification;
 import com.doan.AppTuyenDung.Repositories.AllCode.CodeExpTypeRepository;
 import com.doan.AppTuyenDung.Repositories.AllCode.CodeJobTypeRepository;
 import com.doan.AppTuyenDung.Repositories.AllCode.CodeProvinceRepository;
@@ -86,6 +94,8 @@ public class UserManagermentService {
 	private AuthenticationManager authenticationManager;
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+    @Autowired
+    private CloudinaryService cloudinaryService;
 
 	public ReqRes register(ReqRes registrationRequest) {
 		ReqRes resp = new ReqRes();
@@ -228,35 +238,80 @@ public class UserManagermentService {
         }
         return accountResponse;
     }
-
-    public ReqRes updateUser(Integer userId, UserUpdateRequest updatedUser) {
-        ReqRes reqRes = new ReqRes();
+    public UserUpdateResponse updateUser(UserUpdateRequest updatedUser, MultipartFile fileImage) throws Exception {
+    	UserUpdateResponse reqRes = new UserUpdateResponse();
         try {
-            Optional<User> userOptional = usersRepo.findById(userId);
+            Optional<User> userOptional = usersRepo.findById(updatedUser.getId());
             if (userOptional.isPresent()) {
                 User existingUser = userOptional.get();
+                existingUser.setId(updatedUser.getId());
                 existingUser.setFirstName(updatedUser.getFirstName());
                 existingUser.setLastName(updatedUser.getLastName());
                 existingUser.setAddress(updatedUser.getAddress());
                 existingUser.setLastName(updatedUser.getLastName());
                 CodeGender gender = codeGenderRepo.findByCode(updatedUser.getGenderCode());
                 existingUser.setGenderCode(gender);
-                existingUser.setImage(updatedUser.getImage());
+                // existingUser.setImage(updatedUser.getImage());
+                String imageUrl = "";
+                String imageJobType = updatedUser.getFirstName()+updatedUser.getLastName()+generateRandomNumbers(10)+"Images";
+                if (fileImage != null) {
+                try {
+                    CloudinaryResponse thumbnailResponse = cloudinaryService.uploadFile(fileImage,imageJobType);
+                    imageUrl = thumbnailResponse.getUrl();
+                } catch (Exception e) {
+                	throw new AppException(ErrorCode.ERRORCLOUD);
+                }
+                }
+                existingUser.setImage(imageUrl);
                 existingUser.setDob(updatedUser.getDob());
                 User savedUser = usersRepo.save(existingUser);
-                reqRes.setUser(savedUser);
-                reqRes.setStatusCode(200);
-                reqRes.setMessage("User updated successfully");
+              reqRes = mapToUserUpdateResponse(existingUser.getId());
+
+                //reqRes.setMessage("User updated successfully");
             } else {
-                reqRes.setStatusCode(404);
-                reqRes.setMessage("User not found for update");
+            	throw new AppException(ErrorCode.USER_EXISTED);
             }
         } catch (Exception e) {
-            reqRes.setStatusCode(500);
-            reqRes.setMessage("Error occurred while updating user: " + e.getMessage());
+        	throw new Exception(e);
         }
         return reqRes;
     }
+    private UserUpdateResponse mapToUserUpdateResponse(Integer id) {
+    	 Account account = accountRepo.findByUserId(id);
+        if (account == null) {
+            return null;
+        }
+
+        UserUpdateResponse userUpdateResponse = new UserUpdateResponse();
+
+        if (account.getUser() != null) {
+            userUpdateResponse.setId(account.getUser().getId());
+            userUpdateResponse.setFirstName(account.getUser().getFirstName());
+            userUpdateResponse.setLastName(account.getUser().getLastName());
+            userUpdateResponse.setEmail(account.getUser().getEmail());
+            userUpdateResponse.setAddressUser(account.getUser().getAddress());
+            userUpdateResponse.setImage(account.getUser().getImage());
+            userUpdateResponse.setDobUser(account.getUser().getDob() != null ? account.getUser().getDob().toString() : null);
+            userUpdateResponse.setIdCompany(account.getUser().getCompanyId());
+
+            if (account.getUser().getGenderCode() != null) {
+                userUpdateResponse.setGenderCodeValue(account.getUser().getGenderCode().getValue());
+            }
+        }
+
+        if (account.getRoleCode() != null) {
+            userUpdateResponse.setCodeRoleAccount(account.getRoleCode().getCode());
+            userUpdateResponse.setCodeRoleValue(account.getRoleCode().getValue());
+        }
+        userUpdateResponse.setPhoneNumber(account.getPhonenumber());
+        if (account.getStatusCode() != null) {
+            userUpdateResponse.setCodeStatusValue(account.getStatusCode().getValue());
+        }
+        userUpdateResponse.setCreatedAtUser(account.getCreatedAt() != null ? account.getCreatedAt().toString() : null);
+
+        return userUpdateResponse;
+    }
+
     public ProfileUserRequest getProfile(String token) {
     	String phoneNumber = jwtUtils.extractUserName(token);
     	Account account = accountRepo.findByPhonenumber(phoneNumber);
@@ -278,29 +333,26 @@ public class UserManagermentService {
     private boolean checkAccountExist(String phoneNumber) {
         return accountRepo.existsByPhonenumber(phoneNumber);
     }
-	public ReqRes updateUser( UserUpdateRequest reqres) {
-		return null;
-	}
+    @Transactional
 	public String setDataUserSetting(UserSettingDTO data) {
 	    try {
 	    	if (data.getIdUser() == null) {
 		        return "Missing required parameters!";
 		    }
-
 		    User user = usersRepo.findById(data.getIdUser()).orElse(null);
-		    System.out.print(data.getCategoryJobCode());
 		    if (user == null) {
 		        return "Không tồn tại người dùng này";
 		    }
 
 		    createOrUpdateUserSetting(data, user);
 
-		    if (data.getSkills() != null && !data.getSkills().isEmpty()) {
-		        userSkillRepository.deleteByUserId(user.getId());
-		        List<UserSkill> userSkills = data.getSkills().stream().map(skillId -> {
-		            UserSkill userSkill = new UserSkill();
-		            userSkill.setUserId(user.getId());
-		            userSkill.setSkillId(skillId);
+
+		    if (data.getListSkills() != null && !data.getListSkills().isEmpty()) {
+              userSkillRepository.deleteByUserId(user.getId());
+		          List<UserSkill> userSkills = data.getListSkills().stream().map(skillId -> {
+		          UserSkill userSkill = new UserSkill();
+		           userSkill.setUserId(user.getId());
+		           userSkill.setSkillId(skillId);
 		            return userSkill;
 		        }).toList();
 		        userSkillRepository.saveAll(userSkills);
@@ -339,14 +391,13 @@ public class UserManagermentService {
     private AccountResponse mapToUserResponse(Integer Id) {
         Account account = accountRepo.findByUserId(Id);
         AccountResponse accountResponse = new AccountResponse();
-
         if (account != null) {
             CodeResponse roleDataResponse = new CodeResponse();
             if (account.getRoleCode() != null) {
                 roleDataResponse.setValue(account.getRoleCode().getValue());
                 roleDataResponse.setCode(account.getRoleCode().getCode());
             }
-            accountResponse.setRoleData(roleDataResponse);
+            accountResponse.setCodeRoleAccount(roleDataResponse);
 
             UserResponse userAccountResponse = new UserResponse();
             if (account.getUser() != null) {
@@ -354,17 +405,17 @@ public class UserManagermentService {
                 userAccountResponse.setFirstName(account.getUser().getFirstName());
                 userAccountResponse.setLastName(account.getUser().getLastName());
                 userAccountResponse.setEmail(account.getUser().getEmail());
-                userAccountResponse.setAddress(account.getUser().getAddress());
+                userAccountResponse.setAddressUser(account.getUser().getAddress());
                 userAccountResponse.setImage(account.getUser().getImage());
-                userAccountResponse.setDob(account.getUser().getDob());
-                userAccountResponse.setCompanyId(account.getUser().getCompanyId());
+                userAccountResponse.setDobUser(account.getUser().getDob());
+                userAccountResponse.setIdCompany(account.getUser().getCompanyId());
 
                 CodeResponse genderCode = new CodeResponse();
                 if (account.getUser().getGenderCode() != null) {
                     genderCode.setValue(account.getUser().getGenderCode().getValue());
                     genderCode.setCode(account.getUser().getGenderCode().getCode());
                 }
-                userAccountResponse.setGenderCode(genderCode);
+                userAccountResponse.setGenderCodeValue(genderCode);
 
                 UserSettingResponse userSettingResponse = new UserSettingResponse();
                 if (account.getUser().getUserSetting() != null) {
@@ -405,22 +456,45 @@ public class UserManagermentService {
                         skillResponse.setName(userSkill.getSkill().getName());
                         skillResponse.setCategoryJobCode(userSkill.getSkill().getCategoryJobCode());
                     }
-
                     skillIdResponse.setSkill(skillResponse);
                     return skillIdResponse;
                 })
                 .collect(Collectors.toList());
-
             accountResponse.setListSkills(skillResponses);
             accountResponse.setId(account.getId());
-            accountResponse.setPhonenumber(account.getPhonenumber());
-            accountResponse.setStatusCode(account.getStatusCode() != null ? account.getStatusCode().getCode() : null);
+            accountResponse.setPhoneNumber(account.getPhonenumber());
+            accountResponse.setCodeStatusValue(account.getStatusCode() != null ? account.getStatusCode().getCode() : null);
             accountResponse.setUserId(account.getUser() != null ? account.getUser().getId() : null);
-            accountResponse.setCreatedAt(account.getCreatedAt());
-            accountResponse.setUpdatedAt(account.getUpdatedAt());
+            accountResponse.setCreatedAtUser(account.getCreatedAt());
+            accountResponse.setUpdatedAtUser(new Date());
         }
-
         return accountResponse;
     }
-}
 
+
+    public static String generateRandomNumbers(int count) {
+        Random random = new Random();
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for (int i = 0; i < count; i++) {
+            int randomNumber = random.nextInt(100); // Số ngẫu nhiên từ 0 đến 99
+            stringBuilder.append(randomNumber);
+        }
+
+        return stringBuilder.toString();
+    }
+    public Page<AccountResponse> searchUsers(String firstName, String lastName, String categoryJobCode, 
+            String salaryJobCode, String experienceJobCode, String skillName, Pageable pageable) {
+    	Specification<User> spec = UserSpecification.filterUsers(firstName, lastName, categoryJobCode, 
+	                                           salaryJobCode, experienceJobCode, skillName);
+    	Page<AccountResponse> pageRs = mapUserPageToUserResponsePage(usersRepo.findAll(spec, pageable));
+    	return pageRs;
+    }
+    public Page<AccountResponse> mapUserPageToUserResponsePage(Page<User> userPage) {
+        List<AccountResponse> userResponses = userPage.getContent().stream()
+            .map(user -> mapToUserResponse(user.getId()))
+            .collect(Collectors.toList());
+
+        return new PageImpl<>(userResponses, userPage.getPageable(), userPage.getTotalElements());
+    }
+}

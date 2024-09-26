@@ -9,12 +9,13 @@ import lombok.Data;
 @Data
 public class AccountResponse {
 	 private int id;
-	    private String phonenumber;
-	    private String statusCode;
+
+	    private String phoneNumber;
+	    private String codeStatusValue;
 	    private int userId;
-	    private Date createdAt;
-	    private Date updatedAt;
-	    private CodeResponse roleData;
+	    private Date createdAtUser;
+	    private Date updatedAtUser;
+	    private CodeResponse codeRoleAccount;
 	    private UserResponse userAccountData;
 	    private List<SkillIdRespones> listSkills;
 }

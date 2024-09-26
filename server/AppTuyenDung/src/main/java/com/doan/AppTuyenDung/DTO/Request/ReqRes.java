@@ -7,6 +7,7 @@ import java.util.List;
 import com.doan.AppTuyenDung.entity.CodeGender;
 import com.doan.AppTuyenDung.entity.CodeRule;
 import com.doan.AppTuyenDung.entity.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -30,7 +31,8 @@ public class ReqRes {
 	private String email;
 	private String genderCode;
 	private String image;
+	@JsonIgnore
 	private User User;
+	@JsonIgnore
 	private List<User> UsersList;
 }
-

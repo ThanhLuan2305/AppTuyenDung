@@ -1,15 +1,13 @@
 package com.doan.AppTuyenDung.Controller;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.time.Instant;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,75 +22,54 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
+import java.util.Base64;
 import com.doan.AppTuyenDung.DTO.Request.CompanyDTO;
 import com.doan.AppTuyenDung.DTO.Response.ApiResponse;
 import com.doan.AppTuyenDung.DTO.Response.CompanyResponse;
-import com.doan.AppTuyenDung.DTO.CloudinaryResponse;
 import com.doan.AppTuyenDung.Repositories.AccountRepository;
+
 import com.doan.AppTuyenDung.Repositories.CodeRuleRepository;
 import com.doan.AppTuyenDung.Repositories.CompanyRepository;
+import com.doan.AppTuyenDung.Repositories.PostRepository;
 import com.doan.AppTuyenDung.Repositories.UserRepository;
 import com.doan.AppTuyenDung.Repositories.AllCode.CodeCensorStatusRepository;
 import com.doan.AppTuyenDung.Repositories.AllCode.CodeStatusRepository;
 import com.doan.AppTuyenDung.Services.CloudinaryService;
 import com.doan.AppTuyenDung.Services.CompanyService;
 import com.doan.AppTuyenDung.Services.JWTUtils;
-import com.doan.AppTuyenDung.entity.Account;
-import com.doan.AppTuyenDung.entity.CodeCensorstatus;
-import com.doan.AppTuyenDung.entity.CodeRule;
-import com.doan.AppTuyenDung.entity.CodeStatus;
 import com.doan.AppTuyenDung.entity.Company;
+import com.doan.AppTuyenDung.entity.Post;
 import com.doan.AppTuyenDung.entity.User;
-
 @RestController
-@RequestMapping("/public/admin")
+@RequestMapping("/public")
 public class CompanyController {
 
     @Autowired
     private CompanyService companyService;
 
     @Autowired
-    private CompanyRepository companyRepository;
-
-    @Autowired
-    private CloudinaryService cloudinaryService;
-
-    @Autowired
-    private CodeStatusRepository codeStatusRepository;
-
-    @Autowired
-    private CodeCensorStatusRepository codeCensorStatusRepository;
-
-    @Autowired
-    private AccountRepository accountRepository;
-
-
-    @Autowired
-    private CodeRuleRepository codeRuleRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
     private JWTUtils jwtUtils; 
     @Autowired
     private AccountRepository accountRepo;
-	 @PutMapping("/company/ban/{copanyId}")
+
+    @Autowired
+    private PostRepository postRepository;
+
+	 @PutMapping("/admin/company/ban/{copanyId}")
 	 public ApiResponse<CompanyResponse> banCompany(@PathVariable int copanyId) {
 		 ApiResponse<CompanyResponse> apiResponse = new ApiResponse<>();
 		 apiResponse.setResult(companyService.banCompany(copanyId));
 		 apiResponse.setMessage("Công ty đã bị cấm");
 		 return apiResponse;
 	 }
-	 @PutMapping("/company/unban/{copanyId}")
+	 @PutMapping("/admin/company/unban/{copanyId}")
 	 public ApiResponse<CompanyResponse> unBanCompany(@PathVariable int copanyId) {
 		 ApiResponse<CompanyResponse> apiResponse = new ApiResponse<>();
 		 apiResponse.setResult(companyService.unBanCompany(copanyId));
 		 apiResponse.setMessage("Công ty đã được mở cấm");
 		 return apiResponse;
 	 }
-	 @PutMapping("/company/update/{companyID}")
+	 @PutMapping("/admin/company/update/{companyID}")
 	 public ApiResponse<CompanyResponse> updateCompany(@PathVariable int companyID, @RequestBody CompanyDTO companyDTO) {
 		 CompanyResponse updateCPN = companyService.updateCompany(companyID, companyDTO);
 		 ApiResponse<CompanyResponse> apiResponse = new ApiResponse<>();
@@ -100,21 +77,21 @@ public class CompanyController {
 		 apiResponse.setMessage("Sửa công ty thành công");
 		 return apiResponse;
 	 }
-	 @GetMapping("/company/get_all_company")
+	 @GetMapping("/admin/company/get_all_company")
 	 public ApiResponse<List<CompanyResponse>> getAllCompany() {
 		 ApiResponse<List<CompanyResponse>> lstCpn = new ApiResponse<>();
 		 lstCpn.setResult(companyService.getCompanies());
 		 lstCpn.setMessage("Hiện tất cả công ty thành công" );
 		 return lstCpn;
 	 }
-	 @GetMapping("/company/get_company/{companyID}")
+	 @GetMapping("/admin/company/get_company/{companyID}")
 	 public ApiResponse<CompanyResponse> getAllCompany(@PathVariable int companyID) {
 		 ApiResponse<CompanyResponse> apiResponse = new ApiResponse<>();
 		 apiResponse.setResult(companyService.getCompanyByID(companyID));
-		 apiResponse.setMessage("Tìm thấy công ti với id: "+companyID );
+		 apiResponse.setMessage("Tìm thấy công ty với id: "+companyID );
 		 return apiResponse;
     }
-    @GetMapping("api/get-detail-company-by-userId")
+    @GetMapping("/admin/api/get-detail-company-by-userId")
     public ResponseEntity<?> getDetailCompanyByUserId(
             @RequestParam(value = "userId", required = false) String userId,
             @RequestParam(value = "companyId", required = false) String companyId) 
@@ -129,13 +106,43 @@ public class CompanyController {
         }
         Map<String, Object> response = companyService.getDetailCompanyByUserId(parsedUserId, parsedCompanyId);
         return ResponseEntity.ok(response);
-
     }
+    @GetMapping("path")
+    public Map<String, Object >getDetailCompanyById(@RequestParam Integer id) {
+        Map<String, Object> Response = new HashMap<>();
+        if (id == null) {
+            Response.put("errCode", 1);
+            Response.put("errMessage", "Missing required parameters!");
+        }
+        Optional<Company> optionalCompany = companyRepository.findById(id);
+        if (!optionalCompany.isPresent()) {
+            Response.put("errCode", 2);
+            Response.put("errMessage", "Company not found!");
+            return Response;
+        }
+        
+        Company company = optionalCompany.get();
+        List<User> users = userRepository.findByCompanyId(company.getId());
+        List<Integer> userIds = users.stream().map(User::getId).toList();
+        List<Post> posts = postRepository.findTop5ByStatusCodeAndUserIdIn("PS1", userIds);
 
-    @PostMapping("/create-company")
+        // Assuming you want to set postData in the company object
+        // company.setPostData(posts);
+
+        // Handle file conversion if needed
+        if (company.getFile() != null) {
+               
+        }
+        Response.put("Error", 0);
+        Response.put("errMessage", "Successfully");
+        return Response;
+    }
+    
+
+    @PostMapping("/admin/create-company")
     public ResponseEntity<Map<String, Object>> createNewCompany(@RequestHeader("Authorization") String token, 
     @ModelAttribute Company company,@RequestPart("filethumb" ) MultipartFile filethumb,
-    @RequestPart("fileCover")MultipartFile fileCover, @RequestPart("filepdf")MultipartFile filepdf) throws IOException
+    @RequestPart("fileCover")MultipartFile fileCover, @RequestPart(value="file",required = false)MultipartFile file) throws IOException
     {
         if (token.startsWith("Bearer ")) {
             token = token.substring(7).trim();
@@ -149,10 +156,32 @@ public class CompanyController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
         company.setUser(account.getUser());
-        if (filepdf != null && !filepdf.isEmpty()) {
-            company.setFile(filepdf.getBytes()); 
+
+        try{
+            String base64Pdf = Base64.getEncoder().encodeToString(file.getBytes());
+            String result = "data:application/pdf;base64," + base64Pdf;
+            company.setFile(result.getBytes());
+        } catch(Exception e) {
+            e.printStackTrace();
         }
+
         Map<String, Object> response = companyService.createNewCompany(company,filethumb,fileCover);
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/get-list-company")
+    public ResponseEntity<Map<String, Object>> getListCompany(@RequestParam(defaultValue = "10") int limit,
+                                                              @RequestParam(defaultValue = "0") int offset,
+                                                              @RequestParam(required = false) String search) {
+        Pageable pageable = PageRequest.of(offset, limit);
+        if (search != null && !search.isEmpty()) 
+        {
+            search = "%" + search + "%";
+        }
+        Map<String, Object> response = companyService.GetListCompany(search,pageable);
+        return ResponseEntity.ok(response);
+    }
+    
+
+
 }

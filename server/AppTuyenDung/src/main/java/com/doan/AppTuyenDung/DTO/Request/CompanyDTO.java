@@ -2,9 +2,6 @@ package com.doan.AppTuyenDung.DTO.Request;
 
 import java.util.Date;
 
-import com.doan.AppTuyenDung.entity.CodeCensorstatus;
-import com.doan.AppTuyenDung.entity.CodeStatus;
-import com.doan.AppTuyenDung.entity.User;
 
 import lombok.Data;
 

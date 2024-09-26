@@ -16,17 +16,19 @@ const Register = () => {
     againPass: true,
   });
   const [inputValues, setInputValues] = useState({
-    phonenumber: "",
-    firstName: "",
-    lastName: "",
-    password: "",
+    phonenumber: "+84374852925",
+    firstName: "123",
+    lastName: "123",
+    password: "123123123",
     isOpen: false,
     dataUser: {},
-    roleCode: "",
-    email: "",
-    againPass: "",
-    genderCode: "",
+    roleCode: "CANDIDATE",
+    email: "123123@gmail.com",
+    againPass: "123123123",
+    genderCode: "FE",
+    images : ""
   });
+  console.log(inputValues);
   const [dataCodeRole, setDataCodeRole] = useState([]);
   const [dataCodeGender, setDataCodeGender] = useState([]);
   useEffect(() => {
@@ -69,7 +71,10 @@ const Register = () => {
 
   const handleOnChange = (event) => {
     const { name, value } = event.target;
-    setInputValues({ ...inputValues, [name]: value });
+    setInputValues({ ...inputValues,...{[name]: value}} );
+
+    
+    
   };
 
   let handleOpenVerifyOTP = async () => {
@@ -120,6 +125,9 @@ const Register = () => {
               password: inputValues.password,
               roleCode: inputValues.roleCode,
               email: inputValues.email,
+              genderCode: inputValues.genderCode,
+              image:
+              "https://inkythuatso.com/uploads/thumbnails/800/2023/03/6-anh-dai-dien-trang-inkythuatso-03-15-26-36.jpg"
             },
             ["isOpen"]: true,
           });

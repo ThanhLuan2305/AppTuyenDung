@@ -1,17 +1,16 @@
-import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
+import firebase from "firebase/compat/app";
+import "firebase/compat/auth";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBw_qc3zfWSZA3aOpUBS8dbGZAVapice_E",
-  authDomain: "project-find-job.firebaseapp.com",
-  projectId: "project-find-job",
-  storageBucket: "project-find-job.appspot.com",
-  messagingSenderId: "331878466028",
-  appId: "1:331878466028:web:4eee63f69e00da60a700c9",
-  measurementId: "G-G6RK5P2FCB"
+  apiKey: "AIzaSyB1YvGViJjnK29fmbVsh3Pc3OimiwMMpv4",
+  authDomain: "findjobproject-96c36.firebaseapp.com",
+  projectId: "findjobproject-96c36",
+  storageBucket: "findjobproject-96c36.appspot.com",
+  messagingSenderId: "581090010990",
+  appId: "1:581090010990:web:fbb2e8973afb93508f837f",
+  measurementId: "G-Z63638FY6D",
 };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-
-export { auth };
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+export default firebase;

@@ -15,7 +15,8 @@ import Lightbox from "react-image-lightbox";
 import "react-image-lightbox/style.css";
 import CommonUtils from "../utils/CommonUtils";
 import axios from "axios";
-import { useFetchDataCodeGender } from "../utils/fetch";
+import { useFetchDataCodeGender,useFetchRuleUser } from "../utils/fetch";
+import { Input } from "antd";
 const CandidateInfo = () => {
   const [birthday, setbirthday] = useState("");
   const [isChangeDate, setisChangeDate] = useState(false);
@@ -46,11 +47,11 @@ const CandidateInfo = () => {
       ["address"]: data.userAccountData.address,
       ["phonenumber"]: data.phonenumber,
       ["genderCode"]: data.userAccountData.genderCode,
-      ["roleCode"]: data.userAccountData.roleCode,
+      ["roleCode"]: data.roleCode,
       ["id"]: data.userAccountData.id,
       ["dob"]: data.userAccountData.dob,
       ["image"]: data.userAccountData.image,
-      ["imageReview"]: data.userAccountData.image,
+      ["imageReview"]: data.userAccountData.image, 
       ["email"]: data.userAccountData.email,
     });
     setbirthday(
@@ -60,6 +61,7 @@ const CandidateInfo = () => {
         .format("DD/MM/YYYY")
     );
   };
+  
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("userData"));
     // console.log(userData)
@@ -68,48 +70,16 @@ const CandidateInfo = () => {
         setisActionADD(false);
         let user = await getDetailUserById(userData.id);
         if (user) {
-          console.log(user.user);
-          setStateUser(user.user);
+          console.log(user.result);
+          setStateUser(user.result);
         }
       };
       fetchUser();
     }
   }, []);
-  const [dataCodeGender, setdataCodeGender] = useState([]);
-  const useFetchDataCodeGender = () => {
-    // const [dataCodeGender, setdataCodeGender] = useState([]);
-
-    useEffect(() => {
-      const fetchData = async () => {
-        try {
-          const res = await axios.get(
-            "http://localhost:8080/public/get-all-code/genders-user"
-          );
-          setdataCodeGender(res.data);
-        } catch (error) {
-          console.log(error);
-        }
-      };
-
-      fetchData();
-    }, []);
-
-    return { dataCodeGender };
-  };
-
-  const { dataGender } = useFetchDataCodeGender();
-  useEffect(() => {
-    console.log("Fetched Gender Data:", dataCodeGender);
-  }, [dataCodeGender]);
-  // const { data: dataGender } = useFetchDataCodeGender();
-  const { data: dataRole } = axios
-    .get("http://localhost:8080/public/get-all-code/rules-user")
-    .then((response) => {
-      dataRole(response.data);
-    })
-    .catch((err) => {
-      toast(err);
-    });
+  // console.log(inputValues)
+  const { dataGender: dataGender } = useFetchDataCodeGender();
+  const { dataRulesuser: dataRole } = useFetchRuleUser();
 
   if (
     dataGender &&
@@ -135,44 +105,66 @@ const CandidateInfo = () => {
     setbirthday(date[0]);
     setisChangeDate(true);
   };
-  let handleOnChangeImage = async (event) => {
-    let data = event.target.files;
-    let file = data[0];
-    if (file) {
-      let base64 = await CommonUtils.getBase64(file);
-      let objectUrl = URL.createObjectURL(file);
-      setisChangeImg(true);
-      setInputValues({
-        ...inputValues,
-        ["image"]: base64,
-        ["imageReview"]: objectUrl,
-      });
-    }
-  };
+  const handleOnChangeImage = async  (event) => {
+        let data = event.target.files;
+        let file = data[0];
+        if (file) {
+            let fileURL = URL.createObjectURL(file); // path 
+            let base64 = await CommonUtils.getBase64(file);
+            console.log(base64)
+            setInputValues(prevState => ({
+                ...prevState,
+                image: base64, 
+                imageReview: fileURL 
+            }));
+        }
+        
+    };
+    function base64ToBlob(base64, type = '') {
+      const byteCharacters = atob(base64.split(',')[1]);
+      const byteNumbers = new Array(byteCharacters.length);
+      
+      for (let i = 0; i < byteCharacters.length; i++) {
+          byteNumbers[i] = byteCharacters.charCodeAt(i);
+      }
+      
+      const byteArray = new Uint8Array(byteNumbers);
+      return new Blob([byteArray], { type: type });
+  }
+
+
   let openPreviewImage = () => {
     if (!inputValues.imageReview) return;
 
     setInputValues({ ...inputValues, ["isOpen"]: true });
   };
   let handleSaveUser = async () => {
-    let res = await UpdateUserService({
-      id: inputValues.id,
-      firstName: inputValues.firstName,
-      lastName: inputValues.lastName,
-      address: inputValues.address,
-      roleCode: inputValues.roleCode,
-      genderCode: inputValues.genderCode,
-      dob:
-        isChangeDate === false ? inputValues.dob : new Date(birthday).getTime(),
-      image: isChangeImg ? inputValues.image : null,
-      email: inputValues.email,
-    });
-    if (res && res.errCode === 0) {
-      localStorage.setItem("userData", JSON.stringify(res.user));
+    let formData = new FormData();
+
+    // Append the fields to the FormData object
+    formData.append('id', inputValues.id);
+    formData.append('firstName', inputValues.firstName);
+    formData.append('lastName', inputValues.lastName);
+    formData.append('address', inputValues.address);
+    formData.append('roleCode', inputValues.roleCode);
+    formData.append('genderCode', inputValues.genderCode);
+    
+    // Handle the date
+    formData.append('dob', isChangeDate === false ? inputValues.dob : new Date(birthday).getTime());    
+    formData.append('email', inputValues.email);
+    
+    if (inputValues.image.startsWith("data:image/jpeg;base64,") || inputValues.image.startsWith("data:image/png;base64,")) {
+      const blob = base64ToBlob(inputValues.image, 'image/jpeg');
+      formData.append("fileImage", blob, "image.jpg");
+  } else {
+      console.error("Image is not in Base64 format");
+      return; // Hoặc xử lý lỗi khác
+  }
+    let res = await UpdateUserService(formData);
+     if (res && res.statusCode === 200) {
+      console.log(res)
       toast.success("Cập nhật người dùng thành công");
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000);
+
     } else {
       toast.error(res.errMessage);
     }
@@ -256,7 +248,7 @@ const CandidateInfo = () => {
                       <select
                         style={{ color: "black" }}
                         className="form-control"
-                        value={inputValues.genderCode}
+                        value={inputValues.value}
                         name="genderCode"
                         onChange={(event) => handleOnChange(event)}
                       >
@@ -307,12 +299,15 @@ const CandidateInfo = () => {
                     </label>
                     <div className="col-sm-9">
                       <div
-                        style={{
-                          backgroundImage: `url(${inputValues.imageReview})`,
-                        }}
                         onClick={() => openPreviewImage()}
                         className="box-img-preview"
-                      ></div>
+                      >
+                    <img 
+                      src={inputValues.imageReview} 
+                      alt="Preview" 
+                      style={{ width: '100%', height: 200, objectFit: 'cover' }} 
+                    />
+                      </div>
                     </div>
                   </div>
                 </div>
