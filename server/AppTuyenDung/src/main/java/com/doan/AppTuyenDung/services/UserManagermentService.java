@@ -230,6 +230,7 @@ public class UserManagermentService {
 
 
     public AccountResponse getUsersById(Integer id) throws Exception {
+
         AccountResponse accountResponse = new AccountResponse();
         try {
            accountResponse = mapToUserResponse(id);
@@ -238,11 +239,8 @@ public class UserManagermentService {
         }
         return accountResponse;
     }
-
-
     public UserUpdateResponse updateUser(UserUpdateRequest updatedUser, MultipartFile fileImage) throws Exception {
     	UserUpdateResponse reqRes = new UserUpdateResponse();
-
         try {
             Optional<User> userOptional = usersRepo.findById(updatedUser.getId());
             if (userOptional.isPresent()) {
@@ -268,7 +266,7 @@ public class UserManagermentService {
                 existingUser.setImage(imageUrl);
                 existingUser.setDob(updatedUser.getDob());
                 User savedUser = usersRepo.save(existingUser);
-                reqRes = mapToUserUpdateResponse(existingUser.getId());
+              reqRes = mapToUserUpdateResponse(existingUser.getId());
 
                 //reqRes.setMessage("User updated successfully");
             } else {
