@@ -3,6 +3,7 @@ package com.doan.AppTuyenDung.Controller;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +55,12 @@ public class CompanyController {
 
     @Autowired
     private PostRepository postRepository;
+
+    @Autowired
+    private CompanyRepository companyRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
 	 @PutMapping("/admin/company/ban/{copanyId}")
 	 public ApiResponse<CompanyResponse> banCompany(@PathVariable int copanyId) {

@@ -12,8 +12,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.doan.AppTuyenDung.DTO.Request.CompanyDTO;
@@ -34,25 +32,15 @@ import com.doan.AppTuyenDung.entity.Company;
 import com.doan.AppTuyenDung.entity.Post;
 import com.doan.AppTuyenDung.entity.User;
 
-import jakarta.persistence.EntityNotFoundException;
 import java.time.Instant;
-import java.util.Base64;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
-
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.doan.AppTuyenDung.DTO.CloudinaryResponse;
 import com.doan.AppTuyenDung.DTO.CompanyGetListDTO;
-import com.doan.AppTuyenDung.DTO.GetAllUserAdmin.AccountDTO;
-import com.doan.AppTuyenDung.DTO.GetAllUserAdmin.CustomResponse;
 import com.doan.AppTuyenDung.Repositories.AccountRepository;
 import com.doan.AppTuyenDung.Repositories.CodeRuleRepository;
-import com.doan.AppTuyenDung.Repositories.AllCode.CodeCensorStatusRepository;
-import com.doan.AppTuyenDung.Repositories.AllCode.CodeStatusRepository;
 import com.doan.AppTuyenDung.entity.Account;
 import com.doan.AppTuyenDung.entity.CodeRule;
 @Service
