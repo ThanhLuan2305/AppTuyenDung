@@ -74,6 +74,7 @@ public class UserManagementController {
         return apiResponse;
     }
 
+
     @GetMapping("/public/get-users/{userId}")
     public ApiResponse<AccountResponse> getUSerByID(@PathVariable Integer userId) throws Exception{
     	ApiResponse apiResponse = new ApiResponse<>();

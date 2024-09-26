@@ -48,11 +48,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.multipart.MultipartFile;
-
 import com.doan.AppTuyenDung.DTO.CloudinaryResponse;
 import com.doan.AppTuyenDung.DTO.InfoPostDetailDto;
-
-
+import com.doan.AppTuyenDung.DTO.UserAccountDTO;
 import com.doan.AppTuyenDung.Repositories.UserRepository;
 import com.doan.AppTuyenDung.Repositories.UserSettingRepository;
 import com.doan.AppTuyenDung.Repositories.UserSkillRepository;
@@ -395,7 +393,6 @@ public class UserManagermentService {
     private AccountResponse mapToUserResponse(Integer Id) {
         Account account = accountRepo.findByUserId(Id);
         AccountResponse accountResponse = new AccountResponse();
-
         if (account != null) {
             CodeResponse roleDataResponse = new CodeResponse();
             if (account.getRoleCode() != null) {
@@ -483,7 +480,6 @@ public class UserManagermentService {
     public static String generateRandomNumbers(int count) {
         Random random = new Random();
         StringBuilder stringBuilder = new StringBuilder();
-
         for (int i = 0; i < count; i++) {
             int randomNumber = random.nextInt(100); // Số ngẫu nhiên từ 0 đến 99
             stringBuilder.append(randomNumber);

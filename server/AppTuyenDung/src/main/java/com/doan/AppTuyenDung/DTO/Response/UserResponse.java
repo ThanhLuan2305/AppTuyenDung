@@ -1,7 +1,6 @@
 package com.doan.AppTuyenDung.DTO.Response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-
 import lombok.Data;
 
 @Data

@@ -61,8 +61,8 @@ public class UserManagementController {
     }
 
     @GetMapping("/admin/get-all-users")
-    public ApiResponse<List<UserUpdateResponse>> getAllUsers() throws Exception{
 
+    public ApiResponse<List<UserUpdateResponse>> getAllUsers() throws Exception{
     	ApiResponse apiResponse = new ApiResponse<>();
     	try {
         	apiResponse.setMessage("Danh sách người dừng: ");
@@ -73,6 +73,7 @@ public class UserManagementController {
 		}
         return apiResponse;
     }
+
 
     @GetMapping("/public/get-users/{userId}")
     public ApiResponse<AccountResponse> getUSerByID(@PathVariable Integer userId) throws Exception{
