@@ -1,12 +1,8 @@
 package com.doan.AppTuyenDung.Controller;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.time.Instant;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,51 +26,16 @@ import java.util.Base64;
 import com.doan.AppTuyenDung.DTO.Request.CompanyDTO;
 import com.doan.AppTuyenDung.DTO.Response.ApiResponse;
 import com.doan.AppTuyenDung.DTO.Response.CompanyResponse;
-import com.doan.AppTuyenDung.DTO.CloudinaryResponse;
 import com.doan.AppTuyenDung.Repositories.AccountRepository;
-import com.doan.AppTuyenDung.Repositories.CodeRuleRepository;
-import com.doan.AppTuyenDung.Repositories.CompanyRepository;
-import com.doan.AppTuyenDung.Repositories.UserRepository;
-import com.doan.AppTuyenDung.Repositories.AllCode.CodeCensorStatusRepository;
-import com.doan.AppTuyenDung.Repositories.AllCode.CodeStatusRepository;
-import com.doan.AppTuyenDung.Services.CloudinaryService;
 import com.doan.AppTuyenDung.Services.CompanyService;
 import com.doan.AppTuyenDung.Services.JWTUtils;
-import com.doan.AppTuyenDung.entity.Account;
-import com.doan.AppTuyenDung.entity.CodeCensorstatus;
-import com.doan.AppTuyenDung.entity.CodeRule;
-import com.doan.AppTuyenDung.entity.CodeStatus;
 import com.doan.AppTuyenDung.entity.Company;
-import com.doan.AppTuyenDung.entity.User;
-
 @RestController
 @RequestMapping("/public")
 public class CompanyController {
 
     @Autowired
     private CompanyService companyService;
-
-    @Autowired
-    private CompanyRepository companyRepository;
-
-    @Autowired
-    private CloudinaryService cloudinaryService;
-
-    @Autowired
-    private CodeStatusRepository codeStatusRepository;
-
-    @Autowired
-    private CodeCensorStatusRepository codeCensorStatusRepository;
-
-    @Autowired
-    private AccountRepository accountRepository;
-
-
-    @Autowired
-    private CodeRuleRepository codeRuleRepository;
-
-    @Autowired
-    private UserRepository userRepository;
 
     @Autowired
     private JWTUtils jwtUtils; 
