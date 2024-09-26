@@ -61,8 +61,8 @@ public class UserManagementController {
     }
 
     @GetMapping("/admin/get-all-users")
-
     public ApiResponse<List<UserUpdateResponse>> getAllUsers() throws Exception{
+
     	ApiResponse apiResponse = new ApiResponse<>();
     	try {
         	apiResponse.setMessage("Danh sách người dừng: ");
