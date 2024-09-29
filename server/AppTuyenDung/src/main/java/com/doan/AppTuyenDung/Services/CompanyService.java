@@ -174,13 +174,12 @@ public class CompanyService {
             companyResponse.setCensorData(censorData);
         }
         List<PostResponse> lstPostResponse = new ArrayList<PostResponse>();
-        PostResponse postData = new PostResponse();
         if(company.getUser() != null) {
-        	User user = company.getUser();
-        	List<Post> lstPost = postRepository.findByUserId(user.getId());
+        	List<Post> lstPost = postRepository.findByUserId(company.getUser().getId());
         	if(!lstPost.isEmpty()) {
         		for(Post p : lstPost) {
-                	postData.setUserId(p.getId());
+        	        PostResponse postData = new PostResponse();
+                	postData.setUserId(p.getUser().getId());
                 	postData.setCreatedAt(p.getCreatedAt());
                 	postData.setId(p.getId());
                 	postData.setIsHot(p.getIsHot());
@@ -189,52 +188,52 @@ public class CompanyService {
                 	postData.setTimePost(p.getTimePost());
                 	postData.setUpdatedAt(p.getUpdatedAt());
             		postDetailResponse postDetailResponse = new postDetailResponse();
-                	if(postData.getPostDetailData()!=null) {
-                		postDetailResponse.setId(postData.getPostDetailData().getId());
-                		postDetailResponse.setName(postData.getPostDetailData().getName());
-                		postDetailResponse.setDescriptionHTML(postData.getPostDetailData().getDescriptionHTML());
-                		postDetailResponse.setDescriptionMarkdown(postData.getPostDetailData().getDescriptionMarkdown());
-                		postDetailResponse.setAmount(postData.getPostDetailData().getAmount());
+                	if(p.getDetailPost()!=null) {
+                		postDetailResponse.setId(p.getDetailPost().getId());
+                		postDetailResponse.setName(p.getDetailPost().getName());
+                		postDetailResponse.setDescriptionHTML(p.getDetailPost().getDescriptionHTML());
+                		postDetailResponse.setDescriptionMarkdown(p.getDetailPost().getDescriptionMarkdown());
+                		postDetailResponse.setAmount(p.getDetailPost().getAmount());
                 		CodeResponse jobTypePostData = new CodeResponse();
-                        if(postData.getPostDetailData().getJobTypePostData() != null) {
-                        	jobTypePostData.setCode(postData.getPostDetailData().getJobTypePostData().getCode());
-                        	jobTypePostData.setValue(postData.getPostDetailData().getJobTypePostData().getValue());
+                        if(p.getDetailPost().getCategoryJobCode() != null) {
+                        	jobTypePostData.setCode(p.getDetailPost().getCategoryJobCode().getCode());
+                        	jobTypePostData.setValue(p.getDetailPost().getCategoryJobCode().getValue());
                         	postDetailResponse.setJobTypePostData(jobTypePostData);
                         }
                         CodeResponse workTypePostData = new CodeResponse();
-                        if(postData.getPostDetailData().getWorkTypePostData() != null) {
-                        	workTypePostData.setCode(postData.getPostDetailData().getWorkTypePostData().getCode());
-                        	workTypePostData.setValue(postData.getPostDetailData().getWorkTypePostData().getValue());
+                        if(p.getDetailPost().getCategoryWorktypeCode() != null) {
+                        	workTypePostData.setCode(p.getDetailPost().getCategoryWorktypeCode().getCode());
+                        	workTypePostData.setValue(p.getDetailPost().getCategoryWorktypeCode().getValue());
                         	postDetailResponse.setWorkTypePostData(workTypePostData);
                         }
                         CodeResponse salaryTypePostData = new CodeResponse();
-                        if(postData.getPostDetailData().getSalaryTypePostData() != null) {
-                        	salaryTypePostData.setCode(postData.getPostDetailData().getSalaryTypePostData().getCode());
-                        	salaryTypePostData.setValue(postData.getPostDetailData().getSalaryTypePostData().getValue());
+                        if(p.getDetailPost().getSalaryJobCode()  != null) {
+                        	salaryTypePostData.setCode(p.getDetailPost().getSalaryJobCode().getCode());
+                        	salaryTypePostData.setValue(p.getDetailPost().getSalaryJobCode().getValue());
                         	postDetailResponse.setSalaryTypePostData(salaryTypePostData);
                         }
                         CodeResponse jobLevelPostData = new CodeResponse();
-                        if(postData.getPostDetailData().getJobTypePostData() != null) {
-                        	jobLevelPostData.setCode(postData.getPostDetailData().getJobTypePostData().getCode());
-                        	jobLevelPostData.setValue(postData.getPostDetailData().getJobTypePostData().getValue());
+                        if(p.getDetailPost().getCategoryJoblevelCode()  != null) {
+                        	jobLevelPostData.setCode(p.getDetailPost().getCategoryJoblevelCode().getCode());
+                        	jobLevelPostData.setValue(p.getDetailPost().getCategoryJoblevelCode().getValue());
                         	postDetailResponse.setJobLevelPostData(jobLevelPostData);
                         }
                         CodeResponse genderPostData = new CodeResponse();
-                        if(postData.getPostDetailData().getGenderPostData() != null) {
-                        	genderPostData.setCode(postData.getPostDetailData().getGenderPostData() .getCode());
-                        	genderPostData.setValue(postData.getPostDetailData().getGenderPostData() .getValue());
+                        if(p.getDetailPost().getGenderPostCode() != null) {
+                        	genderPostData.setCode(p.getDetailPost().getGenderPostCode().getCode());
+                        	genderPostData.setValue(p.getDetailPost().getGenderPostCode().getValue());
                         	postDetailResponse.setGenderPostData(genderPostData);
                         }
                         CodeResponse provincePostData = new CodeResponse();
-                        if(postData.getPostDetailData().getProvincePostData() != null) {
-                        	provincePostData.setCode(postData.getPostDetailData().getGenderPostData().getCode());
-                        	provincePostData.setValue(postData.getPostDetailData().getGenderPostData().getValue());
+                        if(p.getDetailPost().getAddressCode() != null) {
+                        	provincePostData.setCode(p.getDetailPost().getAddressCode().getCode());
+                        	provincePostData.setValue(p.getDetailPost().getAddressCode().getValue());
                         	postDetailResponse.setProvincePostData(provincePostData);
                         }
                         CodeResponse expTypePostData = new CodeResponse();
-                        if(postData.getPostDetailData().getExpTypePostData() != null) {
-                        	expTypePostData.setCode(postData.getPostDetailData().getExpTypePostData().getCode());
-                        	expTypePostData.setValue(postData.getPostDetailData().getExpTypePostData().getValue());
+                        if(p.getDetailPost().getExperienceJobCode() != null) {
+                        	expTypePostData.setCode(p.getDetailPost().getExperienceJobCode().getCode());
+                        	expTypePostData.setValue(p.getDetailPost().getExperienceJobCode().getValue());
                         	postDetailResponse.setExpTypePostData(expTypePostData);
                         }
                         postData.setPostDetailData(postDetailResponse);
@@ -242,8 +241,8 @@ public class CompanyService {
                 	lstPostResponse.add(postData);
         		}
         	}
+            companyResponse.setPostData(lstPostResponse);
         }
-        companyResponse.setPostData(lstPostResponse);
         return companyResponse;
     }
     public Map<String, Object> getDetailCompanyByUserId(Integer userId, Integer companyId) {
