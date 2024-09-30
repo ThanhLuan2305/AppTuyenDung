@@ -20,6 +20,7 @@
     "react-minimal-pie-chart": "^8.3.0",
     "react-scripts": "^5.0.0",
     "recharts": "^2.1.10",
+    "slick-carousel": "^1.8.1",
     "styled-components": "^6.1.11",
     "victory-pie": "^36.4.1",
     "web-vitals": "^2.1.2",

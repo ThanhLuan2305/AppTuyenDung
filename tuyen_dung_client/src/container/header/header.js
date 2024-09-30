@@ -1,194 +1,115 @@
-import React from "react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
-// import { toast } from 'react-toastify';
-import "./header.scss";
 import "./header.css";
+import "./header.scss";
 
 const Header = () => {
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState(null);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  const handleResize = () => {
+    setIsMobile(window.innerWidth < 991);
+  };
+
   useEffect(() => {
-    const userData = JSON.parse(localStorage.getItem("userData"));
-    // if (userData && userData.roleCode !== 'CANDIDATE')
-    // {
-    //     toast.error("Vai trò của bạn không làm việc ở đây")
-    //     setTimeout(() => {
-    //         window.location.href = "/admin"
-    //     }, 1000);
-    // }
-    setUser(userData);
+    const handleUserData = () => {
+      const userData = JSON.parse(localStorage.getItem("userData"));
+      console.log("Current user:", userData);
+      setUser(userData);
+    };
+    handleUserData();
+    window.addEventListener("resize", handleResize);
+    handleResize();
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      setUser(null);
+    };
   }, []);
-  let handleLogout = () => {
-    console.log("hello");
+
+  const handleLogout = () => {
     localStorage.removeItem("userData");
     localStorage.removeItem("token_user");
+    setUser(null);
     window.location.href = "/login";
   };
 
-  let scrollHeader = () => {
-    window.addEventListener("scroll", function () {
-      var header = document.querySelector(".header-area");
-      if (header) {
-        header.classList.toggle("sticky", window.scrollY > 0);
-      }
-    });
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
   };
-  scrollHeader();
 
   return (
-    <>
-      <header>
-        {/* <!-- Header Start --> */}
-        <div className="header-area header-transparrent">
-          <div className="headder-top header-sticky">
-            <div className="container">
-              <div className="row align-items-center">
-                <div className="col-lg-3 col-md-2">
-                  {/* <!-- Logo --> */}
-                  <div className="logo" style={{ zIndex: 1 }}>
-                    <NavLink to="/">
-                      <img
-                        src="/assets/img/logo.png"
-                        style={{ width: "250px", height: "75px" }}
-                        alt=""
-                      />
-                    </NavLink>
-                  </div>
-                </div>
-                <div className="col-lg-9 col-md-9">
-                  <div className="menu-wrapper">
-                    {/* <!-- Main-menu --> */}
-                    <div className="main-menu">
-                      <nav className="d-none d-lg-block">
-                        <ul id="navigation">
-                          <li>
-                            <NavLink
-                              to="/"
-                              isActive={() => window.scrollTo(0, 0)}
-                            >
-                              Trang chủ
-                            </NavLink>
-                          </li>
-                          <li>
-                            <NavLink
-                              to="/job"
-                              isActive={() => window.scrollTo(0, 0)}
-                            >
-                              Việc làm{" "}
-                            </NavLink>
-                          </li>
-                          <li>
-                            <NavLink
-                              to="/company"
-                              isActive={() => window.scrollTo(0, 0)}
-                            >
-                              Công ty{" "}
-                            </NavLink>
-                          </li>
-                          <li>
-                            <NavLink
-                              to="/about"
-                              isActive={() => window.scrollTo(0, 0)}
-                            >
-                              Giới thiệu
-                            </NavLink>
-                          </li>
-                          {/* <li><NavLink to="/contact" >Contact</NavLink></li> */}
-                        </ul>
-                      </nav>
-                    </div>
-                    {/* <!-- Header-btn --> */}
-                    <div class="header-btn d-none f-right d-lg-block">
-                      {user ? (
-                        <ul className="navbar-nav navbar-nav-right">
-                          <li className="nav-item nav-profile dropdown">
-                            <a
-                              className="nav-link dropdown-toggle box-header-profile"
-                              href="/#"
-                              data-toggle="dropdown"
-                              id="profileDropdown"
-                            >
-                              <img
-                                style={{
-                                  objectFit: "cover",
-                                  width: "30px",
-                                  height: "30px",
-                                  borderRadius: "50%",
-                                  marginLeft: "15px",
-                                }}
-                                src={user.image}
-                                alt="profile"
-                              />
-                              <span className="header-name-user">
-                                {user.firstName + " " + user.lastName}
-                              </span>
-                            </a>
-                            <div
-                              className="dropdown-menu dropdown-menu-right navbar-dropdown"
-                              aria-labelledby="profileDropdown"
-                            >
-                              <Link
-                                to="/candidate/info"
-                                className="dropdown-item"
-                              >
-                                <i className="far fa-user text-primary" />
-                                Thông tin
-                              </Link>
-                              <Link
-                                to="/candidate/usersetting"
-                                className="dropdown-item"
-                              >
-                                <i className="far fa-solid fa-bars text-primary" />
-                                Cài đặt nâng cao
-                              </Link>
-                              <Link
-                                to="/candidate/cv-post/"
-                                className="dropdown-item"
-                              >
-                                <i className="far fa-file-word text-primary"></i>
-                                Công việc đã nộp
-                              </Link>
-                              <Link
-                                to="/candidate/changepassword/"
-                                className="dropdown-item"
-                              >
-                                <i className="ti-settings text-primary" />
-                                Đổi mật khẩu
-                              </Link>
-                              <a
-                                onClick={() => handleLogout()}
-                                className="dropdown-item"
-                              >
-                                <i className="ti-power-off text-primary" />
-                                Đăng xuất
-                              </a>
-                            </div>
-                          </li>
-                        </ul>
-                      ) : (
-                        <>
-                          <Link to={"/register"} class="btn head-btn1">
-                            Đăng kí
-                          </Link>
-                          <Link to={"/login"} class="btn head-btn2">
-                            Đăng nhập
-                          </Link>
-                        </>
-                      )}
-                    </div>
-                  </div>
-                </div>
-                {/* <!-- Mobile Menu --> */}
-                <div className="col-12">
-                  <div className="mobile_menu d-block d-lg-none"></div>
-                </div>
-              </div>
-            </div>
+    <header className="header-area bg-light shadow-sm">
+      <div className="container-fluid">
+        <nav className="navbar navbar-expand-lg navbar-light bg-transparent">
+          <NavLink className="navbar-brand" to="/home">
+            <img
+              src="/assets/img/logo.png"
+              style={{ maxHeight: "50px", maxWidth: "250px" }}
+              alt="Logo"
+            />
+          </NavLink>
+          <button
+            className="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+            aria-controls="navbarNav"
+            aria-expanded={isMenuOpen ? "true" : "false"}
+            aria-label="Toggle navigation"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+          >
+            <span className="navbar-toggler-icon"></span>
+          </button>
+
+          <div className={`collapse navbar-collapse ${isMenuOpen ? "show" : ""}`} id="navbarNav">
+            <ul className="navbar-nav mx-auto">
+              <li className="nav-item mx-3">
+                <NavLink className="nav-link" to="/home">Trang chủ</NavLink>
+              </li>
+              <li className="nav-item mx-3">
+                <NavLink className="nav-link" to="/job">Việc làm</NavLink>
+              </li>
+              <li className="nav-item mx-3">
+                <NavLink className="nav-link" to="/company">Công ty</NavLink>
+              </li>
+              <li className="nav-item mx-3">
+                <NavLink className="nav-link" to="/about">Giới thiệu</NavLink>
+              </li>
+            </ul>
+
+            <ul className="navbar-nav ms-auto auth-buttons">
+              {user ? (
+                <li className="nav-item dropdown">
+                  <a className="nav-link dropdown-toggle" href="#" id="userDropdown" onClick={toggleDropdown}>
+                    <img src={user.image} alt="User" className="rounded-circle" style={{ width: "30px", height: "30px" }} />
+                    {user.firstName + " " + user.lastName + " "}
+                    <i className="fas fa-chevron-down ms-2"></i>
+                  </a>
+                  <ul className={`dropdown-menu dropdown-menu-end ${isDropdownOpen ? "show" : ""}`} aria-labelledby="userDropdown">
+                    <li><Link className="dropdown-item" to="/candidate/info"><i className="far fa-user text-primary"></i> Thông tin</Link></li>
+                    <li><Link className="dropdown-item" to="/candidate/usersetting"><i className="fas fa-cogs text-primary"></i> Cài đặt</Link></li>
+                    <li><Link className="dropdown-item" to="/candidate/cv-post"><i className="fas fa-file-alt text-primary"></i> CV đã nộp</Link></li>
+                    <li><Link className="dropdown-item" to="/candidate/changepassword"><i className="fas fa-key text-primary"></i> Đổi mật khẩu</Link></li>
+                    <li><button className="dropdown-item" onClick={handleLogout}><i className="fas fa-sign-out-alt text-primary"></i> Đăng xuất</button></li>
+                  </ul>
+                </li>
+              ) : (
+                <>
+                  <li className="nav-item mx-3">
+                    <Link to="/register" className={`nav-link ${isMobile ? 'nav-link text-center' : 'nav-link btn btn-primary text-center'}`}>Đăng ký</Link>
+                  </li>
+                  <li className="nav-item mx-3">
+                    <Link to="/login" className={`nav-link ${isMobile ? 'nav-link text-center' : 'nav-link btn btn-secondary text-center'}`}>Đăng nhập</Link>
+                  </li>
+                </>
+              )}
+            </ul>
           </div>
-        </div>
-        {/* <!-- Header End --> */}
-      </header>
-    </>
+        </nav>
+      </div>
+    </header>
   );
 };
 

@@ -37,7 +37,7 @@ const Home = () => {
       .catch((error) => {
         console.error("Error fetching feature data", error);
       });
-      
+
     const paramsHot = buildParams({
       limit: 5,
       offset: 0,
@@ -50,7 +50,7 @@ const Home = () => {
       isHot: 1,
       search: "",
     });
-    
+
     axios
       .get("http://localhost:8080/public/get-filter-post", { params: paramsHot })
       .then((responseHot) => {
@@ -67,22 +67,27 @@ const Home = () => {
     fetchPost();
   }, []);
 
-  const H1 = styled.h1`
-    color: darkblue;
-    width: 600px;
-    font-size: 2rem; /* Kích thước chữ cơ bản */
-    margin: 0;
+  const Container = styled.div`
+  padding: 0;
+  margin: 0;
+`;
 
-    @media (max-width: 768px) {
-      width: 275px;
-      font-size: 1.5rem; /* Kích thước chữ nhỏ hơn cho màn hình nhỏ */
-      text-align: left; /* Căn giữa trên màn hình nhỏ */
-    }
+  const SectionTitle = styled.h1`
+  text-align: center;
+  color: #003366;
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 30px;
+`;
 
-    @media (max-width: 576px) {
-      font-size: 1.2rem; /* Kích thước chữ nhỏ hơn nữa cho màn hình rất nhỏ */
-    }
-  `;
+  const Subtitle = styled.p`
+  color: #ff6347;
+  font-size: 1.2rem;
+  text-align: center;
+  margin-bottom: 15px;
+  line-height: 1.5;
+`;
+
   return (
     <>
       {/* <div id="preloader-active">
@@ -96,7 +101,7 @@ const Home = () => {
         </div>
     </div> */}
       {/* <!-- Preloader Start --> */}
-      <main>
+      <Container>
         {/* <!-- slider Area Start--> */}
         <div class="slider-area ">
           {/* <!-- Mobile Menu --> */}
@@ -111,7 +116,7 @@ const Home = () => {
                 <div class="row">
                   <div class="col-xl-6 col-lg-5 col-md-10">
                     <div class="hero__caption ">
-                      <H1>Hãy tìm công việc yêu thích của bản thân</H1>
+                      <SectionTitle>Hãy tìm công việc yêu thích của bản thân</SectionTitle>
                     </div>
                   </div>
                 </div>
@@ -125,13 +130,11 @@ const Home = () => {
         <div class="our-services section-pad-t30">
           <div class="container">
             {/* <!-- Section Tittle --> */}
-            <div class="row">
-              <div class="col-lg-12">
-                <div class="section-tittle text-center">
-                  <p style={{ color: "red" }}>Lĩnh vực công việc nổi bật</p>
-                  <h1>Danh mục nghề nghiệp </h1>
-                </div>
-              </div>
+            <div className="col-12">
+              <Subtitle>Lĩnh vực công việc nổi bật</Subtitle>
+            </div>
+            <div className="col-12">
+              <SectionTitle>Danh mục nghề nghiệp</SectionTitle>
             </div>
             <Categories />
 
@@ -168,12 +171,10 @@ const Home = () => {
             {/* <!-- Section Tittle --> */}
             <div class="row">
               <div class="col-lg-12">
-                <div class="section-tittle text-center">
-                  <h2>Công việc nổi bật</h2>
-                </div>
+                <SectionTitle>Công việc nổi bật</SectionTitle>
+                <FeaturesJob dataFeature={dataHot} />
               </div>
             </div>
-            <FeaturesJob dataFeature={dataHot} />
           </div>
         </section>
         <section class="featured-job-area feature-padding">
@@ -181,12 +182,10 @@ const Home = () => {
             {/* <!-- Section Tittle --> */}
             <div class="row">
               <div class="col-lg-12">
-                <div class="section-tittle text-center">
-                  <h2>Công việc mới đăng</h2>
-                </div>
+                <SectionTitle>Công việc mới đăng</SectionTitle>
+                <FeaturesJob dataFeature={dataFeature} />
               </div>
             </div>
-            <FeaturesJob dataFeature={dataFeature} />
           </div>
         </section>
 
@@ -281,7 +280,7 @@ const Home = () => {
             </div>
           </div>
         </div>
-      </main>
+      </Container>
     </>
   );
 };
