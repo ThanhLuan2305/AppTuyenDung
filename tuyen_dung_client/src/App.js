@@ -13,7 +13,6 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link,
   Redirect,
 } from "react-router-dom";
 import Otp from "./container/login/Otp";
@@ -30,6 +29,9 @@ function App() {
       <Switch>
         <div className="App">
           <Route exact path="/">
+            <Redirect to="/home" />
+          </Route>
+          <Route exact path="/home">
             <Header />
             <Home />
             <Footer />
@@ -68,9 +70,9 @@ function App() {
                 (JSON.parse(localStorage.getItem("userData")).codeRoleAccount ===
                   "ADMIN" ||
                   JSON.parse(localStorage.getItem("userData")).codeRoleAccount ===
-                    "EMPLOYER" ||
+                  "EMPLOYER" ||
                   JSON.parse(localStorage.getItem("userData")).codeRoleAccount ===
-                    "COMPANY")
+                  "COMPANY")
               ) {
                 return <HomeAdmin />;
               } else {
@@ -84,7 +86,7 @@ function App() {
               if (
                 JSON.parse(localStorage.getItem("userData")) &&
                 JSON.parse(localStorage.getItem("userData")).codeRoleAccount ===
-                  "CANDIDATE"
+                "CANDIDATE"
               ) {
                 return (
                   <>
