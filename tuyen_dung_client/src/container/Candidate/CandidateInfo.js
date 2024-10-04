@@ -28,11 +28,11 @@ const CandidateInfo = () => {
     firstName: "",
     lastName: "",
     address: "",
-    phonenumber: "",
+    phoneNumber: "",
     genderCode: "",
     roleCode: "",
     id: "",
-    dob: "",
+    dobUser: "",
     image: "",
     imageReview: "",
     isOpen: false,
@@ -44,19 +44,19 @@ const CandidateInfo = () => {
       ...inputValues,
       ["firstName"]: data.userAccountData.firstName,
       ["lastName"]: data.userAccountData.lastName,
-      ["address"]: data.userAccountData.address,
-      ["phonenumber"]: data.phonenumber,
+      ["address"]: data.userAccountData.addressUser,
+      ["phoneNumber"]: data.phoneNumber,
       ["genderCode"]: data.userAccountData.genderCode,
       ["roleCode"]: data.roleCode,
       ["id"]: data.userAccountData.id,
-      ["dob"]: data.userAccountData.dob,
+      ["dobUser"]: data.userAccountData.dobUser,
       ["image"]: data.userAccountData.image,
       ["imageReview"]: data.userAccountData.image, 
       ["email"]: data.userAccountData.email,
     });
     setbirthday(
       moment
-        .unix(+data.userAccountData.dob / 1000)
+        .unix(+data.userAccountData.dobUser / 1000)
         .locale("vi")
         .format("DD/MM/YYYY")
     );
@@ -70,7 +70,7 @@ const CandidateInfo = () => {
         setisActionADD(false);
         let user = await getDetailUserById(userData.id);
         if (user) {
-          console.log(user.result);
+          console.log("info ", user.result);
           setStateUser(user.result);
         }
       };
@@ -78,12 +78,12 @@ const CandidateInfo = () => {
     }
   }, []);
   // console.log(inputValues)
-  const { dataGender: dataGender } = useFetchDataCodeGender();
+  const { dataGender: DataGender } = useFetchDataCodeGender();
   const { dataRulesuser: dataRole } = useFetchRuleUser();
 
   if (
-    dataGender &&
-    dataGender.length > 0 &&
+    DataGender &&
+    DataGender.length > 0 &&
     inputValues.genderCode === "" &&
     dataRole &&
     dataRole.length > 0 &&
@@ -91,7 +91,7 @@ const CandidateInfo = () => {
   ) {
     setInputValues({
       ...inputValues,
-      ["genderCode"]: dataGender[0].code,
+      ["genderCode"]: DataGender[0].code,
       ["roleCode"]: dataRole[0].code,
     });
   }
@@ -140,7 +140,7 @@ const CandidateInfo = () => {
   };
   let handleSaveUser = async () => {
     let formData = new FormData();
-
+    console.log("123");
     // Append the fields to the FormData object
     formData.append('id', inputValues.id);
     formData.append('firstName', inputValues.firstName);
@@ -150,20 +150,22 @@ const CandidateInfo = () => {
     formData.append('genderCode', inputValues.genderCode);
     
     // Handle the date
-    formData.append('dob', isChangeDate === false ? inputValues.dob : new Date(birthday).getTime());    
+    formData.append('dob', isChangeDate === false ? inputValues.dobUser : new Date(birthday).getTime());    
     formData.append('email', inputValues.email);
-    
+    console.log(inputValues.imageReview)
     if (inputValues.image.startsWith("data:image/jpeg;base64,") || inputValues.image.startsWith("data:image/png;base64,")) {
       const blob = base64ToBlob(inputValues.image, 'image/jpeg');
       formData.append("fileImage", blob, "image.jpg");
-  } else {
-      console.error("Image is not in Base64 format");
-      return; // Hoặc xử lý lỗi khác
-  }
+    }else{
+      console.log(inputValues.imageReview)
+      formData.append("image", inputValues.imageReview); 
+    }
     let res = await UpdateUserService(formData);
-     if (res && res.statusCode === 200) {
-      console.log(res)
+     if (res && res.code === 200) {
       toast.success("Cập nhật người dùng thành công");
+        setTimeout(() => {
+          window.location.reload();
+        }, 3000);
 
     } else {
       toast.error(res.errMessage);
@@ -230,9 +232,9 @@ const CandidateInfo = () => {
                     <div className="col-sm-9">
                       <input
                         type="number"
-                        value={inputValues.phonenumber}
+                        value={inputValues.phoneNumber}
                         disabled={isActionADD === true ? false : true}
-                        name="phonenumber"
+                        name="phoneNumber"
                         onChange={(event) => handleOnChange(event)}
                         className="form-control"
                       />
@@ -252,9 +254,9 @@ const CandidateInfo = () => {
                         name="genderCode"
                         onChange={(event) => handleOnChange(event)}
                       >
-                        {dataGender &&
-                          dataGender.length > 0 &&
-                          dataGender.map((item, index) => {
+                        {DataGender &&
+                          DataGender.length > 0 &&
+                          DataGender.map((item, index) => {
                             return (
                               <option key={index} value={item.code}>
                                 {item.value}

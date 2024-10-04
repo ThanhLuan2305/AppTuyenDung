@@ -108,9 +108,11 @@ public class UserManagementController {
 
     }
     @PostMapping("/public/set-user-setting")
-    public ApiResponse setDataUserSetting(@RequestHeader("Authorization") String token,@ModelAttribute UserSettingDTO data,
+    public ApiResponse setDataUserSetting(@RequestHeader("Authorization") String token,
+                                          @ModelAttribute UserSettingDTO data,
                                           @RequestPart(value="filepdf",required = false) MultipartFile filepdf ) 
     {
+        
         // check user 
         ApiResponse apiRS = new ApiResponse<>();
         if (token.startsWith("Bearer ")) {

@@ -252,18 +252,24 @@ public class UserManagermentService {
                 existingUser.setLastName(updatedUser.getLastName());
                 CodeGender gender = codeGenderRepo.findByCode(updatedUser.getGenderCode());
                 existingUser.setGenderCode(gender);
+                
                 // existingUser.setImage(updatedUser.getImage());
                 String imageUrl = "";
                 String imageJobType = updatedUser.getFirstName()+updatedUser.getLastName()+generateRandomNumbers(10)+"Images";
                 if (fileImage != null) {
-                try {
-                    CloudinaryResponse thumbnailResponse = cloudinaryService.uploadFile(fileImage,imageJobType);
-                    imageUrl = thumbnailResponse.getUrl();
-                } catch (Exception e) {
-                	throw new AppException(ErrorCode.ERRORCLOUD);
+                    try {
+                        CloudinaryResponse thumbnailResponse = cloudinaryService.uploadFile(fileImage,imageJobType);
+                        imageUrl = thumbnailResponse.getUrl();
+                        existingUser.setImage(imageUrl);
+                    } catch (Exception e) {
+                        throw new AppException(ErrorCode.ERRORCLOUD);
+                    }
+                    
                 }
+                else{
+                    existingUser.setImage(updatedUser.getImage());
                 }
-                existingUser.setImage(imageUrl);
+                
                 existingUser.setDob(updatedUser.getDob());
                 User savedUser = usersRepo.save(existingUser);
                 reqRes = mapToUserUpdateResponse(existingUser.getId());

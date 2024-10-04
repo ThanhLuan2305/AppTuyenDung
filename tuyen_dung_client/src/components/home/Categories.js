@@ -19,7 +19,7 @@ const Categories = () => {
           )
           .then((res) => {
             setAllCategory(res.data.content);
-          }) //hàm này gọi bên đây
+          }) //hàm này gọi 
           .catch((err) => {
             toast.error(err);
           });

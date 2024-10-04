@@ -163,7 +163,7 @@ public class CompanyController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
         company.setUser(account.getUser());
-
+        
         try{
             String base64Pdf = Base64.getEncoder().encodeToString(file.getBytes());
             String result = "data:application/pdf;base64," + base64Pdf;

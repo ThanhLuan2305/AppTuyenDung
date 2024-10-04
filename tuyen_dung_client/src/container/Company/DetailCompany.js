@@ -9,7 +9,6 @@ const DetailCompany = () => {
   const [dataCompany, setdataCompany] = useState({});
   const { id } = useParams();
   useEffect(() => {
-    //check your id user with comapany : API get /
     if (id) {
       let fetchCompany = async () => {
         let res = await getDetailCompanyById(id);
@@ -39,7 +38,7 @@ const DetailCompany = () => {
         <div className="container">
           <div className="cover-wrapper">
             <img
-              src={dataCompany.coverimage}
+              src={dataCompany.coverImage}
               alt=""
               className="img-responsive cover-img"
               width="100%"
@@ -52,7 +51,7 @@ const DetailCompany = () => {
                 <img
                   style={{ width: "100%", height: "100%" }}
                   src={dataCompany.thumbnail}
-                  alt="Công ty Cổ phần Tập đoàn Hoa Sen"
+                  alt="Công ty ABC"
                   className="img-responsive"
                 />
               </div>
@@ -250,14 +249,14 @@ const DetailCompany = () => {
                   </p>
                   <div className="company-map">
                     <p className="map">Bản đồ trụ sở chính :</p>
-                    {/* <iframe
+                    <iframe
                       width="100%"
                       height={270}
                       frameBorder={0}
                       style={{ border: 0 }}
                       src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyCVgO8KzHQ8iKcfqXgrMnUIGlD-piWiPpo&q=${dataCompany.address}&zoom=15&language=vi`}
                       allowFullScreen
-                    ></iframe> */}
+                    ></iframe>
                   </div>
                 </div>
               </div>

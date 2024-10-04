@@ -1,5 +1,7 @@
 package com.doan.AppTuyenDung.entity;
 
+import org.hibernate.annotations.Type;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -18,6 +20,7 @@ public class Cv {
 
     @Column(columnDefinition = "LONGBLOB")
     private byte[] file; 
+
     private Boolean isChecked;
     private String status;
     private java.util.Date interviewTime;

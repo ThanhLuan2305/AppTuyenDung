@@ -45,8 +45,6 @@ const ManageCvCandidate = (props) => {
     let handleChangePage = async (number) => {
         setnumberPage(number.selected)
         let arrData = await getAllListCvByUserIdService({
-
-
             limit: PAGINATION.pagerow,
             offset: number.selected,
             userId: user.id
@@ -66,7 +64,6 @@ const ManageCvCandidate = (props) => {
                 <div className="card">
                     <div className="card-body">
                         <h4 className="card-title">Danh sách Công Việc Đã Nộp</h4>
-
                         <div className="table-responsive pt-2">
                             <table className="table table-bordered">
                                 <thead>

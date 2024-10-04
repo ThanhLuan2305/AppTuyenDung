@@ -11,8 +11,26 @@ const getDetailCvService = (id,roleCode) => {
 const getStatisticalCv = (data) => {
     return axios.get(`/api/get-statistical-cv?limit=${data.limit}&offset=${data.offset}&fromDate=${data.fromDate}&toDate=${data.toDate}&companyId=${data.companyId}`)
 }
+// when send cv new => send and create new
+const createNewCv = async  (data,token) => {
+    try {
+        
+        // Thực hiện request POST với headers Authorization
+        let response = await axios.post('http://localhost:8080/public/createCVnew', data, {
+            headers: {
+                'Authorization': `Bearer ${token}` // Thêm token vào header
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error creating CV:', error);
+        throw error;
+    }
+}
+
 export {
      getAllListCvByUserIdService,
      getDetailCvService,
-     getStatisticalCv
+     getStatisticalCv,
+     createNewCv
 }
