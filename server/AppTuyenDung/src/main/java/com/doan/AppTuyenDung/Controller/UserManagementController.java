@@ -126,12 +126,12 @@ public class UserManagementController {
             apiRS.setCode(-1);
             apiRS.setMessage("Lỗi không tìm thấy account");
         }
-        if(account.getId() != data.getIdUser())
-        {
-            apiRS.setCode(-1);
-            apiRS.setMessage("Không thể cập nhật thông tin người dùng");
-            return apiRS;
-        }
+        // if(account.getId() != data.getIdUser())
+        // {
+        //     apiRS.setCode(-1);
+        //     apiRS.setMessage("Không thể cập nhật thông tin người dùng");
+        //     return apiRS;
+        // }
 
         try{
             String base64Pdf = Base64.getEncoder().encodeToString(filepdf.getBytes());
