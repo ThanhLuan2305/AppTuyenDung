@@ -77,6 +77,9 @@ const Header = () => {
               <li className="nav-item mx-3">
                 <NavLink className="nav-link" to="/about">Giới thiệu</NavLink>
               </li>
+              <li className="nav-item mx-3">
+                <NavLink className="nav-link" to="/swaggerAPI">Tài Liệu API</NavLink>
+              </li>
             </ul>
 
             <ul className="navbar-nav ms-auto auth-buttons">

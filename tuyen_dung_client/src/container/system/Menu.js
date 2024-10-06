@@ -574,7 +574,8 @@ const Menu = () => {
                 </div>
               </li>
             )}
-            {user.companyId && (
+            
+            {!user.companyId && (
               <li className="nav-item relative">
                 <a
                   className="nav-link"
