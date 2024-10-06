@@ -15,10 +15,14 @@ import org.springframework.http.ResponseEntity;
 import com.doan.AppTuyenDung.Repositories.DetailPostRepository;
 import com.doan.AppTuyenDung.Repositories.PostRepositoriesQuery;
 import com.doan.AppTuyenDung.Repositories.PostRepository;
+import com.doan.AppTuyenDung.Repositories.PostSpecification;
 import com.doan.AppTuyenDung.Repositories.SearchRepository;
+import com.doan.AppTuyenDung.Repositories.UserSpecification;
 import com.doan.AppTuyenDung.Repositories.criteria.FilterData;
 import com.doan.AppTuyenDung.entity.DetailPost;
 import com.doan.AppTuyenDung.entity.Post;
+import com.doan.AppTuyenDung.entity.User;
+
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -32,8 +36,11 @@ import jakarta.persistence.criteria.Root;
 
 import com.doan.AppTuyenDung.DTO.DetailPostDTO;
 import com.doan.AppTuyenDung.DTO.FilterCriteria;
+import com.doan.AppTuyenDung.DTO.Response.AccountResponse;
+import com.doan.AppTuyenDung.DTO.Response.CodeResponse;
 import com.doan.AppTuyenDung.DTO.Response.PageResponse;
 import com.doan.AppTuyenDung.DTO.Response.PostJobTypeCountDTO;
+import com.doan.AppTuyenDung.DTO.Response.PostResponse;
 import com.doan.AppTuyenDung.DTO.Response.postDetailResponse;
 import com.doan.AppTuyenDung.DTO.InfoPostDetailDto;
 import java.util.*;
@@ -131,6 +138,85 @@ public class postService {
         response.put("totalPost", totalPosts);
 
         return response;
+    }
+    public Page<PostResponse> searchPosts(String name, String categoryJobCode, List<String> categoryWorkTypeCode, 
+			String addressCode, List<String> experienceJobCode, List<String> categoryJobLevelCode, List<String> salaryJobCode,Integer isHot, Pageable pageable) {
+    	Specification<Post> spec = PostSpecification.filterPosts(name, categoryJobCode, categoryWorkTypeCode, 
+    			addressCode, experienceJobCode, categoryJobLevelCode, salaryJobCode, isHot);
+    	Page<PostResponse> pageRs = mapPostPageTPostResponsePage(postRepository.findAll(spec, pageable));
+    	return pageRs;
+    }
+    public Page<PostResponse> mapPostPageTPostResponsePage(Page<Post> postPage) {
+        List<PostResponse> userResponses = postPage.getContent().stream()
+            .map(post -> mapToPostResponse(post.getId()))
+            .collect(Collectors.toList());
+
+        return new PageImpl<>(userResponses, postPage.getPageable(), postPage.getTotalElements());
+    }
+    private PostResponse mapToPostResponse(Integer Id) {
+    	Optional<Post> postOptional = postRepository.findById(Id);
+    	Post p = postOptional.get();
+    	PostResponse postData = new PostResponse();
+    	postData.setUserId(p.getUser().getId());
+    	postData.setCreatedAt(p.getCreatedAt());
+    	postData.setId(p.getId());
+    	postData.setIsHot(p.getIsHot());
+    	postData.setStatusCode(p.getStatusCode().getCode());
+    	postData.setTimeEnd(p.getTimeEnd());
+    	postData.setTimePost(p.getTimePost());
+    	postData.setUpdatedAt(p.getUpdatedAt());
+		postDetailResponse postDetailResponse = new postDetailResponse();
+    	if(p.getDetailPost()!=null) {
+    		postDetailResponse.setId(p.getDetailPost().getId());
+    		postDetailResponse.setName(p.getDetailPost().getName());
+    		postDetailResponse.setDescriptionHTML(p.getDetailPost().getDescriptionHTML());
+    		postDetailResponse.setDescriptionMarkdown(p.getDetailPost().getDescriptionMarkdown());
+    		postDetailResponse.setAmount(p.getDetailPost().getAmount());
+    		CodeResponse jobTypePostData = new CodeResponse();
+            if(p.getDetailPost().getCategoryJobCode() != null) {
+            	jobTypePostData.setCode(p.getDetailPost().getCategoryJobCode().getCode());
+            	jobTypePostData.setValue(p.getDetailPost().getCategoryJobCode().getValue());
+            	postDetailResponse.setJobTypePostData(jobTypePostData);
+            }
+            CodeResponse workTypePostData = new CodeResponse();
+            if(p.getDetailPost().getCategoryWorktypeCode() != null) {
+            	workTypePostData.setCode(p.getDetailPost().getCategoryWorktypeCode().getCode());
+            	workTypePostData.setValue(p.getDetailPost().getCategoryWorktypeCode().getValue());
+            	postDetailResponse.setWorkTypePostData(workTypePostData);
+            }
+            CodeResponse salaryTypePostData = new CodeResponse();
+            if(p.getDetailPost().getSalaryJobCode()  != null) {
+            	salaryTypePostData.setCode(p.getDetailPost().getSalaryJobCode().getCode());
+            	salaryTypePostData.setValue(p.getDetailPost().getSalaryJobCode().getValue());
+            	postDetailResponse.setSalaryTypePostData(salaryTypePostData);
+            }
+            CodeResponse jobLevelPostData = new CodeResponse();
+            if(p.getDetailPost().getCategoryJoblevelCode()  != null) {
+            	jobLevelPostData.setCode(p.getDetailPost().getCategoryJoblevelCode().getCode());
+            	jobLevelPostData.setValue(p.getDetailPost().getCategoryJoblevelCode().getValue());
+            	postDetailResponse.setJobLevelPostData(jobLevelPostData);
+            }
+            CodeResponse genderPostData = new CodeResponse();
+            if(p.getDetailPost().getGenderPostCode() != null) {
+            	genderPostData.setCode(p.getDetailPost().getGenderPostCode().getCode());
+            	genderPostData.setValue(p.getDetailPost().getGenderPostCode().getValue());
+            	postDetailResponse.setGenderPostData(genderPostData);
+            }
+            CodeResponse provincePostData = new CodeResponse();
+            if(p.getDetailPost().getAddressCode() != null) {
+            	provincePostData.setCode(p.getDetailPost().getAddressCode().getCode());
+            	provincePostData.setValue(p.getDetailPost().getAddressCode().getValue());
+            	postDetailResponse.setProvincePostData(provincePostData);
+            }
+            CodeResponse expTypePostData = new CodeResponse();
+            if(p.getDetailPost().getExperienceJobCode() != null) {
+            	expTypePostData.setCode(p.getDetailPost().getExperienceJobCode().getCode());
+            	expTypePostData.setValue(p.getDetailPost().getExperienceJobCode().getValue());
+            	postDetailResponse.setExpTypePostData(expTypePostData);
+            }
+            postData.setPostDetailData(postDetailResponse);
+    	}
+    	return postData;
     }
 
 }

@@ -23,7 +23,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.doan.AppTuyenDung.DTO.DetailPostDTO;
+import com.doan.AppTuyenDung.DTO.Response.ApiResponse;
 import com.doan.AppTuyenDung.DTO.Response.PostJobTypeCountDTO;
+import com.doan.AppTuyenDung.DTO.Response.PostResponse;
 import com.doan.AppTuyenDung.DTO.Response.ResponseData;
 import com.doan.AppTuyenDung.Repositories.PostRepository;
 import com.doan.AppTuyenDung.Repositories.SearchRepository;
@@ -82,5 +84,32 @@ public class postController {
 
         Map<String, Object> response = postService.getStatisticalTypePost(limit);
         return ResponseEntity.ok(response);
+    }
+    @GetMapping("/public/get-search-post")
+    public ApiResponse<Page<PostResponse>> getSearchDetailPosts(@RequestParam(required = false) String name,
+    														  @RequestParam(required = false) String categoryJobCode,
+                                                              @RequestParam(required = false) String addressCode,
+                                                              @RequestParam(required = false) List<String> experienceJobCode,
+                                                              @RequestParam(required = false) List<String> categoryWorktypeCode,
+                                                              @RequestParam(required = false) List<String> salaryJobCode,
+                                                              @RequestParam(required = false) List<String> categoryJoblevelCode,
+                                                              @RequestParam(required = false) Integer isHot,
+                                                              @RequestParam(defaultValue = "0") int offset,
+                                                              @RequestParam(defaultValue = "10") int limit) {
+    	ApiResponse<Page<PostResponse>> apiRP = new ApiResponse<Page<PostResponse>>();
+    	try {
+    		Pageable pageable = PageRequest.of(offset, limit);
+            Page<PostResponse> postRP = postService.searchPosts(name,categoryJobCode, categoryWorktypeCode,
+    											        		addressCode, experienceJobCode,
+    											        		categoryJoblevelCode, salaryJobCode,
+                                                                isHot, pageable);
+            apiRP.setResult(postRP);
+    	}
+    	catch (Exception e) {
+    		apiRP.setCode(404);
+    		apiRP.setMessage(e.getMessage());
+		}
+        
+        return apiRP;
     }
 }
