@@ -1,6 +1,9 @@
 package com.doan.AppTuyenDung.Repositories;
 
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import org.springframework.data.jpa.repository.Query;
@@ -11,6 +14,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 import com.doan.AppTuyenDung.entity.Post;
+import com.doan.AppTuyenDung.entity.User;
+
 import java.util.Map;
 
 @Repository
@@ -29,4 +34,5 @@ public interface PostRepository extends JpaRepository<Post, Integer>  {
    // List<Post> findTop5ByStatusCodeAndUserIdIn(String statusCode, List<Integer> userIds);
     
     public List<Post> findByUserId(int userId);
+    Page<Post> findAll(Specification<Post> spec, Pageable pageable);
 }
