@@ -12,6 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 
+import com.doan.AppTuyenDung.Repositories.CompanyRepository;
 import com.doan.AppTuyenDung.Repositories.DetailPostRepository;
 import com.doan.AppTuyenDung.Repositories.PostRepositoriesQuery;
 import com.doan.AppTuyenDung.Repositories.PostRepository;
@@ -19,6 +20,7 @@ import com.doan.AppTuyenDung.Repositories.PostSpecification;
 import com.doan.AppTuyenDung.Repositories.SearchRepository;
 import com.doan.AppTuyenDung.Repositories.UserSpecification;
 import com.doan.AppTuyenDung.Repositories.criteria.FilterData;
+import com.doan.AppTuyenDung.entity.Company;
 import com.doan.AppTuyenDung.entity.DetailPost;
 import com.doan.AppTuyenDung.entity.Post;
 import com.doan.AppTuyenDung.entity.User;
@@ -52,17 +54,10 @@ import static com.doan.AppTuyenDung.utils.AppConst.SORT_BY;
 public class postService {
     @Autowired
     private PostRepository postRepository;
-
-    @Autowired
-    private DetailPostRepository detailPostRepository;
-
-    @Autowired
-    private EntityManager entityManager;
     @Autowired
     private PostRepositoriesQuery postRepositoriesQuery;
-
-    @Autowired
-    private SearchRepository searchRepository;
+    @Autowired 
+    private CompanyRepository companyRepository;
 
     //amount post and get 
     public Page<PostJobTypeCountDTO> getPostJobTypeAndCountPost(Pageable pageable) {
@@ -158,6 +153,8 @@ public class postService {
     	Post p = postOptional.get();
     	PostResponse postData = new PostResponse();
     	postData.setUserId(p.getUser().getId());
+    	Company c = companyRepository.findCompanyByUserId(p.getUser().getId());
+    	postData.setThumbnail(c.getThumbnail());
     	postData.setCreatedAt(p.getCreatedAt());
     	postData.setId(p.getId());
     	postData.setIsHot(p.getIsHot());

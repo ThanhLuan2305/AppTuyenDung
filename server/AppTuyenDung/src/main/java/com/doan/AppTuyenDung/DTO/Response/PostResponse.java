@@ -9,6 +9,7 @@ public class PostResponse {
 	private String statusCode;
     private String timeEnd;
     private String timePost;
+    private String thumbnail;
     private int userId;
     private Integer isHot;
     private Date createdAt;
