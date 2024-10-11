@@ -12,6 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 
+import com.doan.AppTuyenDung.Repositories.CompanyRepository;
 import com.doan.AppTuyenDung.Repositories.DetailPostRepository;
 import com.doan.AppTuyenDung.Repositories.PostRepositoriesQuery;
 import com.doan.AppTuyenDung.Repositories.PostRepository;
@@ -19,6 +20,7 @@ import com.doan.AppTuyenDung.Repositories.PostSpecification;
 import com.doan.AppTuyenDung.Repositories.SearchRepository;
 import com.doan.AppTuyenDung.Repositories.UserSpecification;
 import com.doan.AppTuyenDung.Repositories.criteria.FilterData;
+import com.doan.AppTuyenDung.entity.Company;
 import com.doan.AppTuyenDung.entity.DetailPost;
 import com.doan.AppTuyenDung.entity.Post;
 import com.doan.AppTuyenDung.entity.User;
@@ -54,16 +56,11 @@ public class postService {
     private PostRepository postRepository;
 
     @Autowired
-    private DetailPostRepository detailPostRepository;
-
-    @Autowired
-    private EntityManager entityManager;
-    @Autowired
     private PostRepositoriesQuery postRepositoriesQuery;
 
-    @Autowired
-    private SearchRepository searchRepository;
-
+    @Autowired 
+    private CompanyRepository companyRepository;
+    
     //amount post and get 
     public Page<PostJobTypeCountDTO> getPostJobTypeAndCountPost(Pageable pageable) {
         Page<Object[]> rawResults = postRepositoriesQuery.findPostJobTypeAndCountPost(pageable);
@@ -140,24 +137,26 @@ public class postService {
         return response;
     }
     public Page<PostResponse> searchPosts(String name, String categoryJobCode, List<String> categoryWorkTypeCode, 
-			String addressCode, List<String> experienceJobCode, List<String> categoryJobLevelCode, List<String> salaryJobCode,Integer isHot, Pageable pageable) {
-    	Specification<Post> spec = PostSpecification.filterPosts(name, categoryJobCode, categoryWorkTypeCode, 
-    			addressCode, experienceJobCode, categoryJobLevelCode, salaryJobCode, isHot);
-    	Page<PostResponse> pageRs = mapPostPageTPostResponsePage(postRepository.findAll(spec, pageable));
-    	return pageRs;
+        String addressCode, List<String> experienceJobCode, List<String> categoryJobLevelCode, List<String> salaryJobCode,Integer isHot, Pageable pageable) {
+        Specification<Post> spec = PostSpecification.filterPosts(name, categoryJobCode, categoryWorkTypeCode, 
+                addressCode, experienceJobCode, categoryJobLevelCode, salaryJobCode, isHot);
+        Page<PostResponse> pageRs = mapPostPageTPostResponsePage(postRepository.findAll(spec, pageable));
+    return pageRs;
     }
     public Page<PostResponse> mapPostPageTPostResponsePage(Page<Post> postPage) {
         List<PostResponse> userResponses = postPage.getContent().stream()
             .map(post -> mapToPostResponse(post.getId()))
             .collect(Collectors.toList());
 
-        return new PageImpl<>(userResponses, postPage.getPageable(), postPage.getTotalElements());
-    }
+return new PageImpl<>(userResponses, postPage.getPageable(), postPage.getTotalElements());
+}
     private PostResponse mapToPostResponse(Integer Id) {
     	Optional<Post> postOptional = postRepository.findById(Id);
     	Post p = postOptional.get();
     	PostResponse postData = new PostResponse();
     	postData.setUserId(p.getUser().getId());
+    	Company c = companyRepository.findCompanyByUserId(p.getUser().getId());
+    	postData.setThumbnail(c.getThumbnail());
     	postData.setCreatedAt(p.getCreatedAt());
     	postData.setId(p.getId());
     	postData.setIsHot(p.getIsHot());

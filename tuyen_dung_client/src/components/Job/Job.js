@@ -9,7 +9,7 @@ const Job = (props) => {
         <>
             <div class="job-items">
                 <div class="company-img">
-                    <a href="#"><img src={props.data.companyThumbnailValue} alt="" style={{ width: "85px", height: "85px" }} /></a>
+                    <a href="#"><img src={props.data.thumbnail} alt="" style={{ width: "85px", height: "85px" }} /></a>
                 </div>
                 <div class="job-tittle job-tittle2">
                     <a href="#">
