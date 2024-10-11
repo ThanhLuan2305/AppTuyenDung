@@ -22,6 +22,8 @@ const JobDetail = () => {
           },
         })
         .then((res) => {
+          console.log(res);
+          
           setDataPost(res);
         })
         .catch((error) => {
@@ -198,6 +200,7 @@ const JobDetail = () => {
           isOpen={isActiveModal}
           onHide={() => setAcitveModal(false)}
           postId={id}
+
         />
       </main>
     </>

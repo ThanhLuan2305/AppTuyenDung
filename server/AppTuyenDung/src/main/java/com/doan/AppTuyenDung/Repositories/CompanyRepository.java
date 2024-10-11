@@ -27,6 +27,6 @@ public interface CompanyRepository extends JpaRepository<Company,Integer>{
      "WHERE c.code_status = \"S1\" AND "+
      "(:search IS NULL OR c.name LIKE %:search% )", nativeQuery = true)
     Page<CompanyGetListDTO> getListCompany(@Param("search") String search, Pageable pageable);
-
+     Company findCompanyByUserId(Integer userId);
 
 }
