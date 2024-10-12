@@ -154,7 +154,12 @@ public class postService {
     	PostResponse postData = new PostResponse();
     	postData.setUserId(p.getUser().getId());
     	Company c = companyRepository.findCompanyByUserId(p.getUser().getId());
-    	postData.setThumbnail(c.getThumbnail());
+    	if(c == null ) {
+        	postData.setThumbnail("Chưa có thumbnail"); 
+    	}
+    	else {
+        	postData.setThumbnail(c.getThumbnail() != null ? c.getThumbnail() : "Chưa có thumbnail"); 
+    	}
     	postData.setCreatedAt(p.getCreatedAt());
     	postData.setId(p.getId());
     	postData.setIsHot(p.getIsHot());
