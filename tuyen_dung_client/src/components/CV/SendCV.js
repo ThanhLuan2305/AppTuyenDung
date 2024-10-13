@@ -1,7 +1,7 @@
 import '../modal/modal.css'
 import React, { useEffect, useState } from 'react';
 import CommonUtils from '../../container/utils/CommonUtils';
-import { createNewCv } from '../../service/cvService';
+
 import { toast } from 'react-toastify';
 import { Modal, ModalHeader, ModalFooter, ModalBody, Button, Spinner, Input } from 'reactstrap';
 import { getDetailUserById} from '../../service/userService'
