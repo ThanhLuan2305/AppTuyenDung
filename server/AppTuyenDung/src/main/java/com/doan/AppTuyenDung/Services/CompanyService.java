@@ -183,6 +183,7 @@ public class CompanyService {
                 	postData.setCreatedAt(p.getCreatedAt());
                 	postData.setId(p.getId());
                 	postData.setIsHot(p.getIsHot());
+                	postData.setThumbnail(company.getThumbnail() != null ? company.getThumbnail() : "Chưa có thumbnail");
                 	postData.setStatusCode(p.getStatusCode().getCode());
                 	postData.setTimeEnd(p.getTimeEnd());
                 	postData.setTimePost(p.getTimePost());

@@ -54,13 +54,11 @@ import static com.doan.AppTuyenDung.utils.AppConst.SORT_BY;
 public class postService {
     @Autowired
     private PostRepository postRepository;
-
     @Autowired
     private PostRepositoriesQuery postRepositoriesQuery;
-
     @Autowired 
     private CompanyRepository companyRepository;
-    
+
     //amount post and get 
     public Page<PostJobTypeCountDTO> getPostJobTypeAndCountPost(Pageable pageable) {
         Page<Object[]> rawResults = postRepositoriesQuery.findPostJobTypeAndCountPost(pageable);
@@ -156,7 +154,12 @@ return new PageImpl<>(userResponses, postPage.getPageable(), postPage.getTotalEl
     	PostResponse postData = new PostResponse();
     	postData.setUserId(p.getUser().getId());
     	Company c = companyRepository.findCompanyByUserId(p.getUser().getId());
-    	postData.setThumbnail(c.getThumbnail());
+    	if(c == null ) {
+        	postData.setThumbnail("Chưa có thumbnail"); 
+    	}
+    	else {
+        	postData.setThumbnail(c.getThumbnail() != null ? c.getThumbnail() : "Chưa có thumbnail"); 
+    	}
     	postData.setCreatedAt(p.getCreatedAt());
     	postData.setId(p.getId());
     	postData.setIsHot(p.getIsHot());
