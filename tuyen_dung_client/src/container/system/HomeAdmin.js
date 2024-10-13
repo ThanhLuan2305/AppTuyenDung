@@ -19,7 +19,14 @@ import AddJobType from '../JobType/AddJobType';
 import ManageJobSkill from '../JobSkill/ManageJobSkill';
 import AddJobSkill from '../JobSkill/AddJobSkill';
 import ManageCompany from '../Company/DetailCompany';
-
+import AddJobLevel from './JobLevel/AddJobLevel';
+import ManageJobLevel from './JobLevel/ManageJobLevel';
+import AddWorkType from './WorkType/AddWorkType';
+import ManageWorkType from './WorkType/ManageWorkType';
+import AddSalaryType from './SalaryType/AddSalaryType';
+import ManageSalaryType from './SalaryType/ManageSalaryType';
+import AddExpType from './ExpType/AddExpType';
+import ManageExpType from './ExpType/ManageExpType';
 const HomeAdmin = () => {
     return (
         <Router>
@@ -241,8 +248,46 @@ const HomeAdmin = () => {
                                 <Route exact path="/admin/list-company-admin/">
                                     <ManageCompany />
                                 </Route>
+                                
+                                <Route exact path="/admin/add-job-level">
+                                    <AddJobLevel />
+                                </Route>
+                                <Route exact path="/admin/list-job-level">
+                                    <ManageJobLevel />
+                                </Route>
+                                <Route exact path="/admin/edit-job-level/:id">
+                                    <AddJobLevel />
+                                </Route>
 
+                                <Route exact path="/admin/add-work-type">
+                                    <AddWorkType />
+                                </Route>
+                                <Route exact path="/admin/list-work-type">
+                                    <ManageWorkType />
+                                </Route>
+                                <Route exact path="/admin/edit-work-type/:id">
+                                    <AddWorkType />
+                                </Route>
 
+                                <Route exact path="/admin/add-salary-type">
+                                    <AddSalaryType />
+                                </Route>
+                                <Route exact path="/admin/list-salary-type">
+                                    <ManageSalaryType />
+                                </Route>
+                                <Route exact path="/admin/edit-salary-type/:id">
+                                    <AddSalaryType />
+                                </Route>
+
+                                <Route exact path="/admin/add-exp-type">
+                                    <AddExpType />
+                                </Route>
+                                <Route exact path="/admin/list-exp-type">
+                                    <ManageExpType />
+                                </Route>
+                                <Route exact path="/admin/edit-exp-type/:id">
+                                    <AddExpType />
+                                </Route>
 
 
                         </div>

@@ -117,6 +117,93 @@ const UpdateJobtype = (data) => {
 const getDetailJobTypeByCode = (code) => {
   return axios.get(`/public/get-detail-JobType-by-code?code=${code}`);
 };
+//, getDetailJobLevel, UpdateJobLevel
+
+const createJobLevel = (data) => {
+  return axios.post(`/public/create-jobLevel`, data);
+};
+const getAllJobLevel = (data) => {
+  return axios.get(
+    `/public/get-all-joblevel?limit=${data.limit}&offset=${data.offset}&search=${data.search}`
+  );
+};
+
+const DeleteJobLevel = (codeId) => {
+  return axios.delete(`/public/delete-joblevel?code=${codeId}`);
+};
+const UpdateJobLevel = (data) => {
+  return axios.put(`/public/update-joblevel`, data);
+};
+const getDetailJobLevelByCode = (code) => {
+  return axios.get(`/public/get-detail-JobLevel-by-code?code=${code}`);
+};
+
+// createWorkType, getDetailWorkTypeByCode, UpdateWorkType, DeleteWorkType,getAllWorkType
+const createWorkType = (data) => {
+  return axios.post(`/public/create-worktype`, data);
+};
+const getAllWorkType = (data) => {
+  return axios.get(
+    `/public/get-all-worktype?limit=${data.limit}&offset=${data.offset}&search=${data.search}`
+  );
+};
+
+const DeleteWorkType = (codeId) => {
+  return axios.delete(`/public/delete-worktype?code=${codeId}`);
+};
+
+const UpdateWorkType = (data) => {
+  return axios.put(`/public/update-worktype`, data);
+};
+
+const getDetailWorkTypeByCode = (code) => {
+  return axios.get(`/public/get-detail-WorkType-by-code?code=${code}`);
+};
+
+// createSalaryType, getDetailSalaryTypeByCode, UpdateSalaryType, DeleteSalaryType, getAllSalaryType
+const createSalaryType = (data) => {
+  return axios.post(`/public/create-salarytype`, data);
+};
+const getAllSalaryType = (data) => {
+  return axios.get(
+    `/public/get-all-salarytype?limit=${data.limit}&offset=${data.offset}&search=${data.search}`
+  );
+};
+
+const DeleteSalaryType = (codeId) => {
+  return axios.delete(`/public/delete-salarytype?code=${codeId}`);
+};
+
+const UpdateSalaryType = (data) => {
+  return axios.put(`/public/update-salarytype`, data);
+};
+
+const getDetailSalaryTypeByCode = (code) => {
+  return axios.get(`/public/get-detail-SalaryType-by-code?code=${code}`);
+};
+
+//createExpType, getAllExpType, DeleteExpType, UpdateExpType, getDetailExpTypeByCode
+const createExpType = (data) => {
+  return axios.post(`/public/create-exptype`, data);
+};
+const getAllExpType = (data) => {
+  return axios.get(
+    `/public/get-all-exptype?limit=${data.limit}&offset=${data.offset}&search=${data.search}`
+  );
+};
+
+const DeleteExpType = (codeId) => {
+  return axios.delete(`/public/delete-exptype?code=${codeId}`);
+};
+
+const UpdateExpType = (data) => {
+  return axios.put(`/public/update-exptype`, data);
+};
+
+const getDetailExpTypeByCode = (code) => {
+  return axios.get(`/public/get-detail-ExpType-by-code?code=${code}`);
+};
+
 
 const BanUserService = (userId) => {
   return axios.post(`/api/ban-user`, {
@@ -200,8 +287,32 @@ export {
   getListSkill,
   DeleteSkillService,
   getDetailSkillById,
+
   UpdateSkill,
   createSkill,
+  createJobLevel,
+  getAllJobLevel,
+  DeleteJobLevel,
+  UpdateJobLevel,
+  getDetailJobLevelByCode,
+
+  createWorkType,
+  getDetailWorkTypeByCode,
+  UpdateWorkType,
+  DeleteWorkType,
+  getAllWorkType,
+
+  createSalaryType,
+  getDetailSalaryTypeByCode,
+  UpdateSalaryType,
+  DeleteSalaryType,
+  getAllSalaryType,
+
+  createExpType,
+  getAllExpType,
+  DeleteExpType,
+  UpdateExpType,
+  getDetailExpTypeByCode,
 
   getStatisticalPackagePost,
   getStatisticalTypePost,

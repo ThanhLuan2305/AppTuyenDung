@@ -42,15 +42,15 @@ const JobPage = () => {
       }, {});
 
     axios
-      .get("http://localhost:8080/public/get-filter-post", {
+      .get("http://localhost:8080/public/get-search-post", {
         params: filteredParams,
       })
       .then((responseFeature) => {
         // console.log(responseFeature.data);
-        setPost(responseFeature.data.content);
-        setCountPage(Math.ceil(responseFeature.data.totalElements / limit));
+        setPost(responseFeature.data.result.content);
+        setCountPage(Math.ceil(responseFeature.data.result.totalElements / limit));
         // console.log(Math.ceil(responseFeature.data.totalElements / limit));
-        setCount(responseFeature.data.totalElements);
+        setCount(responseFeature.data.result.totalElements);
       })
       .catch((error) => {
         console.error("Error fetching feature data", error);
@@ -128,37 +128,34 @@ const JobPage = () => {
           obj[key] = params[key];
           return obj;
         }, {});
+      
+        Object.keys(filteredParams).forEach((key) => {
+          if (Array.isArray(filteredParams[key])) {
+            filteredParams[key] = filteredParams[key].join(',');
+          }
+        });  
       axios
-        .get("http://localhost:8080/public/get-filter-post", {
+        .get("http://localhost:8080/public/get-search-post", {
           params: filteredParams,
         })
         .then((responseFeature) => {
-          console.log(responseFeature.data.content);
+          // console.log(responseFeature.data.result);
           setNumberPage(0);
           setOffset(0);
-          setPost(responseFeature.data.content);
+          setPost(responseFeature.data.result.content);
           // console.log(post)
-          setCountPage(Math.ceil(responseFeature.data.totalElements / limit));
-          console.log(countPage);
-          setCount(responseFeature.data.totalElements);
-          console.log(count);
+          setCountPage(Math.ceil(responseFeature.data.result.totalElements / limit));
+          setCount(responseFeature.data.result.totalElements);
+
         })
         .catch((error) => {
           console.error("Error fetching feature data", error);
         });
-      // let arrData = await getListPostService(params)
-      // if (arrData && arrData.errCode === 0) {
-      //     setNumberPage(0)
-      //     setOffset(0)
-      //     setPost(arrData.data)
-      //     setCountPage(Math.ceil(arrData.count / limit))
-      //     setCount(arrData.count)
-      // }
     };
     filterdata();
   }, [workType, jobLevel, exp, jobType, jobLocation, salary, search]);
   const handleChangePage = (number) => {
-    console.log(number);
+    // console.log(number);
     const newOffset = number.selected; // Tính toán offset mới
     setNumberPage(newOffset);
     loadPost(limit, newOffset); // Truyền offset mới vào hàm loadPost

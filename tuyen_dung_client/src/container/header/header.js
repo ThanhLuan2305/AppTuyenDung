@@ -16,7 +16,7 @@ const Header = () => {
   useEffect(() => {
     const handleUserData = () => {
       const userData = JSON.parse(localStorage.getItem("userData"));
-      console.log("Current user:", userData);
+      // console.log("Current user:", userData);
       setUser(userData);
     };
     handleUserData();

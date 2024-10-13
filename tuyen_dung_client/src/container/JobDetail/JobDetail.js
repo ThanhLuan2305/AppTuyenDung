@@ -4,10 +4,8 @@ import { useHistory, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import moment from "moment";
 import SendCV from "../../components/CV/SendCV";
-import { getDetailPostByIdService } from "../../service/userService";
 import axios from "axios";
 import CommonUtils from "../utils/CommonUtils";
-import { CgEnter } from "react-icons/cg";
 const JobDetail = () => {
   const history = useHistory();
   const { id } = useParams();
@@ -22,6 +20,8 @@ const JobDetail = () => {
           },
         })
         .then((res) => {
+          console.log(res);
+          
           setDataPost(res);
         })
         .catch((error) => {
@@ -198,6 +198,7 @@ const JobDetail = () => {
           isOpen={isActiveModal}
           onHide={() => setAcitveModal(false)}
           postId={id}
+
         />
       </main>
     </>

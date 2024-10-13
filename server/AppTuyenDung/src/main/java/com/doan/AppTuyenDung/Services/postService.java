@@ -135,19 +135,19 @@ public class postService {
         return response;
     }
     public Page<PostResponse> searchPosts(String name, String categoryJobCode, List<String> categoryWorkTypeCode, 
-			String addressCode, List<String> experienceJobCode, List<String> categoryJobLevelCode, List<String> salaryJobCode,Integer isHot, Pageable pageable) {
-    	Specification<Post> spec = PostSpecification.filterPosts(name, categoryJobCode, categoryWorkTypeCode, 
-    			addressCode, experienceJobCode, categoryJobLevelCode, salaryJobCode, isHot);
-    	Page<PostResponse> pageRs = mapPostPageTPostResponsePage(postRepository.findAll(spec, pageable));
-    	return pageRs;
+        String addressCode, List<String> experienceJobCode, List<String> categoryJobLevelCode, List<String> salaryJobCode,Integer isHot, Pageable pageable) {
+        Specification<Post> spec = PostSpecification.filterPosts(name, categoryJobCode, categoryWorkTypeCode, 
+                addressCode, experienceJobCode, categoryJobLevelCode, salaryJobCode, isHot);
+        Page<PostResponse> pageRs = mapPostPageTPostResponsePage(postRepository.findAll(spec, pageable));
+    return pageRs;
     }
     public Page<PostResponse> mapPostPageTPostResponsePage(Page<Post> postPage) {
         List<PostResponse> userResponses = postPage.getContent().stream()
             .map(post -> mapToPostResponse(post.getId()))
             .collect(Collectors.toList());
 
-        return new PageImpl<>(userResponses, postPage.getPageable(), postPage.getTotalElements());
-    }
+return new PageImpl<>(userResponses, postPage.getPageable(), postPage.getTotalElements());
+}
     private PostResponse mapToPostResponse(Integer Id) {
     	Optional<Post> postOptional = postRepository.findById(Id);
     	Post p = postOptional.get();

@@ -1,7 +1,7 @@
 import '../modal/modal.css'
 import React, { useEffect, useState } from 'react';
 import CommonUtils from '../../container/utils/CommonUtils';
-import { createNewCv } from '../../service/cvService';
+
 import { toast } from 'react-toastify';
 import { Modal, ModalHeader, ModalFooter, ModalBody, Button, Spinner, Input } from 'reactstrap';
 import { getDetailUserById} from '../../service/userService'
@@ -12,6 +12,7 @@ function SendCV(props){
     const [inputValue, setInputValue] = useState({
         userId: '', postId: '', file: '', linkFileUser: '', fileUser: '', linkFile: '',description: ''
     })
+
     const [typeCv,setTypeCv] = useState('pcCv')
     useEffect(() => {
         if (userData)
@@ -27,8 +28,9 @@ function SendCV(props){
             ['linkFileUser']: res.result.userAccountData.userSettingData.file ? URL.createObjectURL(dataURLtoFile(res.result.userAccountData.userSettingData.file,'yourCV')) : '',
             ['fileUser'] : res.result.userAccountData.userSettingData.file ? res.result.userAccountData.userSettingData.file : ''
         })
+        console.log(inputValue)
     }
-    console.log(inputValue.linkFileUser)
+    // console.log(inputValue)
     const handleChange = (event) => {
         const { name, value } = event.target
         setInputValue({
@@ -109,32 +111,48 @@ function SendCV(props){
             const blob = base64ToBlob(base64Data, 'application/pdf');
             formData.append('filePDF', blob, 'file.pdf');  // Đặt tên tệp là file.pdf
         }
-        axios.post("http://localhost:8080/public/createCVnew",formData,
+        try{
+            const res = await axios.post("http://localhost:8080/public/createCVnew", formData, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                },
+            });
+            if (res.data.errCode === 0) {
+                const emailPayload = {
+                    userEmail: inputValue.userEmail,  // Thêm email người dùng
+                    companyEmail: inputValue.companyEmail,  // Email công ty
+                    jobTitle: inputValue.jobTitle,  // Tiêu đề công việc
+                    userName: inputValue.userName  // Tên người dùng
+                };
+                // Gửi email sau khi nộp CV thành công
+            const emailRes = await axios.post("http://localhost:8080/send-mail/send-application-email", emailPayload, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                },
+            });
+            if(emailRes.data.code === 200)
             {
-              headers: {
-                Authorization: `Bearer ${token}`
-                  // 'Content-Type': 'multipart/form-data; charset=utf-8'
-              },
-            }
-            ).then((res) => { 
-                setTimeout(function () {
-                    setIsLoading(false)
-                    if (res.data.errCode === 0) {
-
-                        setInputValue({
-                            ...inputValue,
-                            ["file"]: '', ["description"]: '', ["linkFile"]: ''
-                        })
-                        toast.success("Đã nộp CV vào công ty thành công!")
-                        props.onHide()
-                    }
-                    else
-                        toast.error("Gửi CV thất bại");
+                setTimeout(() => {
+                    setIsLoading(false);
+                    setInputValue({
+                        ...inputValue,
+                        file: '',
+                        description: '',
+                        linkFile: ''
+                    });
+                    toast.success("Đã nộp CV và gửi email thành công!");
+                    props.onHide();
                 }, 1000);
-        })   
-        
-        
+            }
+        } else {
+            toast.error("Gửi CV thất bại");
+        }
+    } catch (error) {
+        console.log(error)
+        setIsLoading(false)
+        toast.error("Gửi CV thất bại")    
     }
+}
     return (
         <div>
             <Modal isOpen={props.isOpen} className={'booking-modal-container'}

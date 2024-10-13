@@ -13,9 +13,7 @@ const LeftBar = (props) => {
   useEffect(() => {
     axios
       .get("http://localhost:8080/public/get-all-code/job-types")
-      .then((response) => {
-        console.log(response);
-        
+      .then((response) => {     
         setdataJobType(response.data);
       })
       .catch((error) => {
