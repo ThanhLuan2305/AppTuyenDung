@@ -97,7 +97,7 @@ const ManageUser = () => {
                         <div className="table-responsive pt-2">
                             <table className="table table-bordered">
                                 <thead>
-                                    <tr>
+                                    <tr className="text-center">
                                         <th>
                                             STT
                                         </th>
@@ -129,7 +129,7 @@ const ManageUser = () => {
                                         dataUser.map((item, index) => {
                                             let date = item.dob ? moment.unix(item.dob / 1000).format('DD/MM/YYYY') : 'Không có thông tin'
                                             return (
-                                                <tr key={index}>
+                                                <tr key={index} className="text-center">
                                                     <td>{index + 1 + numberPage * PAGINATION.pagerow}</td>
                                                     <td>{`${item.firstName} ${item.lastName}`}</td>
                                                     <td>{item.phonenumber}</td>
@@ -141,6 +141,8 @@ const ManageUser = () => {
                                                         <Link style={{ color: '#4B49AC' }} to={`/admin/edit-user/${item.id}/`}>Sửa</Link>
                                                         &nbsp; &nbsp;
                                                        {user.id != item.id &&  <a style={{ color: '#4B49AC' }} href="#" onClick={(event) => handlebanUser(event, item)} >{item.statusCode === 'S1' ? 'Chặn' : 'Kích hoạt' }</a>}
+                                                       &nbsp; &nbsp;
+                                                       <Link style={{ color: '#4B49AC' }} to={`/admin/detail-user/${item.id}/`}>Chi tiết</Link>
                                                     </td>
                                                 </tr>
                                             )
