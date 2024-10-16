@@ -27,6 +27,8 @@ import AddSalaryType from './SalaryType/AddSalaryType';
 import ManageSalaryType from './SalaryType/ManageSalaryType';
 import AddExpType from './ExpType/AddExpType';
 import ManageExpType from './ExpType/ManageExpType';
+import ProfilePage from './User/ProfileUser';
+import SearchPage from './Cannidate/Search';
 const HomeAdmin = () => {
     return (
         <Router>
@@ -211,12 +213,12 @@ const HomeAdmin = () => {
                         {/* partial */}
                         <div className="main-panel">
                             <div className="content-wrapper">
-                            <Route exact path="/admin/">
+                                <Route exact path="/admin/">
                                     <Home />
                                 </Route>
-                            <Route exact path="/admin/add-company">
+                                <Route exact path="/admin/add-company">
                                     <AddCompany />
-                                </Route> 
+                                </Route>
                                 <Route exact path="/admin/list-user">
                                     <ManageUser />
                                 </Route>
@@ -225,6 +227,9 @@ const HomeAdmin = () => {
                                 </Route>
                                 <Route exact path="/admin/edit-user/:id">
                                     <AddUser />
+                                </Route>
+                                <Route exact path="/admin/detail-user/:id">
+                                    <ProfilePage />
                                 </Route>
                                 <Route exact path="/admin/list-job-type">
                                     <ManageJobType />
@@ -248,7 +253,7 @@ const HomeAdmin = () => {
                                 <Route exact path="/admin/list-company-admin/">
                                     <ManageCompany />
                                 </Route>
-                                
+
                                 <Route exact path="/admin/add-job-level">
                                     <AddJobLevel />
                                 </Route>
@@ -288,9 +293,11 @@ const HomeAdmin = () => {
                                 <Route exact path="/admin/edit-exp-type/:id">
                                     <AddExpType />
                                 </Route>
+                                <Route exact path="/admin/search-cannidate">
+                                    <SearchPage />
+                                </Route>
 
-
-                        </div>
+                            </div>
                             {/* content-wrapper ends */}
                             {/* partial:partials/_footer.html */}
                             <Footer />

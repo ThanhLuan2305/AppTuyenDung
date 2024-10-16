@@ -359,6 +359,29 @@ const Menu = () => {
                 </ul>
               </div>
             </li>
+            <li className="nav-item relative">
+              <a
+                className="nav-link"
+                data-toggle="collapse"
+                href="#cannidate"
+                aria-expanded="false"
+                aria-controls="cannidate"
+              >
+                <i class="fa-solid fa-clipboard menu-icon"></i>
+                <span className="menu-title">Quản lý ứng viên</span>
+                <i className="menu-arrow" />
+              </a>
+              <div className="collapse" id="cannidate">
+                <ul className="nav flex-column sub-menu">
+                  <li className="nav-item relative">
+                    {" "}
+                    <Link className="nav-link" to="/admin/search-cannidate/">
+                      Tìm kiếm ứng viên
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+            </li>
           </>
         )}
         {user && user.codeRoleAccount === "COMPANY" && (
